@@ -175,6 +175,7 @@ class POSvrSys(object):
         self.create_cuAddEditDialog()
         self.create_cuAddEditComboboxes()
         self.create_inGenderTreestore()
+        self.create_inCastTreestore()
         
     def initialize_translation(self):
         """This function initializes the possible translations"""
@@ -246,23 +247,35 @@ class POSvrSys(object):
     def on_inAddButton_clicked(self, widget):
         
         self.inAddEditDialog.set_title(_("Add Movie Dialog"))
+        self.inTitleEntry.grab_focus()
         
         self.inAddEditDialog.run()
         
-        selected_rows = self.inGenresTreeview.get_selection().get_selected_rows()
+        selected_genres_rows = self.inGenresTreeview.get_selection().get_selected_rows()
+        selected_casts_rows = self.inCastsTreeview.get_selection().get_selected_rows()
         
-        model = selected_rows[0]
+        genreModel = selected_genres_rows[0]
+        castModel = selected_casts_rows[0]
         
-        print "size of list is", len(selected_rows[1])
+        self.inGenresSelectedList = []
+        self.inCastsSelectedList = []
         
         # selected genres
-        for row in selected_rows[1]:
+        for row in selected_genres_rows[1]:
             
-            print model[row][2]
-        
+            self.inGenresSelectedList.append(genreModel[row][0])
+            
+        # selected casts
+        for row in selected_casts_rows[1]:
+            
+            self.inCastsSelectedList.append(castModel[row][0])
+            
+        print self.inCastsSelectedList
+            
         self.inAddEditDialog.hide()
         
         self.inGenresTreeview.get_selection().unselect_all()
+        self.inCastsTreeview.get_selection().unselect_all()
         
     def on_cuAddButton_clicked(self, widget):
         
@@ -735,6 +748,41 @@ class POSvrSys(object):
         
         self.inPopulateGenresTreestore()
         
+    def inInitializeCastTreestore(self):
+        
+        """Called when we want to initialize the tree.
+        """
+        tree_type_list = [] #For creating the TreeStore
+        __column_dict = {} #For easy access later on
+
+        #Get the treeView from the widget Tree
+        #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
+        
+        # Loop through the columns and initialize the Tree
+        for item_column in self.inCastTreestore_columns:
+            #Add the column to the column dict
+            __column_dict[item_column.ID] = item_column
+            #Save the type for gtk.TreeStore creation
+            tree_type_list.append(item_column.type)
+            #is it visible?
+            if (item_column.visible):
+                #Create the Column
+                column = gtk.TreeViewColumn(item_column.name
+                    , item_column.cellrenderer
+                    , text=item_column.pos)
+                
+                column.set_resizable(True)
+                column.set_sort_column_id(item_column.pos)
+                self.inCastsTreeview.append_column(column)
+                
+        #Create the gtk.TreeStore Model to use with the inTreeview
+        self.inCastsTreestore = gtk.TreeStore(*tree_type_list)
+        #Attache the model to the treeView
+        self.inCastsTreeview.set_model(self.inCastsTreestore)
+        self.inCastsTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        
+        self.inPopulateCastsTreestore()
+        
     def cuInitializeTreestore(self):
         """Called when we want to initialize the tree.
         """
@@ -796,6 +844,18 @@ class POSvrSys(object):
             genre.append(instance.name)
             
             self.inGenresTreestore.append(None, genre)
+            
+    def inPopulateCastsTreestore(self):
+        
+        for instance in session.query(Cast):
+            
+            cast = []
+            
+            cast.append(instance)
+            cast.append(instance.id)
+            cast.append(instance.full_name)
+            
+            self.inCastsTreestore.append(None, cast)
             
     def cuPopulateTreestore(self):
         
@@ -963,6 +1023,16 @@ class POSvrSys(object):
         
         self.inInitializeGenreTreestore()
         
+    def create_inCastTreestore(self):
+        
+        self.inCastTreestore_columns = [
+            TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
+            , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
+            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Full Name"), 2, True, gtk.CellRendererText())
+        ]
+        
+        self.inInitializeCastTreestore()
+        
     def create_cuTreestore(self):
         
         self.cuTreestore_columns = [
@@ -999,12 +1069,21 @@ class POSvrSys(object):
         self.inAddEditDialog = wTree.get_widget("inAddEditDialog")
         self.inAddEditTable = wTree.get_widget("inAddEditTable")
         self.inGenresTreeview = wTree.get_widget("inGenresTreeview")
-        
-        self.inGenresTreeview.set_model(self.inGenreListStore)
+        self.inCastsTreeview = wTree.get_widget("inCastsTreeview")
         
         self.inReleaseCalendar = CalendarEntry('')
         self.inAddEditTable.attach(self.inReleaseCalendar, 1, 2 , 3, 4)
         self.inReleaseCalendar.show_all()
+        
+        self.inTitleEntry = wTree.get_widget("inTitleEntry")
+        self.inImdbCodeEntry = wTree.get_widget("inImdbCodeEntry")
+        self.inReleaseEntry = wTree.get_widget("inReleaseEntry")
+        
+        self.inTitleLabel = wTree.get_widget("inTitleLabel")
+        self.inImdbCodeLabel = wTree.get_widget("inImdbCodeLabel")
+        self.inReleaseLabel = wTree.get_widget("inReleaseLabel")
+        
+        self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
         if DEBUG:
             
