@@ -3,7 +3,7 @@
 
 # POSvrSys - PyGTK POS Video Rental System
 # Copyright (C) 2008 Bertrand Kintanar <b3rxkintanar@gmail.com>
-# # http://posvrsys.googlecode.com/
+# http://posvrsys.googlecode.com/
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
