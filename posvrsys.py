@@ -176,6 +176,7 @@ class POSvrSys(object):
         self.create_cuAddEditComboboxes()
         self.create_inGenderTreestore()
         self.create_inCastTreestore()
+        self.create_inWriterTreestore()
         
     def initialize_translation(self):
         """This function initializes the possible translations"""
@@ -259,26 +260,9 @@ class POSvrSys(object):
             
         self.inAddEditDialog.hide()
         
-        #selected_genres_rows = self.inGenresTreeview.get_selection().get_selected_rows()
-        #selected_casts_rows = self.inCastsTreeview.get_selection().get_selected_rows()
-        
-        #genreModel = selected_genres_rows[0]
-        #castModel = selected_casts_rows[0]
-        
-        #self.inGenresSelectedList = []
-        #self.inCastsSelectedList = []
-        
-        ## selected genres
-        #for row in selected_genres_rows[1]:
+        if result == gtk.RESPONSE_OK:
             
-            #self.inGenresSelectedList.append(genreModel[row][0])
-            
-        ## selected casts
-        #for row in selected_casts_rows[1]:
-            
-            #self.inCastsSelectedList.append(castModel[row][0])
-            
-        #print self.inCastsSelectedList
+            self.inPerformAdd()
             
         #self.inAddEditDialog.hide()
         
@@ -425,6 +409,48 @@ class POSvrSys(object):
         cust = insertCustomer(session, cust, ci, sa, co)
         
         return cust
+    
+    def inPerformAdd(self):
+        
+        print "im in"
+        
+        movie = Movie(self.inTitleEntry.get_text(), self.inImdbCodeEntry.get_text(),
+            self.inReleaseCalendar.get_date(), self.inPlotEntry.get_text(),
+            self.inRatingSpin.get_value())
+        
+        selected_genres_rows = self.inGenresTreeview.get_selection().get_selected_rows()
+        selected_casts_rows = self.inCastsTreeview.get_selection().get_selected_rows()
+        selected_writers_rows = self.inWritersTreeview.get_selection().get_selected_rows()
+        
+        genreModel = selected_genres_rows[0]
+        castModel = selected_casts_rows[0]
+        writerModel = selected_writers_rows[0]
+        
+        self.inGenresSelectedList = []
+        self.inCastsSelectedList = []
+        self.inWritersSelectedList = []
+        
+        director = session.query(Director).filter(Director.full_name==self.inDirectorEntry.get_text()).one()
+        
+        # selected genres
+        for row in selected_genres_rows[1]:
+            
+            self.inGenresSelectedList.append(genreModel[row][0])
+            
+        # selected casts
+        for row in selected_casts_rows[1]:
+            
+            self.inCastsSelectedList.append(castModel[row][0])
+            
+        # selected writers
+        for row in selected_writers_rows[1]:
+            
+            self.inWritersSelectedList.append(writerModel[row][0])
+            
+        movie = insertMovie(session, movie, director, self.inWritersSelectedList,
+            self.inCastsSelectedList, self.inGenresSelectedList)
+        
+        self.updateInTreeStore([movie])
         
     def cuPerformAdd(self):
         
@@ -481,7 +507,7 @@ class POSvrSys(object):
             
     def check_widgets(self, widgetsList):
         
-        types = (gtk.Entry, gtk.ComboBox, gtk.TreeView)
+        types = (gtk.Entry, gtk.ComboBox, gtk.TreeView, gtk.SpinButton)
         
         ret_value = 0
         
@@ -541,6 +567,24 @@ class POSvrSys(object):
                 else:
                     
                     label.set_markup_with_mnemonic("%s" % text)
+                    
+            elif type(widget) == types[3]:
+                
+                print widget.get_value()
+                
+                if widget.get_value() == 0.0:
+                    
+                    label.set_markup_with_mnemonic("<span style='italic' foreground='red'>%s</span>" % text)
+                    
+                    widget.grab_focus()
+                    
+                    ret_value = -1
+                    
+                    break
+                
+                else:
+                    
+                    label.set_markup_with_mnemonic("%s" % text)
                 
         return ret_value
     
@@ -571,6 +615,12 @@ class POSvrSys(object):
         
         self.inTreestore.clear()
         self.inEntry.grab_focus()
+        
+        if searchFilter == _("All Genres") and searchTitle == "":
+            
+            self.on_inShowAllButton_clicked(widget)
+            
+            return
         
         movieList = []
         if searchFilter != _('All Genres'):
@@ -810,6 +860,41 @@ class POSvrSys(object):
         
         self.inPopulateCastsTreestore()
         
+    def inInitializeWriterTreestore(self):
+        
+        """Called when we want to initialize the tree.
+        """
+        tree_type_list = [] #For creating the TreeStore
+        __column_dict = {} #For easy access later on
+
+        #Get the treeView from the widget Tree
+        #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
+        
+        # Loop through the columns and initialize the Tree
+        for item_column in self.inWriterTreestore_columns:
+            #Add the column to the column dict
+            __column_dict[item_column.ID] = item_column
+            #Save the type for gtk.TreeStore creation
+            tree_type_list.append(item_column.type)
+            #is it visible?
+            if (item_column.visible):
+                #Create the Column
+                column = gtk.TreeViewColumn(item_column.name
+                    , item_column.cellrenderer
+                    , text=item_column.pos)
+                
+                column.set_resizable(True)
+                column.set_sort_column_id(item_column.pos)
+                self.inWritersTreeview.append_column(column)
+                
+        #Create the gtk.TreeStore Model to use with the inTreeview
+        self.inWritersTreestore = gtk.TreeStore(*tree_type_list)
+        #Attache the model to the treeView
+        self.inWritersTreeview.set_model(self.inWritersTreestore)
+        self.inWritersTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        
+        self.inPopulateWritersTreestore()
+        
     def cuInitializeTreestore(self):
         """Called when we want to initialize the tree.
         """
@@ -883,6 +968,18 @@ class POSvrSys(object):
             cast.append(instance.full_name)
             
             self.inCastsTreestore.append(None, cast)
+            
+    def inPopulateWritersTreestore(self):
+        
+        for instance in session.query(Writer):
+            
+            writer = []
+            
+            writer.append(instance)
+            writer.append(instance.id)
+            writer.append(instance.full_name)
+            
+            self.inWritersTreestore.append(None, writer)
             
     def cuPopulateTreestore(self):
         
@@ -1060,6 +1157,16 @@ class POSvrSys(object):
         
         self.inInitializeCastTreestore()
         
+    def create_inWriterTreestore(self):
+        
+        self.inWriterTreestore_columns = [
+            TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
+            , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
+            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Full Name"), 2, True, gtk.CellRendererText())
+        ]
+        
+        self.inInitializeWriterTreestore()
+        
     def create_cuTreestore(self):
         
         self.cuTreestore_columns = [
@@ -1097,6 +1204,7 @@ class POSvrSys(object):
         self.inAddEditTable = wTree.get_widget("inAddEditTable")
         self.inGenresTreeview = wTree.get_widget("inGenresTreeview")
         self.inCastsTreeview = wTree.get_widget("inCastsTreeview")
+        self.inWritersTreeview = wTree.get_widget("inWritersTreeview")
         
         self.inReleaseCalendar = CalendarEntry('')
         self.inAddEditTable.attach(self.inReleaseCalendar, 1, 2 , 3, 4)
@@ -1104,23 +1212,44 @@ class POSvrSys(object):
         
         self.inTitleEntry = wTree.get_widget("inTitleEntry")
         self.inImdbCodeEntry = wTree.get_widget("inImdbCodeEntry")
+        self.inDirectorEntry = wTree.get_widget("inDirectorEntry")
+        self.inRatingSpin = wTree.get_widget("inRatingSpin")
+        self.inPlotEntry = wTree.get_widget("inPlotEntry")
+        self.inDirectorCompletion = gtk.EntryCompletion()
+        self.inDirectorListstore = gtk.ListStore(str)
+        
+        for instance in session.query(Director):
+            
+            self.inDirectorListstore.append([instance.full_name])
+            
+        self.inDirectorCompletion.set_model(self.inDirectorListstore)
+        self.inDirectorEntry.set_completion(self.inDirectorCompletion)
+        self.inDirectorCompletion.set_text_column(0)
         
         self.inTitleLabel = wTree.get_widget("inTitleLabel")
         self.inImdbCodeLabel = wTree.get_widget("inImdbCodeLabel")
         self.inReleaseLabel = wTree.get_widget("inReleaseLabel")
+        self.inDirectorLabel = wTree.get_widget("inDirectorLabel")
+        self.inRatingLabel = wTree.get_widget("inRatingLabel")
+        self.inPlotLabel = wTree.get_widget("inPlotLabel")
         self.inGenresLabel = wTree.get_widget("inGenresLabel")
         self.inCastsLabel = wTree.get_widget("inCastsLabel")
+        self.inWritersLabel = wTree.get_widget("inWritersLabel")
+        
+        self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
         self.inWidgets = \
             [
                 [self.inTitleEntry, self.inTitleLabel, _("_Title:")],
                 [self.inImdbCodeEntry, self.inImdbCodeLabel, _("_IMDB Code:")],
                 [self.inReleaseCalendar.entry, self.inReleaseLabel, _("_Release:")],
-                [self.inGenresTreeview, self.inGenresLabel, _("_Genres:")],
-                [self.inCastsTreeview, self.inCastsLabel, _("C_asts:")],
+                [self.inDirectorEntry, self.inDirectorLabel, _("_Director:")],
+                [self.inRatingSpin, self.inRatingLabel, _("R_ating:")],
+                [self.inPlotEntry, self.inPlotLabel, _("_Plot:")],
+                [self.inGenresTreeview, self.inGenresLabel, _("<b>_Genres</b>")],
+                [self.inCastsTreeview, self.inCastsLabel, _("<b>C_asts</b>")],
+                [self.inWritersTreeview, self.inWritersLabel, _("<b>_Writers</b>")],
             ]
-        
-        self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
         if DEBUG:
             

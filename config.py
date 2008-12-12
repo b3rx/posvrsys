@@ -27,7 +27,7 @@
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0rc4
 
 DEBUG    = True
-LOGIN    = True
+LOGIN    = False
 PREFIX   = "+63"
 APP_NAME = "POSvrSys"
 

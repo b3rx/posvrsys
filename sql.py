@@ -530,6 +530,8 @@ def insertMovie(session, movie, director, writers, casts, genres):
     session.add(movie)
     session.commit()
     
+    return movie
+    
 def populateTables(session):
     
     states = {
