@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Thu Dec 11 21:44:20 2008 -->
+<!--Generated with glade3 3.4.3 on Fri Dec 12 10:38:38 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -259,6 +259,20 @@
                     <property name="n_rows">2</property>
                     <property name="n_columns">1</property>
                     <child>
+                      <widget class="GtkLabel" id="inManagementLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">&lt;span size="4"&gt;&lt;b&gt;Inventory Management&lt;/b&gt;&lt;/span&gt;</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
+                        <property name="x_padding">5</property>
+                        <property name="y_padding">5</property>
+                      </packing>
+                    </child>
+                    <child>
                       <widget class="GtkVBox" id="vbox2">
                         <property name="visible">True</property>
                         <child>
@@ -386,20 +400,6 @@
                         <property name="bottom_attach">2</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkLabel" id="inManagementLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">&lt;span size="4"&gt;&lt;b&gt;Inventory Management&lt;/b&gt;&lt;/span&gt;</property>
-                        <property name="use_markup">True</property>
-                      </widget>
-                      <packing>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"></property>
-                        <property name="x_padding">5</property>
-                        <property name="y_padding">5</property>
-                      </packing>
-                    </child>
                   </widget>
                   <packing>
                     <property name="position">1</property>
@@ -417,6 +417,20 @@
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
                     <property name="n_columns">1</property>
+                    <child>
+                      <widget class="GtkLabel" id="cuManagementLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">&lt;span size="4"&gt;&lt;b&gt;Customer Management&lt;/b&gt;&lt;/span&gt;</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
+                        <property name="x_padding">5</property>
+                        <property name="y_padding">5</property>
+                      </packing>
+                    </child>
                     <child>
                       <widget class="GtkVBox" id="vbox4">
                         <property name="visible">True</property>
@@ -530,20 +544,6 @@
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="cuManagementLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">&lt;span size="4"&gt;&lt;b&gt;Customer Management&lt;/b&gt;&lt;/span&gt;</property>
-                        <property name="use_markup">True</property>
-                      </widget>
-                      <packing>
-                        <property name="x_options">GTK_FILL</property>
-                        <property name="y_options"></property>
-                        <property name="x_padding">5</property>
-                        <property name="y_padding">5</property>
                       </packing>
                     </child>
                   </widget>
@@ -718,31 +718,20 @@
             <property name="n_columns">2</property>
             <property name="column_spacing">4</property>
             <child>
-              <widget class="GtkEntry" id="loPasswordEntry">
+              <widget class="GtkLabel" id="loPasswordLabel">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="visibility">False</property>
+                <property name="xalign">0</property>
+                <property name="xpad">4</property>
+                <property name="label" translatable="yes">_Password:</property>
+                <property name="use_underline">True</property>
+                <property name="justify">GTK_JUSTIFY_RIGHT</property>
+                <property name="mnemonic_widget">loPasswordEntry</property>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
-                <property name="y_options">GTK_FILL</property>
-                <property name="y_padding">1</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="loUsernameEntry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="is_focus">True</property>
-              </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="y_options">GTK_FILL</property>
-                <property name="y_padding">1</property>
+                <property name="x_options">GTK_EXPAND</property>
+                <property name="y_options"></property>
               </packing>
             </child>
             <child>
@@ -760,20 +749,31 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="loPasswordLabel">
+              <widget class="GtkEntry" id="loUsernameEntry">
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="xpad">4</property>
-                <property name="label" translatable="yes">_Password:</property>
-                <property name="use_underline">True</property>
-                <property name="justify">GTK_JUSTIFY_RIGHT</property>
-                <property name="mnemonic_widget">loPasswordEntry</property>
+                <property name="can_focus">True</property>
+                <property name="is_focus">True</property>
               </widget>
               <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="y_options">GTK_FILL</property>
+                <property name="y_padding">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="loPasswordEntry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="visibility">False</property>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
-                <property name="x_options">GTK_EXPAND</property>
-                <property name="y_options"></property>
+                <property name="y_options">GTK_FILL</property>
+                <property name="y_padding">1</property>
               </packing>
             </child>
           </widget>
@@ -844,140 +844,26 @@
                   <placeholder/>
                 </child>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow2">
+                  <widget class="GtkScrolledWindow" id="scrolledwindow5">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <child>
-                      <widget class="GtkTreeView" id="inGenresTreeview">
+                      <widget class="GtkTreeView" id="inCastsTreeview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="headers_visible">False</property>
                         <property name="enable_search">False</property>
                         <property name="show_expanders">False</property>
-                        <property name="enable_tree_lines">True</property>
                       </widget>
                     </child>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label5">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">4</property>
-                    <property name="label" translatable="yes">&lt;span&gt;&lt;b&gt;General&lt;/b&gt;&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
-                  </widget>
-                  <packing>
-                    <property name="right_attach">2</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="inTitleLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_Title:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">inTitleEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="inImdbCodeLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_IMDB Code:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">inImdbCodeEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="inReleaseLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_Release:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuMiddlenameEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="inGenresLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="yalign">0.14000000059604645</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_Genres:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">inGenresTreeview</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options">GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="inImdbCodeEntry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="inTitleEntry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="x_options">GTK_FILL</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
                     <property name="y_options"></property>
                     <property name="x_padding">4</property>
                     <property name="y_padding">1</property>
@@ -1002,26 +888,140 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow5">
+                  <widget class="GtkEntry" id="inTitleEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="inImdbCodeEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="inGenresLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0.14000000059604645</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_Genres:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">inGenresTreeview</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options">GTK_FILL</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="inReleaseLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_Release:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuMiddlenameEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="inImdbCodeLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_IMDB Code:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">inImdbCodeEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="inTitleLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_Title:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">inTitleEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label5">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">4</property>
+                    <property name="label" translatable="yes">&lt;span&gt;&lt;b&gt;General&lt;/b&gt;&lt;/span&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="right_attach">2</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkScrolledWindow" id="scrolledwindow2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <child>
-                      <widget class="GtkTreeView" id="inCastsTreeview">
+                      <widget class="GtkTreeView" id="inGenresTreeview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="headers_visible">False</property>
                         <property name="enable_search">False</property>
                         <property name="show_expanders">False</property>
+                        <property name="enable_tree_lines">True</property>
                       </widget>
                     </child>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
                     <property name="y_options"></property>
                     <property name="x_padding">4</property>
                     <property name="y_padding">1</property>
@@ -1051,7 +1051,7 @@
                 <property name="receives_default">True</property>
                 <property name="label" translatable="yes">gtk-cancel</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
+                <property name="response_id">-6</property>
               </widget>
             </child>
             <child>
@@ -1061,7 +1061,7 @@
                 <property name="receives_default">True</property>
                 <property name="label" translatable="yes">gtk-save</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
+                <property name="response_id">-5</property>
               </widget>
               <packing>
                 <property name="position">1</property>
@@ -1099,14 +1099,53 @@
                 <property name="n_columns">2</property>
                 <property name="row_spacing">1</property>
                 <child>
-                  <widget class="GtkComboBox" id="cuCountryCombobox">
+                  <widget class="GtkTable" id="table3">
+                    <property name="visible">True</property>
+                    <property name="n_rows">1</property>
+                    <property name="n_columns">2</property>
+                    <child>
+                      <widget class="GtkLabel" id="cuPrefixLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">2</property>
+                        <property name="label" translatable="yes">prx</property>
+                      </widget>
+                      <packing>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
+                        <property name="y_padding">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkEntry" id="cuContactnumberEntry">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                        <property name="x_padding">4</property>
+                        <property name="y_padding">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkComboBox" id="cuGenderCombobox">
                     <property name="visible">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">11</property>
-                    <property name="bottom_attach">12</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"></property>
                     <property name="x_padding">4</property>
@@ -1114,14 +1153,277 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="cuStateCombobox">
+                  <widget class="GtkEntry" id="cuLastnameEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="cuFirstnameEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuGenderLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_Gender:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuGenderCombobox</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuMiddlenameLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_Middle Name:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuMiddlenameEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuFirstnameLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_First Name:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuFirstnameEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuLastnameLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_Last Name:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuLastnameEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="cuMiddlenameEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label36">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">4</property>
+                    <property name="label" translatable="yes">&lt;span&gt;&lt;b&gt;General&lt;/b&gt;&lt;/span&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="right_attach">2</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuContactnumberLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">C_ontact Number:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuContactnumberEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label41">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">4</property>
+                    <property name="label" translatable="yes">&lt;span&gt;&lt;b&gt;Address&lt;/b&gt;&lt;/span&gt;</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                  <packing>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuStreetLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">St_reet:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuStreetEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuCityLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">C_ity/Town:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuCityCombobox</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuZipcodeLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">_Zip Code:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuZipcodeEntry</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">9</property>
+                    <property name="bottom_attach">10</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuStateLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">S_tate/Province:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuStateCombobox</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">10</property>
+                    <property name="bottom_attach">11</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="cuCountryLabel">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">14</property>
+                    <property name="label" translatable="yes">Co_untry:</property>
+                    <property name="use_markup">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="mnemonic_widget">cuCountryCombobox</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">11</property>
+                    <property name="bottom_attach">12</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="cuStreetEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"></property>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkComboBox" id="cuCityCombobox">
                     <property name="visible">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">10</property>
-                    <property name="bottom_attach">11</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"></property>
                     <property name="x_padding">4</property>
@@ -1145,335 +1447,33 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkComboBox" id="cuCityCombobox">
+                  <widget class="GtkComboBox" id="cuStateCombobox">
                     <property name="visible">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="cuStreetEntry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuCountryLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">Co_untry:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuCountryCombobox</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">11</property>
-                    <property name="bottom_attach">12</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuStateLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">S_tate/Province:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuStateCombobox</property>
-                  </widget>
-                  <packing>
                     <property name="top_attach">10</property>
                     <property name="bottom_attach">11</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuZipcodeLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_Zip Code:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuZipcodeEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">9</property>
-                    <property name="bottom_attach">10</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuCityLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">C_ity/Town:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuCityCombobox</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuStreetLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">St_reet:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuStreetEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label41">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">4</property>
-                    <property name="label" translatable="yes">&lt;span&gt;&lt;b&gt;Address&lt;/b&gt;&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
-                  </widget>
-                  <packing>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuContactnumberLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">C_ontact Number:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuContactnumberEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label36">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">4</property>
-                    <property name="label" translatable="yes">&lt;span&gt;&lt;b&gt;General&lt;/b&gt;&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
-                  </widget>
-                  <packing>
-                    <property name="right_attach">2</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="cuMiddlenameEntry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
                     <property name="x_padding">4</property>
                     <property name="y_padding">1</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="cuLastnameLabel">
+                  <widget class="GtkComboBox" id="cuCountryCombobox">
                     <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_Last Name:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuLastnameEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuFirstnameLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_First Name:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuFirstnameEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuMiddlenameLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_Middle Name:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuMiddlenameEntry</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="cuGenderLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">14</property>
-                    <property name="label" translatable="yes">_Gender:</property>
-                    <property name="use_markup">True</property>
-                    <property name="use_underline">True</property>
-                    <property name="mnemonic_widget">cuGenderCombobox</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="cuFirstnameEntry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="cuLastnameEntry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
+                    <property name="top_attach">11</property>
+                    <property name="bottom_attach">12</property>
                     <property name="x_options">GTK_FILL</property>
                     <property name="y_options"></property>
                     <property name="x_padding">4</property>
                     <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkComboBox" id="cuGenderCombobox">
-                    <property name="visible">True</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"></property>
-                    <property name="x_padding">4</property>
-                    <property name="y_padding">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkTable" id="table3">
-                    <property name="visible">True</property>
-                    <property name="n_rows">1</property>
-                    <property name="n_columns">2</property>
-                    <child>
-                      <widget class="GtkEntry" id="cuContactnumberEntry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                        <property name="x_padding">4</property>
-                        <property name="y_padding">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="cuPrefixLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="xpad">2</property>
-                        <property name="label" translatable="yes">prx</property>
-                      </widget>
-                      <packing>
-                        <property name="x_options"></property>
-                        <property name="y_options"></property>
-                        <property name="y_padding">1</property>
-                      </packing>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
                   </packing>
                 </child>
               </widget>

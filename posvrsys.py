@@ -249,33 +249,40 @@ class POSvrSys(object):
         self.inAddEditDialog.set_title(_("Add Movie Dialog"))
         self.inTitleEntry.grab_focus()
         
-        self.inAddEditDialog.run()
+        result = self.inAddEditDialog.run()
         
-        selected_genres_rows = self.inGenresTreeview.get_selection().get_selected_rows()
-        selected_casts_rows = self.inCastsTreeview.get_selection().get_selected_rows()
-        
-        genreModel = selected_genres_rows[0]
-        castModel = selected_casts_rows[0]
-        
-        self.inGenresSelectedList = []
-        self.inCastsSelectedList = []
-        
-        # selected genres
-        for row in selected_genres_rows[1]:
+        while result == gtk.RESPONSE_OK and self.check_widgets(self.inWidgets) == -1:
             
-            self.inGenresSelectedList.append(genreModel[row][0])
+            result = self.inAddEditDialog.run()
             
-        # selected casts
-        for row in selected_casts_rows[1]:
-            
-            self.inCastsSelectedList.append(castModel[row][0])
-            
-        print self.inCastsSelectedList
+            self.reset_widgets(self.inWidgets, False)
             
         self.inAddEditDialog.hide()
         
-        self.inGenresTreeview.get_selection().unselect_all()
-        self.inCastsTreeview.get_selection().unselect_all()
+        #selected_genres_rows = self.inGenresTreeview.get_selection().get_selected_rows()
+        #selected_casts_rows = self.inCastsTreeview.get_selection().get_selected_rows()
+        
+        #genreModel = selected_genres_rows[0]
+        #castModel = selected_casts_rows[0]
+        
+        #self.inGenresSelectedList = []
+        #self.inCastsSelectedList = []
+        
+        ## selected genres
+        #for row in selected_genres_rows[1]:
+            
+            #self.inGenresSelectedList.append(genreModel[row][0])
+            
+        ## selected casts
+        #for row in selected_casts_rows[1]:
+            
+            #self.inCastsSelectedList.append(castModel[row][0])
+            
+        #print self.inCastsSelectedList
+            
+        #self.inAddEditDialog.hide()
+        
+        self.reset_widgets(self.inWidgets)
         
     def on_cuAddButton_clicked(self, widget):
         
@@ -464,13 +471,17 @@ class POSvrSys(object):
                     
                     widget.set_text("")
                     
-                else:
+                elif type(widget) == gtk.ComboBox:
                     
                     widget.set_active(0)
+                    
+                elif type(widget) == gtk.TreeView:
+                    
+                    widget.get_selection().unselect_all()
             
     def check_widgets(self, widgetsList):
         
-        types = (gtk.Entry, gtk.ComboBox)
+        types = (gtk.Entry, gtk.ComboBox, gtk.TreeView)
         
         ret_value = 0
         
@@ -515,6 +526,22 @@ class POSvrSys(object):
                     
                     label.set_markup_with_mnemonic("%s" % text)
                     
+            elif type(widget) == types[2]:
+                
+                if widget.get_selection().get_selected_rows()[1] == []:
+                    
+                    label.set_markup_with_mnemonic("<span style='italic' foreground='red'>%s</span>" % text)
+                    
+                    widget.grab_focus()
+                    
+                    ret_value = -1
+                    
+                    break
+                
+                else:
+                    
+                    label.set_markup_with_mnemonic("%s" % text)
+                
         return ret_value
     
     def on_inShowAllButton_clicked(self, widget):
@@ -1077,11 +1104,21 @@ class POSvrSys(object):
         
         self.inTitleEntry = wTree.get_widget("inTitleEntry")
         self.inImdbCodeEntry = wTree.get_widget("inImdbCodeEntry")
-        self.inReleaseEntry = wTree.get_widget("inReleaseEntry")
         
         self.inTitleLabel = wTree.get_widget("inTitleLabel")
         self.inImdbCodeLabel = wTree.get_widget("inImdbCodeLabel")
         self.inReleaseLabel = wTree.get_widget("inReleaseLabel")
+        self.inGenresLabel = wTree.get_widget("inGenresLabel")
+        self.inCastsLabel = wTree.get_widget("inCastsLabel")
+        
+        self.inWidgets = \
+            [
+                [self.inTitleEntry, self.inTitleLabel, _("_Title:")],
+                [self.inImdbCodeEntry, self.inImdbCodeLabel, _("_IMDB Code:")],
+                [self.inReleaseCalendar.entry, self.inReleaseLabel, _("_Release:")],
+                [self.inGenresTreeview, self.inGenresLabel, _("_Genres:")],
+                [self.inCastsTreeview, self.inCastsLabel, _("C_asts:")],
+            ]
         
         self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
