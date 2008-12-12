@@ -167,16 +167,10 @@ class POSvrSys(object):
         self.notebook = self.wTree.get_widget("notebook")
         
         self.create_buttonImages()
-        self.create_inTreestore()
-        self.create_inGenreCombobox()
-        self.create_cuTreestore()
+        self.create_statusbar()
         self.create_aboutDialog()
         self.create_inAddEditDialog()
         self.create_cuAddEditDialog()
-        self.create_cuAddEditComboboxes()
-        self.create_inGenderTreestore()
-        self.create_inCastTreestore()
-        self.create_inWriterTreestore()
         
     def initialize_translation(self):
         """This function initializes the possible translations"""
@@ -1124,6 +1118,13 @@ class POSvrSys(object):
         maImageBox.show()
         daImageBox.show()
         
+    def create_statusbar(self):
+        
+        self.statusbar = self.wTree.get_widget("statusbar")
+        
+        self.context_id = self.statusbar.get_context_id("POSvrSys")
+        self.statusbar.push(self.context_id, _("Welcome to %s %s") % (APP_NAME, __appversion__))
+        
     def create_inTreestore(self):
         
         self.inTreestore_columns = [
@@ -1198,6 +1199,10 @@ class POSvrSys(object):
             print _("   Creating aboutDialog......... Done")
             
     def create_inAddEditDialog(self):
+        
+        # create some controls
+        self.create_inTreestore()
+        self.create_inGenreCombobox()
         
         wTree = gtk.glade.XML(self.gladefile, "inAddEditDialog")
         self.inAddEditDialog = wTree.get_widget("inAddEditDialog")
@@ -1283,6 +1288,13 @@ class POSvrSys(object):
         self.cuZipcodeLabel       = wTree.get_widget("cuZipcodeLabel")
         self.cuStateLabel         = wTree.get_widget("cuStateLabel")
         self.cuCountryLabel       = wTree.get_widget("cuCountryLabel")
+        
+        # create some controls
+        self.create_inGenderTreestore()
+        self.create_inCastTreestore()
+        self.create_inWriterTreestore()
+        self.create_cuTreestore()
+        self.create_cuAddEditComboboxes()
         
         self.cuWidgets = \
         [
