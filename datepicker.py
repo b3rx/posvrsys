@@ -40,6 +40,7 @@ class CalendarEntry (gtk.HBox):
         gtk.HBox.__init__ (self, False, 0)
         self.calendar = gtk.Calendar ()
         self.entry = gtk.Entry ()
+        self.entry.set_editable(False)
         self.button = gtk.Button (label = '...')
         self.ageLabel = gtk.Label (entryLabel)
         self.ageEntry = gtk.Entry ()
