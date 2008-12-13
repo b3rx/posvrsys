@@ -303,10 +303,6 @@ class POSvrSys(object):
         
         self.inAddEditDialog.hide()
         
-    def on_inGenresTreeview_row_activated(self, treeview, path, column):
-        
-        print "im in"
-        
     def on_cuTreeview_row_activated(self, treeview, path, column):
         
         self.cuAddEditDialog.set_title(_("Edit Customer Dialog"))
@@ -846,7 +842,7 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inGenresTreeview.append_column(column)
                 
-        #Attache the model to the treeView
+        self.inGenresTreestore.set_name('inGenresTreestore')
         self.inGenresTreeview.set_model(self.inGenresTreestore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
@@ -891,7 +887,7 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inCastsTreeview.append_column(column)
                 
-        #Attache the model to the treeView
+        self.inCastsTreestore.set_name('inCastsTreestore')
         self.inCastsTreeview.set_model(self.inCastsTreestore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
@@ -936,7 +932,7 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inWritersTreeview.append_column(column)
                 
-        #Attache the model to the treeView
+        self.inWritersTreestore.set_name('inWritersTreestore')
         self.inWritersTreeview.set_model(self.inWritersTreestore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
@@ -947,8 +943,7 @@ class POSvrSys(object):
         Sets the toggled state on the toggle button to true or false.
         """
         
-        it = self.inGenresTreestore.get_iter(path)
-        #model.set_value(it, 2, not model[path][2])
+        print model.get_name()
         
         model[path][2] = not model[path][2]
         
