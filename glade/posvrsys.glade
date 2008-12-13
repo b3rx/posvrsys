@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Thu Dec 11 22:24:44 2008 -->
+<!--Generated with glade3 3.4.3 on Sat Dec 13 10:11:04 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -373,6 +373,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="headers_clickable">True</property>
+                                <signal name="row_activated" handler="on_inTreeview_row_activated"/>
                               </widget>
                             </child>
                           </widget>
@@ -822,6 +823,7 @@
   </widget>
   <widget class="GtkDialog" id="inAddEditDialog">
     <property name="border_width">5</property>
+    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
@@ -857,22 +859,35 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkScrolledWindow" id="scrolledwindow6">
-                        <property name="width_request">200</property>
-                        <property name="height_request">100</property>
+                      <widget class="GtkFrame" id="frame3">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">GTK_SHADOW_IN</property>
                         <child>
-                          <widget class="GtkTreeView" id="inWritersTreeview">
+                          <widget class="GtkScrolledWindow" id="scrolledwindow6">
+                            <property name="width_request">200</property>
+                            <property name="height_request">100</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="headers_visible">False</property>
-                            <property name="enable_search">False</property>
-                            <property name="show_expanders">False</property>
-                            <property name="enable_tree_lines">True</property>
+                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <child>
+                              <widget class="GtkTreeView" id="inWritersTreeview">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="headers_visible">False</property>
+                                <property name="enable_search">False</property>
+                                <property name="show_expanders">False</property>
+                                <property name="enable_tree_lines">True</property>
+                              </widget>
+                            </child>
                           </widget>
+                        </child>
+                        <child>
+                          <placeholder/>
+                          <packing>
+                            <property name="type">label_item</property>
+                          </packing>
                         </child>
                       </widget>
                       <packing>
@@ -942,21 +957,34 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkScrolledWindow" id="scrolledwindow5">
-                        <property name="height_request">80</property>
+                      <widget class="GtkFrame" id="frame1">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">GTK_SHADOW_IN</property>
                         <child>
-                          <widget class="GtkTreeView" id="inCastsTreeview">
+                          <widget class="GtkScrolledWindow" id="scrolledwindow5">
+                            <property name="height_request">80</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="headers_visible">False</property>
-                            <property name="enable_search">False</property>
-                            <property name="show_expanders">False</property>
-                            <property name="enable_tree_lines">True</property>
+                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <child>
+                              <widget class="GtkTreeView" id="inCastsTreeview">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="headers_visible">False</property>
+                                <property name="enable_search">False</property>
+                                <property name="show_expanders">False</property>
+                                <property name="enable_tree_lines">True</property>
+                              </widget>
+                            </child>
                           </widget>
+                        </child>
+                        <child>
+                          <placeholder/>
+                          <packing>
+                            <property name="type">label_item</property>
+                          </packing>
                         </child>
                       </widget>
                       <packing>
@@ -1102,22 +1130,35 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkScrolledWindow" id="scrolledwindow5">
-                        <property name="width_request">200</property>
-                        <property name="height_request">100</property>
+                      <widget class="GtkFrame" id="frame2">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">GTK_SHADOW_IN</property>
                         <child>
-                          <widget class="GtkTreeView" id="inGenresTreeview">
+                          <widget class="GtkScrolledWindow" id="scrolledwindow5">
+                            <property name="width_request">200</property>
+                            <property name="height_request">100</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="headers_visible">False</property>
-                            <property name="enable_search">False</property>
-                            <property name="show_expanders">False</property>
-                            <property name="enable_tree_lines">True</property>
+                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <child>
+                              <widget class="GtkTreeView" id="inGenresTreeview">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="headers_visible">False</property>
+                                <property name="enable_search">False</property>
+                                <property name="show_expanders">False</property>
+                                <property name="enable_tree_lines">True</property>
+                              </widget>
+                            </child>
                           </widget>
+                        </child>
+                        <child>
+                          <placeholder/>
+                          <packing>
+                            <property name="type">label_item</property>
+                          </packing>
                         </child>
                       </widget>
                       <packing>

@@ -284,6 +284,27 @@ class POSvrSys(object):
             
         self.reset_widgets(self.cuWidgets)
         
+    def on_inTreeview_row_activated(self, treeview, path, column):
+        
+        self.inAddEditDialog.set_title(_("Edit Movie Dialog"))
+        
+        inModel = treeview.get_model()
+        inIter  = inModel.get_iter(path)
+        
+        movie = inModel.get_value(inIter, 0)
+        
+        self.inTitleEntry.set_text(movie.title)
+        self.inImdbCodeEntry.set_text(movie.imdbCode)
+        #date = 
+        #self.inReleaseCalendar.set_date(movie.release)
+        self.inReleaseCalendar.update_entry()
+        
+        self.inTitleEntry.grab_focus()
+        
+        result = self.inAddEditDialog.run()
+        
+        self.inAddEditDialog.hide()
+        
     def on_cuTreeview_row_activated(self, treeview, path, column):
         
         self.cuAddEditDialog.set_title(_("Edit Customer Dialog"))
