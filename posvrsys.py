@@ -257,8 +257,6 @@ class POSvrSys(object):
         if result == gtk.RESPONSE_OK:
             
             self.inPerformAdd()
-            
-        #self.inAddEditDialog.hide()
         
         self.reset_widgets(self.inWidgets)
         
@@ -304,6 +302,10 @@ class POSvrSys(object):
         result = self.inAddEditDialog.run()
         
         self.inAddEditDialog.hide()
+        
+    def on_inGenresTreeview_row_activated(self, treeview, path, column):
+        
+        print "im in"
         
     def on_cuTreeview_row_activated(self, treeview, path, column):
         
@@ -815,28 +817,38 @@ class POSvrSys(object):
         #Get the treeView from the widget Tree
         #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
         
+        for item_column in self.inGenreTreestore_columns:
+            tree_type_list.append(item_column.type)
+            
+        self.inGenresTreestore = gtk.TreeStore(*tree_type_list)
         # Loop through the columns and initialize the Tree
-        for item_column in self.inGenderTreestore_columns:
+        for item_column in self.inGenreTreestore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
             #Save the type for gtk.TreeStore creation
-            tree_type_list.append(item_column.type)
+            
             #is it visible?
             if (item_column.visible):
                 #Create the Column
-                column = gtk.TreeViewColumn(item_column.name
-                    , item_column.cellrenderer
-                    , text=item_column.pos)
+                if type(item_column.cellrenderer) != type(gtk.CellRendererToggle()):
+                    column = gtk.TreeViewColumn(item_column.name
+                        , item_column.cellrenderer
+                        , text=item_column.pos)
+                else:
+                    item_column.cellrenderer.set_property('activatable', True)
+                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inGenresTreestore )
+                    
+                    column = gtk.TreeViewColumn(item_column.name
+                        , item_column.cellrenderer)
+                    column.add_attribute( item_column.cellrenderer, "active", 2)
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
                 self.inGenresTreeview.append_column(column)
                 
-        #Create the gtk.TreeStore Model to use with the inTreeview
-        self.inGenresTreestore = gtk.TreeStore(*tree_type_list)
         #Attache the model to the treeView
         self.inGenresTreeview.set_model(self.inGenresTreestore)
-        self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
         self.inPopulateGenresTreestore()
         
@@ -850,28 +862,38 @@ class POSvrSys(object):
         #Get the treeView from the widget Tree
         #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
         
+        for item_column in self.inCastTreestore_columns:
+            tree_type_list.append(item_column.type)
+            
+        self.inCastsTreestore = gtk.TreeStore(*tree_type_list)
         # Loop through the columns and initialize the Tree
         for item_column in self.inCastTreestore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
             #Save the type for gtk.TreeStore creation
-            tree_type_list.append(item_column.type)
+            
             #is it visible?
             if (item_column.visible):
                 #Create the Column
-                column = gtk.TreeViewColumn(item_column.name
-                    , item_column.cellrenderer
-                    , text=item_column.pos)
+                if type(item_column.cellrenderer) != type(gtk.CellRendererToggle()):
+                    column = gtk.TreeViewColumn(item_column.name
+                        , item_column.cellrenderer
+                        , text=item_column.pos)
+                else:
+                    item_column.cellrenderer.set_property('activatable', True)
+                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inCastsTreestore )
+                    
+                    column = gtk.TreeViewColumn(item_column.name
+                        , item_column.cellrenderer)
+                    column.add_attribute( item_column.cellrenderer, "active", 2)
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
                 self.inCastsTreeview.append_column(column)
                 
-        #Create the gtk.TreeStore Model to use with the inTreeview
-        self.inCastsTreestore = gtk.TreeStore(*tree_type_list)
         #Attache the model to the treeView
         self.inCastsTreeview.set_model(self.inCastsTreestore)
-        self.inCastsTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
         self.inPopulateCastsTreestore()
         
@@ -885,30 +907,50 @@ class POSvrSys(object):
         #Get the treeView from the widget Tree
         #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
         
+        for item_column in self.inWriterTreestore_columns:
+            tree_type_list.append(item_column.type)
+            
+        self.inWritersTreestore = gtk.TreeStore(*tree_type_list)
         # Loop through the columns and initialize the Tree
         for item_column in self.inWriterTreestore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
             #Save the type for gtk.TreeStore creation
-            tree_type_list.append(item_column.type)
+            
             #is it visible?
             if (item_column.visible):
                 #Create the Column
-                column = gtk.TreeViewColumn(item_column.name
-                    , item_column.cellrenderer
-                    , text=item_column.pos)
+                if type(item_column.cellrenderer) != type(gtk.CellRendererToggle()):
+                    column = gtk.TreeViewColumn(item_column.name
+                        , item_column.cellrenderer
+                        , text=item_column.pos)
+                else:
+                    item_column.cellrenderer.set_property('activatable', True)
+                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inWritersTreestore )
+                    
+                    column = gtk.TreeViewColumn(item_column.name
+                        , item_column.cellrenderer)
+                    column.add_attribute( item_column.cellrenderer, "active", 2)
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
                 self.inWritersTreeview.append_column(column)
                 
-        #Create the gtk.TreeStore Model to use with the inTreeview
-        self.inWritersTreestore = gtk.TreeStore(*tree_type_list)
         #Attache the model to the treeView
         self.inWritersTreeview.set_model(self.inWritersTreestore)
-        self.inWritersTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
         self.inPopulateWritersTreestore()
+        
+    def toggled( self, cell, path, model ):
+        """
+        Sets the toggled state on the toggle button to true or false.
+        """
+        
+        it = self.inGenresTreestore.get_iter(path)
+        #model.set_value(it, 2, not model[path][2])
+        
+        model[path][2] = not model[path][2]
         
     def cuInitializeTreestore(self):
         """Called when we want to initialize the tree.
@@ -968,6 +1010,7 @@ class POSvrSys(object):
             
             genre.append(instance)
             genre.append(instance.id)
+            genre.append(False)
             genre.append(instance.name)
             
             self.inGenresTreestore.append(None, genre)
@@ -980,6 +1023,7 @@ class POSvrSys(object):
             
             cast.append(instance)
             cast.append(instance.id)
+            cast.append(False)
             cast.append(instance.full_name)
             
             self.inCastsTreestore.append(None, cast)
@@ -992,6 +1036,7 @@ class POSvrSys(object):
             
             writer.append(instance)
             writer.append(instance.id)
+            writer.append(False)
             writer.append(instance.full_name)
             
             self.inWritersTreestore.append(None, writer)
@@ -1159,12 +1204,13 @@ class POSvrSys(object):
         
         self.inInitializeTreestore()
         
-    def create_inGenderTreestore(self):
+    def create_inGenreTreestore(self):
         
-        self.inGenderTreestore_columns = [
+        self.inGenreTreestore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
-            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Genre"), 2, True, gtk.CellRendererText())
+            , TVColumn(COL_CODE, gobject.TYPE_BOOLEAN, _("check"), 2, True, gtk.CellRendererToggle())
+            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Genre"), 3, True, gtk.CellRendererText())
         ]
         
         self.inInitializeGenreTreestore()
@@ -1174,7 +1220,8 @@ class POSvrSys(object):
         self.inCastTreestore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
-            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Full Name"), 2, True, gtk.CellRendererText())
+            , TVColumn(COL_CODE, gobject.TYPE_BOOLEAN, _("check"), 2, True, gtk.CellRendererToggle())
+            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Full Name"), 3, True, gtk.CellRendererText())
         ]
         
         self.inInitializeCastTreestore()
@@ -1184,7 +1231,8 @@ class POSvrSys(object):
         self.inWriterTreestore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
-            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Full Name"), 2, True, gtk.CellRendererText())
+            , TVColumn(COL_CODE, gobject.TYPE_BOOLEAN, _("check"), 2, True, gtk.CellRendererToggle())
+            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Full Name"), 3, True, gtk.CellRendererText())
         ]
         
         self.inInitializeWriterTreestore()
@@ -1311,7 +1359,7 @@ class POSvrSys(object):
         self.cuCountryLabel       = wTree.get_widget("cuCountryLabel")
         
         # create some controls
-        self.create_inGenderTreestore()
+        self.create_inGenreTreestore()
         self.create_inCastTreestore()
         self.create_inWriterTreestore()
         self.create_cuTreestore()
