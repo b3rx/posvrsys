@@ -260,6 +260,47 @@ class POSvrSys(object):
         
         self.reset_widgets(self.inWidgets)
         
+    def on_inGenresTreeview_cursor_changed(self, widget):
+        
+        self.inGenresRemoveButton.set_sensitive(True)
+        
+    def on_inGenresAddButton_clicked(self, widget):
+        
+        genre = []
+        
+        g = session.query(Genre).filter(self.inGenresEntry.get_text()==Genre.name).one()
+        
+        genre.append(g)
+        genre.append(g.id)
+        genre.append(g.name)
+        
+        print genre
+        
+        self.inGenresTreestore.append(None, genre)
+        #self.inGenresRemoveButton.set_sensitive(True)
+        
+        print 'on_inGenresAddButton_clicked'
+        
+    def on_inGenresRemoveButton_clicked(self, widget):
+        
+        print 'on_inGenresRemoveButton_clicked'
+        
+    def on_inCastsAddButton_clicked(self, widget):
+        
+        print 'on_inCastsAddButton_clicked'
+        
+    def on_inCastsRemoveButton_clicked(self, widget):
+        
+        print 'on_inCastsRemoveButton_clicked'
+        
+    def on_inWritersAddButton_clicked(self, widget):
+        
+        print 'on_inWritersAddButton_clicked'
+        
+    def on_inWritersRemoveButton_clicked(self, widget):
+        
+        print 'on_inWritersRemoveButton_clicked'
+        
     def on_cuAddButton_clicked(self, widget):
         
         self.cuLastnameEntry.grab_focus()
@@ -826,17 +867,9 @@ class POSvrSys(object):
             #is it visible?
             if (item_column.visible):
                 #Create the Column
-                if type(item_column.cellrenderer) != type(gtk.CellRendererToggle()):
-                    column = gtk.TreeViewColumn(item_column.name
+                column = gtk.TreeViewColumn(item_column.name
                         , item_column.cellrenderer
                         , text=item_column.pos)
-                else:
-                    item_column.cellrenderer.set_property('activatable', True)
-                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inGenresTreestore )
-                    
-                    column = gtk.TreeViewColumn(item_column.name
-                        , item_column.cellrenderer)
-                    column.add_attribute( item_column.cellrenderer, "active", 2)
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
@@ -846,7 +879,7 @@ class POSvrSys(object):
         self.inGenresTreeview.set_model(self.inGenresTreestore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
-        self.inPopulateGenresTreestore()
+        #self.inPopulateGenresTreestore()
         
     def inInitializeCastTreestore(self):
         
@@ -1204,8 +1237,7 @@ class POSvrSys(object):
         self.inGenreTreestore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
-            , TVColumn(COL_CODE, gobject.TYPE_BOOLEAN, _("check"), 2, True, gtk.CellRendererToggle())
-            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Genre"), 3, True, gtk.CellRendererText())
+            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Genre"), 2, True, gtk.CellRendererText())
         ]
         
         self.inInitializeGenreTreestore()
@@ -1276,7 +1308,7 @@ class POSvrSys(object):
         self.inWritersTreeview = wTree.get_widget("inWritersTreeview")
         
         self.inReleaseCalendar = CalendarEntry('')
-        self.inAddEditTable.attach(self.inReleaseCalendar, 1, 2 , 3, 4)
+        self.inAddEditTable.attach(self.inReleaseCalendar, 1, 2 , 2, 3)
         self.inReleaseCalendar.show_all()
         
         self.inTitleEntry = wTree.get_widget("inTitleEntry")
@@ -1284,26 +1316,39 @@ class POSvrSys(object):
         self.inDirectorEntry = wTree.get_widget("inDirectorEntry")
         self.inRatingSpin = wTree.get_widget("inRatingSpin")
         self.inPlotEntry = wTree.get_widget("inPlotEntry")
+        self.inGenresEntry = wTree.get_widget("inGenresEntry")
+        
+        self.inGenresAddButton = wTree.get_widget("inGenresAddButton")
+        self.inGenresRemoveButton = wTree.get_widget("inGenresRemoveButton")
         self.inDirectorCompletion = gtk.EntryCompletion()
+        self.inGenresCompletion = gtk.EntryCompletion()
         self.inDirectorListstore = gtk.ListStore(str)
+        self.inGenresListstore = gtk.ListStore(str)
         
         for instance in session.query(Director):
             
             self.inDirectorListstore.append([instance.full_name])
             
+        for instance in session.query(Genre):
+            
+            self.inGenresListstore.append([instance.name])
+            
         self.inDirectorCompletion.set_model(self.inDirectorListstore)
+        self.inGenresCompletion.set_model(self.inGenresListstore)
         self.inDirectorEntry.set_completion(self.inDirectorCompletion)
+        self.inGenresEntry.set_completion(self.inGenresCompletion)
         self.inDirectorCompletion.set_text_column(0)
+        self.inGenresCompletion.set_text_column(0)
         
-        self.inTitleLabel = wTree.get_widget("inTitleLabel")
+        self.inTitleLabel    = wTree.get_widget("inTitleLabel")
         self.inImdbCodeLabel = wTree.get_widget("inImdbCodeLabel")
-        self.inReleaseLabel = wTree.get_widget("inReleaseLabel")
+        self.inReleaseLabel  = wTree.get_widget("inReleaseLabel")
         self.inDirectorLabel = wTree.get_widget("inDirectorLabel")
-        self.inRatingLabel = wTree.get_widget("inRatingLabel")
-        self.inPlotLabel = wTree.get_widget("inPlotLabel")
-        self.inGenresLabel = wTree.get_widget("inGenresLabel")
-        self.inCastsLabel = wTree.get_widget("inCastsLabel")
-        self.inWritersLabel = wTree.get_widget("inWritersLabel")
+        self.inRatingLabel   = wTree.get_widget("inRatingLabel")
+        self.inPlotLabel     = wTree.get_widget("inPlotLabel")
+        self.inGenresLabel   = wTree.get_widget("inGenresLabel")
+        self.inCastsLabel    = wTree.get_widget("inCastsLabel")
+        self.inWritersLabel  = wTree.get_widget("inWritersLabel")
         
         self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
@@ -1316,14 +1361,21 @@ class POSvrSys(object):
                 [self.inRatingSpin, self.inRatingLabel, _("R_ating:")],
                 [self.inPlotEntry, self.inPlotLabel, _("_Plot:")],
                 [self.inGenresTreeview, self.inGenresLabel, _("<b>_Genres</b>")],
-                [self.inCastsTreeview, self.inCastsLabel, _("<b>C_asts</b>")],
-                [self.inWritersTreeview, self.inWritersLabel, _("<b>_Writers</b>")],
             ]
+            #    [self.inCastsTreeview, self.inCastsLabel, _("<b>C_asts</b>")],
+            #    [self.inWritersTreeview, self.inWritersLabel, _("<b>_Writers</b>")],
+            #]
+        
+        self.create_inGenreTreestore()
+        #self.create_inCastTreestore()
+        #self.create_inWriterTreestore()
         
         if DEBUG:
             
             print _("   Creating inAddEditDialog..... Done")
             
+        wTree.signal_autoconnect(self)
+        
     def create_cuAddEditDialog(self):
         
         wTree = gtk.glade.XML(self.gladefile, "cuAddEditDialog")
@@ -1354,9 +1406,6 @@ class POSvrSys(object):
         self.cuCountryLabel       = wTree.get_widget("cuCountryLabel")
         
         # create some controls
-        self.create_inGenreTreestore()
-        self.create_inCastTreestore()
-        self.create_inWriterTreestore()
         self.create_cuTreestore()
         self.create_cuAddEditComboboxes()
         
@@ -1386,6 +1435,8 @@ class POSvrSys(object):
         if DEBUG:
             
             print _("   Creating cuAddEditDialog..... Done")
+            
+        wTree.signal_autoconnect(self)
             
     def show_loginDialog(self):
         
