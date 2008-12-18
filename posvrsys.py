@@ -267,21 +267,45 @@ class POSvrSys(object):
     def on_inGenresAddButton_clicked(self, widget):
         
         genre = []
+        in_liststore = False
         
-        g = session.query(Genre).filter(self.inGenresEntry.get_text()==Genre.name).one()
+        try:
+            
+            g = session.query(Genre).filter(self.inGenresEntry.get_text()==Genre.name).one()
+            
+            genre.extend([g, g.id, g.name])
+            
+        except NoResultFound:
+            
+            return
         
-        genre.append(g)
-        genre.append(g.id)
-        genre.append(g.name)
+        _iter = self.inGenresListstore.get_iter_first()
         
-        print genre
-        
-        self.inGenresTreestore.append(None, genre)
-        #self.inGenresRemoveButton.set_sensitive(True)
-        
-        print 'on_inGenresAddButton_clicked'
+        while _iter != None:
+            
+            value = self.inGenresListstore.get_value(_iter, 2)
+            
+            if value == g.name:
+                
+                in_liststore = True
+                
+            _iter = self.inGenresListstore.iter_next(_iter)
+            
+        if not in_liststore:
+            
+            self.inGenresListstore.append([g, g.id, g.name])
+            
+        self.inGenresEntry.set_text("")
         
     def on_inGenresRemoveButton_clicked(self, widget):
+        
+        selected_row = self.inGenresTreeview.get_selection().get_selected_rows()
+        
+        _iter = self.inGenresListstore.get_iter(selected_row[1][0])
+        self.inGenresListstore.remove(_iter)
+        
+        self.inGenresTreeview.get_selection().unselect_all()
+        self.inGenresRemoveButton.set_sensitive(False)
         
         print 'on_inGenresRemoveButton_clicked'
         
@@ -844,44 +868,43 @@ class POSvrSys(object):
         
         self.inPopulateTreestore()
         
-    def inInitializeGenreTreestore(self):
+    def inInitializeGenresListstore(self):
         
         """Called when we want to initialize the tree.
         """
         tree_type_list = [] #For creating the TreeStore
-        __column_dict = {} #For easy access later on
-
-        #Get the treeView from the widget Tree
-        #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
+        __column_dict  = {} #For easy access later on
         
-        for item_column in self.inGenreTreestore_columns:
+        for item_column in self.inGenreListstore_columns:
+            
             tree_type_list.append(item_column.type)
             
-        self.inGenresTreestore = gtk.TreeStore(*tree_type_list)
+        #Save the type for gtk.TreeStore creation
+        self.inGenresListstore = gtk.ListStore(*tree_type_list)
+        
         # Loop through the columns and initialize the Tree
-        for item_column in self.inGenreTreestore_columns:
+        for item_column in self.inGenreListstore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
-            #Save the type for gtk.TreeStore creation
             
             #is it visible?
             if (item_column.visible):
                 #Create the Column
-                column = gtk.TreeViewColumn(item_column.name
-                        , item_column.cellrenderer
-                        , text=item_column.pos)
+                column = gtk.TreeViewColumn(
+                    item_column.name, 
+                    item_column.cellrenderer, 
+                    text=item_column.pos
+                )
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
                 self.inGenresTreeview.append_column(column)
                 
-        self.inGenresTreestore.set_name('inGenresTreestore')
-        self.inGenresTreeview.set_model(self.inGenresTreestore)
+        self.inGenresListstore.set_name('inGenresListstore')
+        self.inGenresTreeview.set_model(self.inGenresListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
-        #self.inPopulateGenresTreestore()
-        
-    def inInitializeCastTreestore(self):
+    def inInitializeCastsListstore(self):
         
         """Called when we want to initialize the tree.
         """
@@ -891,12 +914,12 @@ class POSvrSys(object):
         #Get the treeView from the widget Tree
         #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
         
-        for item_column in self.inCastTreestore_columns:
+        for item_column in self.inCastListstore_columns:
             tree_type_list.append(item_column.type)
             
-        self.inCastsTreestore = gtk.TreeStore(*tree_type_list)
+        self.inCastsListstore = gtk.ListStore(*tree_type_list)
         # Loop through the columns and initialize the Tree
-        for item_column in self.inCastTreestore_columns:
+        for item_column in self.inCastListstore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
             #Save the type for gtk.TreeStore creation
@@ -910,7 +933,7 @@ class POSvrSys(object):
                         , text=item_column.pos)
                 else:
                     item_column.cellrenderer.set_property('activatable', True)
-                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inCastsTreestore )
+                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inCastsListstore )
                     
                     column = gtk.TreeViewColumn(item_column.name
                         , item_column.cellrenderer)
@@ -920,11 +943,11 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inCastsTreeview.append_column(column)
                 
-        self.inCastsTreestore.set_name('inCastsTreestore')
-        self.inCastsTreeview.set_model(self.inCastsTreestore)
+        self.inCastsListstore.set_name('inCastsListstore')
+        self.inCastsTreeview.set_model(self.inCastsListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
-        self.inPopulateCastsTreestore()
+        #self.inPopulateCastsTreestore()
         
     def inInitializeWriterTreestore(self):
         
@@ -1054,7 +1077,7 @@ class POSvrSys(object):
             cast.append(False)
             cast.append(instance.full_name)
             
-            self.inCastsTreestore.append(None, cast)
+            self.inCastsListstore.append(None, cast)
             
     def inPopulateWritersTreestore(self):
         
@@ -1232,26 +1255,26 @@ class POSvrSys(object):
         
         self.inInitializeTreestore()
         
-    def create_inGenreTreestore(self):
+    def create_inGenreListstore(self):
         
-        self.inGenreTreestore_columns = [
+        self.inGenreListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
             , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Genre"), 2, True, gtk.CellRendererText())
         ]
         
-        self.inInitializeGenreTreestore()
+        self.inInitializeGenresListstore()
         
     def create_inCastTreestore(self):
         
-        self.inCastTreestore_columns = [
+        self.inCastListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
             , TVColumn(COL_CODE, gobject.TYPE_BOOLEAN, _("check"), 2, True, gtk.CellRendererToggle())
             , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Full Name"), 3, True, gtk.CellRendererText())
         ]
         
-        self.inInitializeCastTreestore()
+        self.inInitializeCastsListstore()
         
     def create_inWriterTreestore(self):
         
@@ -1366,7 +1389,8 @@ class POSvrSys(object):
             #    [self.inWritersTreeview, self.inWritersLabel, _("<b>_Writers</b>")],
             #]
         
-        self.create_inGenreTreestore()
+        #self.create_inGenreTreestore()
+        self.create_inGenreListstore()
         #self.create_inCastTreestore()
         #self.create_inWriterTreestore()
         

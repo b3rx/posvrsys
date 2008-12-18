@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Sun Dec 14 15:54:59 2008 -->
+<!--Generated with glade3 3.4.5 on Thu Dec 18 22:33:54 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -257,7 +257,6 @@
                   <widget class="GtkTable" id="table2">
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
-                    <property name="n_columns">1</property>
                     <child>
                       <widget class="GtkVBox" id="vbox2">
                         <property name="visible">True</property>
@@ -372,7 +371,6 @@
                               <widget class="GtkTreeView" id="inTreeview">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="headers_clickable">True</property>
                                 <signal name="row_activated" handler="on_inTreeview_row_activated"/>
                               </widget>
                             </child>
@@ -417,7 +415,6 @@
                   <widget class="GtkTable" id="table4">
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
-                    <property name="n_columns">1</property>
                     <child>
                       <widget class="GtkVBox" id="vbox4">
                         <property name="visible">True</property>
@@ -518,7 +515,6 @@
                               <widget class="GtkTreeView" id="cuTreeview">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="headers_clickable">True</property>
                                 <signal name="row_activated" handler="on_cuTreeview_row_activated"/>
                               </widget>
                             </child>
@@ -649,7 +645,7 @@
     <property name="window_position">GTK_WIN_POS_CENTER_ALWAYS</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
-    <property name="program_name">PyGTK POS Video Rental System</property>
+    <property name="program_name">POSvrSys</property>
     <property name="version">0.1</property>
     <property name="copyright" translatable="yes">Copyright (c) 2008 Bertrand Kintanar</property>
     <property name="comments" translatable="yes">POS Video Rental System is a PyGTK program that will manage your video rental business. This application brings video rental system into a whole new level.</property>
@@ -675,6 +671,7 @@
 #
 # If you find any bugs or have any suggestions email: b3rxkintanar@gmail.com
 # URL: http://www.b3rx.com/posvrsys</property>
+    <property name="authors">Bertrand Son Kintanar &lt;b3rxkintanar@gmail.com&gt;</property>
     <property name="logo">logo.ico</property>
     <signal name="close" handler="on_aboutDialog_close"/>
     <signal name="response" handler="on_aboutDialog_close"/>
@@ -917,7 +914,7 @@
                           <widget class="GtkSpinButton" id="inRatingSpin">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="adjustment">0.10000000000000001 0 10 0.10000000000000001 10 10</property>
+                            <property name="adjustment">0.10000000000000001 0 10 0.10000000000000001 10 0</property>
                             <property name="climb_rate">0.10000000149011612</property>
                             <property name="digits">1</property>
                           </widget>
@@ -1055,7 +1052,6 @@
                                   <widget class="GtkTable" id="table9">
                                     <property name="visible">True</property>
                                     <property name="n_rows">2</property>
-                                    <property name="n_columns">1</property>
                                     <property name="column_spacing">4</property>
                                     <property name="row_spacing">2</property>
                                     <child>
@@ -1129,7 +1125,6 @@
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="headers_visible">False</property>
-                                                <property name="headers_clickable">True</property>
                                                 <signal name="cursor_changed" handler="on_inGenresTreeview_cursor_changed"/>
                                               </widget>
                                             </child>
@@ -1235,7 +1230,6 @@
                   <widget class="GtkTable" id="inAddEditTable2">
                     <property name="visible">True</property>
                     <property name="n_rows">4</property>
-                    <property name="n_columns">1</property>
                     <property name="row_spacing">1</property>
                     <child>
                       <widget class="GtkLabel" id="inPlotLabel5">
@@ -1265,7 +1259,6 @@
                               <widget class="GtkTable" id="table18">
                                 <property name="visible">True</property>
                                 <property name="n_rows">2</property>
-                                <property name="n_columns">1</property>
                                 <property name="column_spacing">4</property>
                                 <property name="row_spacing">2</property>
                                 <child>
@@ -1284,7 +1277,6 @@
                                           <widget class="GtkTreeView" id="treeview13">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="headers_clickable">True</property>
                                           </widget>
                                         </child>
                                       </widget>
@@ -1401,7 +1393,6 @@
                               <widget class="GtkTable" id="table17">
                                 <property name="visible">True</property>
                                 <property name="n_rows">2</property>
-                                <property name="n_columns">1</property>
                                 <property name="column_spacing">4</property>
                                 <property name="row_spacing">2</property>
                                 <child>
@@ -1473,7 +1464,6 @@
                                           <widget class="GtkTreeView" id="treeview12">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="headers_clickable">True</property>
                                           </widget>
                                         </child>
                                       </widget>
@@ -1946,7 +1936,6 @@
                 <child>
                   <widget class="GtkTable" id="table3">
                     <property name="visible">True</property>
-                    <property name="n_rows">1</property>
                     <property name="n_columns">2</property>
                     <child>
                       <widget class="GtkEntry" id="cuContactnumberEntry">

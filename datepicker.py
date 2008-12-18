@@ -44,7 +44,7 @@ class CalendarEntry (gtk.HBox):
         self.button = gtk.Button (label = '...')
         self.ageLabel = gtk.Label (entryLabel)
         self.ageEntry = gtk.Entry ()
-        self.cwindow = gtk.Window (gtk.WINDOW_TOPLEVEL)
+        self.cwindow = gtk.Window (gtk.WINDOW_POPUP)
         self.display = False
         self.currentDate = datetime.date.today()
                 
