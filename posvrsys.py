@@ -279,21 +279,21 @@ class POSvrSys(object):
             
             return
         
-        _iter = self.inGenresListstore.get_iter_first()
+        _iter = self.inGenresAddEditListstore.get_iter_first()
         
         while _iter != None:
             
-            value = self.inGenresListstore.get_value(_iter, 2)
+            value = self.inGenresAddEditListstore.get_value(_iter, 2)
             
             if value == g.name:
                 
                 in_liststore = True
                 
-            _iter = self.inGenresListstore.iter_next(_iter)
+            _iter = self.inGenresAddEditListstore.iter_next(_iter)
             
         if not in_liststore:
             
-            self.inGenresListstore.append([g, g.id, g.name])
+            self.inGenresAddEditListstore.append([g, g.id, g.name])
             
         self.inGenresEntry.set_text("")
         
@@ -301,8 +301,8 @@ class POSvrSys(object):
         
         selected_row = self.inGenresTreeview.get_selection().get_selected_rows()
         
-        _iter = self.inGenresListstore.get_iter(selected_row[1][0])
-        self.inGenresListstore.remove(_iter)
+        _iter = self.inGenresAddEditListstore.get_iter(selected_row[1][0])
+        self.inGenresAddEditListstore.remove(_iter)
         
         self.inGenresTreeview.get_selection().unselect_all()
         self.inGenresRemoveButton.set_sensitive(False)
@@ -880,7 +880,7 @@ class POSvrSys(object):
             tree_type_list.append(item_column.type)
             
         #Save the type for gtk.TreeStore creation
-        self.inGenresListstore = gtk.ListStore(*tree_type_list)
+        self.inGenresAddEditListstore = gtk.ListStore(*tree_type_list)
         
         # Loop through the columns and initialize the Tree
         for item_column in self.inGenreListstore_columns:
@@ -900,8 +900,8 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inGenresTreeview.append_column(column)
                 
-        self.inGenresListstore.set_name('inGenresListstore')
-        self.inGenresTreeview.set_model(self.inGenresListstore)
+        self.inGenresAddEditListstore.set_name('inGenresAddEditListstore')
+        self.inGenresTreeview.set_model(self.inGenresAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
     def inInitializeCastsListstore(self):
@@ -917,7 +917,7 @@ class POSvrSys(object):
         for item_column in self.inCastListstore_columns:
             tree_type_list.append(item_column.type)
             
-        self.inCastsListstore = gtk.ListStore(*tree_type_list)
+        self.inCastsAddEditListstore = gtk.ListStore(*tree_type_list)
         # Loop through the columns and initialize the Tree
         for item_column in self.inCastListstore_columns:
             #Add the column to the column dict
@@ -933,7 +933,7 @@ class POSvrSys(object):
                         , text=item_column.pos)
                 else:
                     item_column.cellrenderer.set_property('activatable', True)
-                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inCastsListstore )
+                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inCastsAddEditListstore )
                     
                     column = gtk.TreeViewColumn(item_column.name
                         , item_column.cellrenderer)
@@ -943,8 +943,8 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inCastsTreeview.append_column(column)
                 
-        self.inCastsListstore.set_name('inCastsListstore')
-        self.inCastsTreeview.set_model(self.inCastsListstore)
+        self.inCastsAddEditListstore.set_name('inCastsAddEditListstore')
+        self.inCastsTreeview.set_model(self.inCastsAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
         #self.inPopulateCastsTreestore()
@@ -962,7 +962,7 @@ class POSvrSys(object):
         for item_column in self.inWriterTreestore_columns:
             tree_type_list.append(item_column.type)
             
-        self.inWritersTreestore = gtk.TreeStore(*tree_type_list)
+        self.inWritersAddEditListstore = gtk.ListStore(*tree_type_list)
         # Loop through the columns and initialize the Tree
         for item_column in self.inWriterTreestore_columns:
             #Add the column to the column dict
@@ -978,7 +978,7 @@ class POSvrSys(object):
                         , text=item_column.pos)
                 else:
                     item_column.cellrenderer.set_property('activatable', True)
-                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inWritersTreestore )
+                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inWritersAddEditListstore )
                     
                     column = gtk.TreeViewColumn(item_column.name
                         , item_column.cellrenderer)
@@ -988,8 +988,8 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inWritersTreeview.append_column(column)
                 
-        self.inWritersTreestore.set_name('inWritersTreestore')
-        self.inWritersTreeview.set_model(self.inWritersTreestore)
+        self.inWritersAddEditListstore.set_name('inWritersAddEditListstore')
+        self.inWritersTreeview.set_model(self.inWritersAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
         self.inPopulateWritersTreestore()
@@ -1077,7 +1077,7 @@ class POSvrSys(object):
             cast.append(False)
             cast.append(instance.full_name)
             
-            self.inCastsListstore.append(None, cast)
+            self.inCastsAddEditListstore.append(None, cast)
             
     def inPopulateWritersTreestore(self):
         
@@ -1090,7 +1090,7 @@ class POSvrSys(object):
             writer.append(False)
             writer.append(instance.full_name)
             
-            self.inWritersTreestore.append(None, writer)
+            self.inWritersAddEditListstore.append(None, writer)
             
     def cuPopulateTreestore(self):
         

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Dec 18 22:33:54 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Dec 19 01:17:46 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="icon">logo.ico</property>
-    <property name="accept_focus">False</property>
     <property name="focus_on_map">False</property>
     <signal name="destroy" handler="on_mainWindow_destroy"/>
     <child>
@@ -308,8 +307,8 @@
                                 <property name="can_default">True</property>
                                 <property name="has_default">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="label" translatable="yes">_Search</property>
-                                <property name="use_underline">True</property>
+                                <property name="label" translatable="yes">gtk-find</property>
+                                <property name="use_stock">True</property>
                                 <property name="response_id">0</property>
                                 <signal name="clicked" handler="on_inSearchButton_clicked"/>
                               </widget>
@@ -454,8 +453,8 @@
                                 <property name="can_default">True</property>
                                 <property name="has_default">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="label" translatable="yes">_Search</property>
-                                <property name="use_underline">True</property>
+                                <property name="label" translatable="yes">gtk-find</property>
+                                <property name="use_stock">True</property>
                                 <property name="response_id">0</property>
                               </widget>
                               <packing>
@@ -649,11 +648,11 @@
     <property name="version">0.1</property>
     <property name="copyright" translatable="yes">Copyright (c) 2008 Bertrand Kintanar</property>
     <property name="comments" translatable="yes">POS Video Rental System is a PyGTK program that will manage your video rental business. This application brings video rental system into a whole new level.</property>
-    <property name="website">http://b3rx.com/posvrsys</property>
+    <property name="website">http://posvrsys.googlecode.com/</property>
     <property name="website_label" translatable="yes">POSvrSys website</property>
     <property name="license" translatable="yes"># POSvrSys - PyGTK POS Video Rental System
 # Copyright (C) 2008 Bertrand Kintanar &lt;b3rxkintanar@gmail.com&gt;
-# http://www.b3rx.com/posvrsys
+# http://posvrsys.googlecode.com/
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -670,7 +669,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 # If you find any bugs or have any suggestions email: b3rxkintanar@gmail.com
-# URL: http://www.b3rx.com/posvrsys</property>
+# URL: http://posvrsys.googlecode.com/</property>
     <property name="authors">Bertrand Son Kintanar &lt;b3rxkintanar@gmail.com&gt;</property>
     <property name="logo">logo.ico</property>
     <signal name="close" handler="on_aboutDialog_close"/>
