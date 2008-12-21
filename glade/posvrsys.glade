@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Dec 19 01:17:46 2008 -->
+<!--Generated with glade3 3.4.3 on Mon Dec 22 01:10:00 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -829,7 +829,7 @@
         <property name="visible">True</property>
         <property name="spacing">2</property>
         <child>
-          <widget class="GtkNotebook" id="notebook1">
+          <widget class="GtkNotebook" id="inAddEditNotebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
@@ -913,7 +913,7 @@
                           <widget class="GtkSpinButton" id="inRatingSpin">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="adjustment">0.10000000000000001 0 10 0.10000000000000001 10 0</property>
+                            <property name="adjustment">0 0 10 0.10000000000000001 10 0</property>
                             <property name="climb_rate">0.10000000149011612</property>
                             <property name="digits">1</property>
                           </widget>
@@ -1124,6 +1124,7 @@
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="headers_visible">False</property>
+                                                <signal name="focus_out_event" handler="on_inGenresTreeview_focus_out_event"/>
                                                 <signal name="cursor_changed" handler="on_inGenresTreeview_cursor_changed"/>
                                               </widget>
                                             </child>
@@ -1160,7 +1161,7 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="inPlotLabel2">
+                          <widget class="GtkLabel" id="inGenresLabel">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="xpad">10</property>
@@ -1231,7 +1232,7 @@
                     <property name="n_rows">4</property>
                     <property name="row_spacing">1</property>
                     <child>
-                      <widget class="GtkLabel" id="inPlotLabel5">
+                      <widget class="GtkLabel" id="inCastsLabel">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="xpad">10</property>
@@ -1273,9 +1274,12 @@
                                         <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                         <child>
-                                          <widget class="GtkTreeView" id="treeview13">
+                                          <widget class="GtkTreeView" id="inCastsTreeview">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="headers_visible">False</property>
+                                            <signal name="focus_out_event" handler="on_inCastsTreeview_focus_out_event"/>
+                                            <signal name="cursor_changed" handler="on_inCastsTreeview_cursor_changed"/>
                                           </widget>
                                         </child>
                                       </widget>
@@ -1325,6 +1329,7 @@
                                     <child>
                                       <widget class="GtkButton" id="inCastsRemoveButton">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
                                         <property name="label" translatable="yes">gtk-remove</property>
@@ -1363,7 +1368,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="inPlotLabel3">
+                      <widget class="GtkLabel" id="inWritersLabel">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="xpad">10</property>
@@ -1426,6 +1431,7 @@
                                     <child>
                                       <widget class="GtkButton" id="inWritersRemoveButton">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
                                         <property name="label" translatable="yes">gtk-remove</property>
@@ -1460,9 +1466,12 @@
                                         <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                         <child>
-                                          <widget class="GtkTreeView" id="treeview12">
+                                          <widget class="GtkTreeView" id="inWritersTreeview">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="headers_visible">False</property>
+                                            <signal name="focus_out_event" handler="on_inWritersTreeview_focus_out_event"/>
+                                            <signal name="cursor_changed" handler="on_inWritersTreeview_cursor_changed"/>
                                           </widget>
                                         </child>
                                       </widget>

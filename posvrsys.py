@@ -246,11 +246,12 @@ class POSvrSys(object):
         
         result = self.inAddEditDialog.run()
         
-        while result == gtk.RESPONSE_OK and self.check_widgets(self.inWidgets) == -1:
+        while result == gtk.RESPONSE_OK and \
+              self.check_widgets(self.inWidgets, self.inAddEditNotebook) == -1:
             
             result = self.inAddEditDialog.run()
             
-            self.reset_widgets(self.inWidgets, False)
+            self.reset_widgets(self.inWidgets, False, self.inAddEditNotebook)
             
         self.inAddEditDialog.hide()
         
@@ -258,11 +259,19 @@ class POSvrSys(object):
             
             self.inPerformAdd()
         
-        self.reset_widgets(self.inWidgets)
+        self.reset_widgets(self.inWidgets, notebook=self.inAddEditNotebook)
         
     def on_inGenresTreeview_cursor_changed(self, widget):
         
         self.inGenresRemoveButton.set_sensitive(True)
+        
+    def on_inCastsTreeview_cursor_changed(self, widget):
+        
+        self.inCastsRemoveButton.set_sensitive(True)
+        
+    def on_inWritersTreeview_cursor_changed(self, widget):
+        
+        self.inWritersRemoveButton.set_sensitive(True)
         
     def on_inGenresAddButton_clicked(self, widget):
         
@@ -293,9 +302,99 @@ class POSvrSys(object):
             
         if not in_liststore:
             
-            self.inGenresAddEditListstore.append([g, g.id, g.name])
+            self.inGenresAddEditListstore.append(genre)
             
         self.inGenresEntry.set_text("")
+        
+    def on_inCastsAddButton_clicked(self, widget):
+        
+        cast = []
+        in_liststore = False
+        
+        try:
+            
+            c = session.query(Cast).filter(self.inCastsEntry.get_text()==Cast.full_name).one()
+            
+            cast.extend([c, c.id, c.full_name])
+            
+        except NoResultFound:
+            
+            name = self.inCastsEntry.get_text().split(", ")
+            
+            if len(name) != 2:
+                
+                return
+            
+            c = Cast(name[0], name[1])
+            
+            cast.extend([c, -1, c.full_name])
+            
+            self.inCastsListstore.append([c.full_name])
+            
+        _iter = self.inCastsAddEditListstore.get_iter_first()
+        
+        while _iter != None:
+            
+            value = self.inCastsAddEditListstore.get_value(_iter, 2)
+            
+            if value == c.full_name:
+                
+                in_liststore = True
+                
+            _iter = self.inCastsAddEditListstore.iter_next(_iter)
+            
+        if not in_liststore:
+            
+            self.inCastsAddEditListstore.append(cast)
+            
+        self.inCastsEntry.set_text("")
+        self.inCastsEntry.grab_focus()
+        
+    def on_inWritersAddButton_clicked(self, widget):
+        
+        writer = []
+        in_liststore = False
+        
+        try:
+            
+            w = session.query(Writer).filter(self.inWritersEntry.get_text()==Writer.full_name).one()
+            
+            writer.extend([w, w.id, w.full_name])
+            
+        except NoResultFound:
+            
+            name = self.inWritersEntry.get_text().split(", ")
+            
+            if len(name) != 2:
+                
+                return
+            
+            w = Writer(name[0], name[1])
+            
+            writer.extend([w, -1, w.full_name])
+            
+            self.inWritersListstore.append([w.full_name])
+            
+        _iter = self.inWritersAddEditListstore.get_iter_first()
+        
+        while _iter != None:
+            
+            value = self.inWritersAddEditListstore.get_value(_iter, 2)
+            
+            if value == w.full_name:
+                
+                in_liststore = True
+                
+            _iter = self.inWritersAddEditListstore.iter_next(_iter)
+            
+        if not in_liststore:
+            
+            print writer
+            
+            self.inWritersAddEditListstore.append(writer)
+            
+        self.inWritersEntry.set_text("")
+        self.inWritersEntry.grab_focus()
         
     def on_inGenresRemoveButton_clicked(self, widget):
         
@@ -309,21 +408,25 @@ class POSvrSys(object):
         
         print 'on_inGenresRemoveButton_clicked'
         
-    def on_inCastsAddButton_clicked(self, widget):
-        
-        print 'on_inCastsAddButton_clicked'
-        
     def on_inCastsRemoveButton_clicked(self, widget):
         
-        print 'on_inCastsRemoveButton_clicked'
+        selected_row = self.inCastsTreeview.get_selection().get_selected_rows()
         
-    def on_inWritersAddButton_clicked(self, widget):
+        _iter = self.inCastsAddEditListstore.get_iter(selected_row[1][0])
+        self.inCastsAddEditListstore.remove(_iter)
         
-        print 'on_inWritersAddButton_clicked'
+        self.inCastsTreeview.get_selection().unselect_all()
+        self.inCastsRemoveButton.set_sensitive(False)
         
     def on_inWritersRemoveButton_clicked(self, widget):
         
-        print 'on_inWritersRemoveButton_clicked'
+        selected_row = self.inWritersTreeview.get_selection().get_selected_rows()
+        
+        _iter = self.inWritersAddEditListstore.get_iter(selected_row[1][0])
+        self.inWritersAddEditListstore.remove(_iter)
+        
+        self.inWritersTreeview.get_selection().unselect_all()
+        self.inWritersRemoveButton.set_sensitive(False)
         
     def on_cuAddButton_clicked(self, widget):
         
@@ -354,19 +457,57 @@ class POSvrSys(object):
         inModel = treeview.get_model()
         inIter  = inModel.get_iter(path)
         
-        movie = inModel.get_value(inIter, 0)
+        m = inModel.get_value(inIter, 0)
         
-        self.inTitleEntry.set_text(movie.title)
-        self.inImdbCodeEntry.set_text(movie.imdbCode)
-        #date = 
-        #self.inReleaseCalendar.set_date(movie.release)
+        self.inTitleEntry.set_text(m.title)
+        self.inImdbCodeEntry.set_text(m.imdbCode)
+        
+        rDate = m.release.split('-')
+        self.inReleaseCalendar.set_date(datetime.date(int(rDate[0]), int(rDate[1]), int(rDate[2])))
         self.inReleaseCalendar.update_entry()
+        
+        self.inDirectorEntry.set_text(m.director.full_name)
+        self.inRatingSpin.set_value(float(m.rating))
+        self.inPlotEntry.set_text(m.plot)
+        
+        for genre in m.genres:
+            
+            self.inGenresAddEditListstore.append([genre, genre.id, genre.name])
+            
+        for cast in m.casts:
+            
+            self.inCastsAddEditListstore.append([cast, cast.id, cast.full_name])
+            
+        for writer in m.writers:
+            
+            self.inWritersAddEditListstore.append([writer, writer.id, writer.full_name])
         
         self.inTitleEntry.grab_focus()
         
         result = self.inAddEditDialog.run()
         
+        while result == gtk.RESPONSE_OK and \
+              self.check_widgets(self.inWidgets, self.inAddEditNotebook) == -1:
+            
+            result = self.inAddEditDialog.run()
+            
+            self.reset_widgets(self.inWidgets, False, self.inAddEditNotebook)
+            
         self.inAddEditDialog.hide()
+        
+        if result == gtk.RESPONSE_OK:
+            
+            m = self.inPerformEdit(m)
+            
+            self.inTreestore.set(inIter, 
+                COL_OBJECT, m, 
+                COL_OBJECT_TYPE, m.id,
+                COL_CODE, m.id,
+                COL_NAME, "%s (%s)" % (m.title, m.release[0:4]),
+                COL_GENRES, list2str(m.genres),
+                COL_TYPE, m.director.full_name)
+        
+        self.reset_widgets(self.inWidgets, notebook=self.inAddEditNotebook)
         
     def on_cuTreeview_row_activated(self, treeview, path, column):
         
@@ -488,42 +629,107 @@ class POSvrSys(object):
         
         return cust
     
-    def inPerformAdd(self):
+    def inPerformEdit(self, movie):
         
-        print "im in"
-        
-        movie = Movie(self.inTitleEntry.get_text(), self.inImdbCodeEntry.get_text(),
-            self.inReleaseCalendar.get_date(), self.inPlotEntry.get_text(),
-            self.inRatingSpin.get_value())
-        
-        selected_genres_rows = self.inGenresTreeview.get_selection().get_selected_rows()
-        selected_casts_rows = self.inCastsTreeview.get_selection().get_selected_rows()
-        selected_writers_rows = self.inWritersTreeview.get_selection().get_selected_rows()
-        
-        genreModel = selected_genres_rows[0]
-        castModel = selected_casts_rows[0]
-        writerModel = selected_writers_rows[0]
+        movie.title    = self.inTitleEntry.get_text()
+        movie.imdbCode = self.inImdbCodeEntry.get_text()
+        movie.release  = str(self.inReleaseCalendar.get_date())
+        movie.plot     = self.inPlotEntry.get_text()
+        movie.rating   = self.inRatingSpin.get_value()
         
         self.inGenresSelectedList = []
         self.inCastsSelectedList = []
         self.inWritersSelectedList = []
         
-        director = session.query(Director).filter(Director.full_name==self.inDirectorEntry.get_text()).one()
+        try:
+            
+            director = session.query(Director).filter(Director.full_name==self.inDirectorEntry.get_text()).one()
+            
+        except NoResultFound:
+            
+            name = self.inDirectorEntry.get_text().split(", ")
+            
+            director = Director(name[0], name[1])
+            
+            self.inDirectorListstore.append(director, director.id, director.full_name)
         
         # selected genres
-        for row in selected_genres_rows[1]:
+        _iter = self.inGenresAddEditListstore.get_iter_first()
+        while _iter != None:
             
-            self.inGenresSelectedList.append(genreModel[row][0])
+            self.inGenresSelectedList.append(self.inGenresAddEditListstore.get_value(_iter, 0))
+            
+            _iter = self.inGenresAddEditListstore.iter_next(_iter)
             
         # selected casts
-        for row in selected_casts_rows[1]:
+        _iter = self.inCastsAddEditListstore.get_iter_first()
+        while _iter != None:
             
-            self.inCastsSelectedList.append(castModel[row][0])
+            self.inCastsSelectedList.append(self.inCastsAddEditListstore.get_value(_iter, 0))
+            
+            _iter = self.inCastsAddEditListstore.iter_next(_iter)
             
         # selected writers
-        for row in selected_writers_rows[1]:
+        _iter = self.inWritersAddEditListstore.get_iter_first()
+        while _iter != None:
             
-            self.inWritersSelectedList.append(writerModel[row][0])
+            self.inWritersSelectedList.append(self.inWritersAddEditListstore.get_value(_iter, 0))
+            
+            _iter = self.inWritersAddEditListstore.iter_next(_iter)
+            
+        movie.director = director
+        movie.writers = self.inWritersSelectedList
+        movie.casts = self.inCastsSelectedList
+        movie.genres = self.inGenresSelectedList
+        
+        session.add(movie)
+        session.commit()
+        
+        return movie
+    
+    def inPerformAdd(self):
+        
+        movie = Movie(self.inTitleEntry.get_text(), self.inImdbCodeEntry.get_text(),
+            self.inReleaseCalendar.get_date(), self.inPlotEntry.get_text(),
+            self.inRatingSpin.get_value())
+        
+        self.inGenresSelectedList = []
+        self.inCastsSelectedList = []
+        self.inWritersSelectedList = []
+        
+        try:
+            
+            director = session.query(Director).filter(Director.full_name==self.inDirectorEntry.get_text()).one()
+            
+        except NoResultFound:
+            
+            name = self.inDirectorEntry.get_text().split(", ")
+            
+            director = Director(name[0], name[1])
+        
+        # selected genres
+        _iter = self.inGenresAddEditListstore.get_iter_first()
+        while _iter != None:
+            
+            self.inGenresSelectedList.append(self.inGenresAddEditListstore.get_value(_iter, 0))
+            
+            _iter = self.inGenresAddEditListstore.iter_next(_iter)
+            
+        # selected casts
+        _iter = self.inCastsAddEditListstore.get_iter_first()
+        while _iter != None:
+            
+            self.inCastsSelectedList.append(self.inCastsAddEditListstore.get_value(_iter, 0))
+            
+            _iter = self.inCastsAddEditListstore.iter_next(_iter)
+            
+        # selected writers
+        _iter = self.inWritersAddEditListstore.get_iter_first()
+        while _iter != None:
+            
+            self.inWritersSelectedList.append(self.inWritersAddEditListstore.get_value(_iter, 0))
+            
+            _iter = self.inWritersAddEditListstore.iter_next(_iter)
             
         movie = insertMovie(session, movie, director, self.inWritersSelectedList,
             self.inCastsSelectedList, self.inGenresSelectedList)
@@ -559,13 +765,17 @@ class POSvrSys(object):
         
         self.updateCuTreeStore([temp_cust])
         
-    def reset_widgets(self, widgetsList, value=True):
+    def reset_widgets(self, widgetsList, value=True, notebook=None):
         
         for w in widgetsList:
             
             widget = w[0]
             label  = w[1]
             text   = w[2]
+            
+            if notebook:
+                
+                notebook.set_current_page(0)
             
             label.set_markup_with_mnemonic("%s" % text)
             
@@ -581,9 +791,28 @@ class POSvrSys(object):
                     
                 elif type(widget) == gtk.TreeView:
                     
+                    model = widget.get_model()
+                    model.clear()
+                    
+                    entries = {
+                        "inGenresAddEditListstore"  : self.inGenresEntry,
+                        "inCastsAddEditListstore"   : self.inCastsEntry,
+                        "inWritersAddEditListstore" : self.inWritersEntry
+                    }
+                    
+                    entry = entries[model.get_name()]
+                    
+                    if entry:
+                        
+                        entry.set_text("")
+                        
                     widget.get_selection().unselect_all()
-            
-    def check_widgets(self, widgetsList):
+                    
+                elif type(widget) == gtk.SpinButton:
+                    
+                    widget.set_value(0.0)
+                    
+    def check_widgets(self, widgetsList, notebook=None):
         
         types = (gtk.Entry, gtk.ComboBox, gtk.TreeView, gtk.SpinButton)
         
@@ -595,6 +824,10 @@ class POSvrSys(object):
             label  = w[1]
             text   = w[2]
             
+            if notebook:
+                
+                notebook.set_current_page(w[3])
+                
             if type(widget) == types[0]:
                 
                 if widget.get_text() == "":
@@ -632,11 +865,23 @@ class POSvrSys(object):
                     
             elif type(widget) == types[2]:
                 
-                if widget.get_selection().get_selected_rows()[1] == []:
+                entries = {
+                    "inGenresAddEditListstore"  : self.inGenresEntry,
+                    "inCastsAddEditListstore"   : self.inCastsEntry,
+                    "inWritersAddEditListstore" : self.inWritersEntry
+                }
+                
+                model = widget.get_model()
+                
+                if len(model) == 0:
                     
+                    entry = entries[model.get_name()]
+                    
+                    if entry:
+                        
+                        entry.grab_focus()
+                        
                     label.set_markup_with_mnemonic("<span style='italic' foreground='red'>%s</span>" % text)
-                    
-                    widget.grab_focus()
                     
                     ret_value = -1
                     
@@ -647,8 +892,6 @@ class POSvrSys(object):
                     label.set_markup_with_mnemonic("%s" % text)
                     
             elif type(widget) == types[3]:
-                
-                print widget.get_value()
                 
                 if widget.get_value() == 0.0:
                     
@@ -875,7 +1118,7 @@ class POSvrSys(object):
         tree_type_list = [] #For creating the TreeStore
         __column_dict  = {} #For easy access later on
         
-        for item_column in self.inGenreListstore_columns:
+        for item_column in self.inGenresListstore_columns:
             
             tree_type_list.append(item_column.type)
             
@@ -883,7 +1126,7 @@ class POSvrSys(object):
         self.inGenresAddEditListstore = gtk.ListStore(*tree_type_list)
         
         # Loop through the columns and initialize the Tree
-        for item_column in self.inGenreListstore_columns:
+        for item_column in self.inGenresListstore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
             
@@ -909,35 +1152,28 @@ class POSvrSys(object):
         """Called when we want to initialize the tree.
         """
         tree_type_list = [] #For creating the TreeStore
-        __column_dict = {} #For easy access later on
-
-        #Get the treeView from the widget Tree
-        #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
+        __column_dict  = {} #For easy access later on
         
-        for item_column in self.inCastListstore_columns:
+        for item_column in self.inCastsListstore_columns:
+            
             tree_type_list.append(item_column.type)
             
+        #Save the type for gtk.TreeStore creation
         self.inCastsAddEditListstore = gtk.ListStore(*tree_type_list)
+        
         # Loop through the columns and initialize the Tree
-        for item_column in self.inCastListstore_columns:
+        for item_column in self.inCastsListstore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
-            #Save the type for gtk.TreeStore creation
             
             #is it visible?
             if (item_column.visible):
                 #Create the Column
-                if type(item_column.cellrenderer) != type(gtk.CellRendererToggle()):
-                    column = gtk.TreeViewColumn(item_column.name
-                        , item_column.cellrenderer
-                        , text=item_column.pos)
-                else:
-                    item_column.cellrenderer.set_property('activatable', True)
-                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inCastsAddEditListstore )
-                    
-                    column = gtk.TreeViewColumn(item_column.name
-                        , item_column.cellrenderer)
-                    column.add_attribute( item_column.cellrenderer, "active", 2)
+                column = gtk.TreeViewColumn(
+                    item_column.name, 
+                    item_column.cellrenderer, 
+                    text=item_column.pos
+                )
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
@@ -947,42 +1183,33 @@ class POSvrSys(object):
         self.inCastsTreeview.set_model(self.inCastsAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
-        #self.inPopulateCastsTreestore()
-        
-    def inInitializeWriterTreestore(self):
+    def inInitializeWritersListstore(self):
         
         """Called when we want to initialize the tree.
         """
         tree_type_list = [] #For creating the TreeStore
-        __column_dict = {} #For easy access later on
-
-        #Get the treeView from the widget Tree
-        #self.inGenresTreeviewTreeview = self.wTree.get_widget("inTreeview")
+        __column_dict  = {} #For easy access later on
         
-        for item_column in self.inWriterTreestore_columns:
+        for item_column in self.inWritersListstore_columns:
+            
             tree_type_list.append(item_column.type)
             
+        #Save the type for gtk.TreeStore creation
         self.inWritersAddEditListstore = gtk.ListStore(*tree_type_list)
+        
         # Loop through the columns and initialize the Tree
-        for item_column in self.inWriterTreestore_columns:
+        for item_column in self.inWritersListstore_columns:
             #Add the column to the column dict
             __column_dict[item_column.ID] = item_column
-            #Save the type for gtk.TreeStore creation
             
             #is it visible?
             if (item_column.visible):
                 #Create the Column
-                if type(item_column.cellrenderer) != type(gtk.CellRendererToggle()):
-                    column = gtk.TreeViewColumn(item_column.name
-                        , item_column.cellrenderer
-                        , text=item_column.pos)
-                else:
-                    item_column.cellrenderer.set_property('activatable', True)
-                    item_column.cellrenderer.connect( 'toggled', self.toggled, self.inWritersAddEditListstore )
-                    
-                    column = gtk.TreeViewColumn(item_column.name
-                        , item_column.cellrenderer)
-                    column.add_attribute( item_column.cellrenderer, "active", 2)
+                column = gtk.TreeViewColumn(
+                    item_column.name, 
+                    item_column.cellrenderer, 
+                    text=item_column.pos
+                )
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
@@ -991,8 +1218,6 @@ class POSvrSys(object):
         self.inWritersAddEditListstore.set_name('inWritersAddEditListstore')
         self.inWritersTreeview.set_model(self.inWritersAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        
-        self.inPopulateWritersTreestore()
         
     def toggled( self, cell, path, model ):
         """
@@ -1257,35 +1482,33 @@ class POSvrSys(object):
         
     def create_inGenreListstore(self):
         
-        self.inGenreListstore_columns = [
+        self.inGenresListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
-            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Genre"), 2, True, gtk.CellRendererText())
+            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Genre"), 2, True, gtk.CellRendererText())
         ]
         
         self.inInitializeGenresListstore()
         
-    def create_inCastTreestore(self):
+    def create_inCastListstore(self):
         
-        self.inCastListstore_columns = [
+        self.inCastsListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
-            , TVColumn(COL_CODE, gobject.TYPE_BOOLEAN, _("check"), 2, True, gtk.CellRendererToggle())
-            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Full Name"), 3, True, gtk.CellRendererText())
+            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Full Name"), 2, True, gtk.CellRendererText())
         ]
         
         self.inInitializeCastsListstore()
         
-    def create_inWriterTreestore(self):
+    def create_inWriterListstore(self):
         
-        self.inWriterTreestore_columns = [
+        self.inWritersListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
-            , TVColumn(COL_CODE, gobject.TYPE_BOOLEAN, _("check"), 2, True, gtk.CellRendererToggle())
-            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Full Name"), 3, True, gtk.CellRendererText())
+            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Full Name"), 2, True, gtk.CellRendererText())
         ]
         
-        self.inInitializeWriterTreestore()
+        self.inInitializeWritersListstore()
         
     def create_cuTreestore(self):
         
@@ -1330,6 +1553,8 @@ class POSvrSys(object):
         self.inCastsTreeview = wTree.get_widget("inCastsTreeview")
         self.inWritersTreeview = wTree.get_widget("inWritersTreeview")
         
+        self.inAddEditNotebook = wTree.get_widget("inAddEditNotebook")
+        
         self.inReleaseCalendar = CalendarEntry('')
         self.inAddEditTable.attach(self.inReleaseCalendar, 1, 2 , 2, 3)
         self.inReleaseCalendar.show_all()
@@ -1340,13 +1565,25 @@ class POSvrSys(object):
         self.inRatingSpin = wTree.get_widget("inRatingSpin")
         self.inPlotEntry = wTree.get_widget("inPlotEntry")
         self.inGenresEntry = wTree.get_widget("inGenresEntry")
+        self.inCastsEntry = wTree.get_widget("inCastsEntry")
+        self.inWritersEntry = wTree.get_widget("inWritersEntry")
         
         self.inGenresAddButton = wTree.get_widget("inGenresAddButton")
         self.inGenresRemoveButton = wTree.get_widget("inGenresRemoveButton")
+        self.inCastsAddButton = wTree.get_widget("inCastsAddButton")
+        self.inCastsRemoveButton = wTree.get_widget("inCastsRemoveButton")
+        self.inWritersAddButton = wTree.get_widget("inWritersAddButton")
+        self.inWritersRemoveButton = wTree.get_widget("inWritersRemoveButton")
+        
         self.inDirectorCompletion = gtk.EntryCompletion()
         self.inGenresCompletion = gtk.EntryCompletion()
+        self.inCastsCompletion = gtk.EntryCompletion()
+        self.inWritersCompletion = gtk.EntryCompletion()
+        
         self.inDirectorListstore = gtk.ListStore(str)
         self.inGenresListstore = gtk.ListStore(str)
+        self.inCastsListstore = gtk.ListStore(str)
+        self.inWritersListstore = gtk.ListStore(str)
         
         for instance in session.query(Director):
             
@@ -1356,12 +1593,28 @@ class POSvrSys(object):
             
             self.inGenresListstore.append([instance.name])
             
+        for instance in session.query(Cast):
+            
+            self.inCastsListstore.append([instance.full_name])
+            
+        for instance in session.query(Writer):
+            
+            self.inWritersListstore.append([instance.full_name])
+            
         self.inDirectorCompletion.set_model(self.inDirectorListstore)
         self.inGenresCompletion.set_model(self.inGenresListstore)
+        self.inCastsCompletion.set_model(self.inCastsListstore)
+        self.inWritersCompletion.set_model(self.inWritersListstore)
+        
         self.inDirectorEntry.set_completion(self.inDirectorCompletion)
         self.inGenresEntry.set_completion(self.inGenresCompletion)
+        self.inCastsEntry.set_completion(self.inCastsCompletion)
+        self.inWritersEntry.set_completion(self.inWritersCompletion)
+        
         self.inDirectorCompletion.set_text_column(0)
         self.inGenresCompletion.set_text_column(0)
+        self.inCastsCompletion.set_text_column(0)
+        self.inWritersCompletion.set_text_column(0)
         
         self.inTitleLabel    = wTree.get_widget("inTitleLabel")
         self.inImdbCodeLabel = wTree.get_widget("inImdbCodeLabel")
@@ -1375,24 +1628,22 @@ class POSvrSys(object):
         
         self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
+        self.create_inGenreListstore()
+        self.create_inCastListstore()
+        self.create_inWriterListstore()
+        
         self.inWidgets = \
             [
-                [self.inTitleEntry, self.inTitleLabel, _("_Title:")],
-                [self.inImdbCodeEntry, self.inImdbCodeLabel, _("_IMDB Code:")],
-                [self.inReleaseCalendar.entry, self.inReleaseLabel, _("_Release:")],
-                [self.inDirectorEntry, self.inDirectorLabel, _("_Director:")],
-                [self.inRatingSpin, self.inRatingLabel, _("R_ating:")],
-                [self.inPlotEntry, self.inPlotLabel, _("_Plot:")],
-                [self.inGenresTreeview, self.inGenresLabel, _("<b>_Genres</b>")],
+                [self.inTitleEntry, self.inTitleLabel, _("_Title:"), 0],
+                [self.inImdbCodeEntry, self.inImdbCodeLabel, _("_IMDB Code:"), 0],
+                [self.inReleaseCalendar.entry, self.inReleaseLabel, _("_Release:"), 0],
+                [self.inDirectorEntry, self.inDirectorLabel, _("_Director:"), 0],
+                [self.inRatingSpin, self.inRatingLabel, _("R_ating:"), 0],
+                [self.inPlotEntry, self.inPlotLabel, _("_Plot:"), 0],
+                [self.inGenresTreeview, self.inGenresLabel, _("G_enres:"), 0],
+                [self.inCastsTreeview, self.inCastsLabel, _("Cas_ts:"), 1],
+                [self.inWritersTreeview, self.inWritersLabel, _("_Writers:"), 1],
             ]
-            #    [self.inCastsTreeview, self.inCastsLabel, _("<b>C_asts</b>")],
-            #    [self.inWritersTreeview, self.inWritersLabel, _("<b>_Writers</b>")],
-            #]
-        
-        #self.create_inGenreTreestore()
-        self.create_inGenreListstore()
-        #self.create_inCastTreestore()
-        #self.create_inWriterTreestore()
         
         if DEBUG:
             

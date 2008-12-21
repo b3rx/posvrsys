@@ -73,29 +73,21 @@ class Cast(Base):
     last_name     = Column(String(50))
     first_name    = Column(String(50))
     full_name     = Column(String(100))
-    gender        = Column(Integer)
     
     movieassoc = relation('MovieCast', cascade="all, delete-orphan", lazy=False)
     
     movies = AssociationProxy('movieassoc', 'movie', creator='MovieCast')
     
-    def __init__(self, last_name, first_name, gender):
+    def __init__(self, last_name, first_name):
         
         self.last_name   = last_name
         self.first_name  = first_name
-        self.gender      = gender
         self.full_name   = "%s, %s" % (last_name, first_name)
         
     def __repr__(self):
         
-        return "<Cast('%s', '%s', '%s', %s)>" % (self.last_name, 
-            self.first_name, self.full_name, self.gender)
-    
-    def display(self):
-        
-        gender = {1:'(M)', 2:'(F)'}
-        
-        print "Name       :", self.full_name, gender[self.gender]
+        return "<Cast('%s', '%s', '%s')>" % (self.last_name, 
+            self.first_name, self.full_name)
         
 class City(Base):
     
@@ -192,25 +184,17 @@ class Director(Base):
     last_name     = Column(String(50))
     first_name    = Column(String(50))
     full_name     = Column(String(100))
-    gender        = Column(Integer)
     
-    def __init__(self, last_name, first_name, gender):
+    def __init__(self, last_name, first_name):
         
         self.last_name   = last_name
         self.first_name  = first_name
-        self.gender      = gender
         self.full_name   = "%s, %s" % (last_name, first_name)
         
     def __repr__(self):
         
-        return "<Director('%s', '%s', '%s', %s)>" % (self.last_name, 
-            self.first_name, self.full_name, self.gender)
-    
-    def display(self):
-        
-        gender = {1:'(M)', 2:'(F)'}
-        
-        print "Name       :", self.full_name, gender[self.gender]
+        return "<Director('%s', '%s', '%s')>" % (self.last_name, 
+            self.first_name, self.full_name)
         
 class Genre(Base):
     
@@ -384,7 +368,6 @@ class Writer(Base):
     last_name     = Column(String(50))
     first_name    = Column(String(50))
     full_name     = Column(String(100))
-    gender        = Column(Integer)
     
     # AssociationTables
     movieassoc = relation('MovieWriter', cascade="all, delete-orphan", lazy=False)
@@ -393,23 +376,16 @@ class Writer(Base):
     movies = AssociationProxy('movieassoc', 'movie', creator='MovieWriter')
 
     
-    def __init__(self, last_name, first_name, gender):
+    def __init__(self, last_name, first_name):
         
         self.last_name   = last_name
         self.first_name  = first_name
-        self.gender      = gender
         self.full_name   = "%s, %s" % (last_name, first_name)
         
     def __repr__(self):
         
-        return "<Writer('%s', '%s', '%s', %s)>" % (self.last_name, 
-            self.first_name, self.full_name, self.gender)
-    
-    def display(self):
-        
-        gender = {1:'(M)', 2:'(F)'}
-        
-        print "Name       :", self.full_name, gender[self.gender]
+        return "<Writer('%s', '%s', '%s')>" % (self.last_name, 
+            self.first_name, self.full_name)
         
 def checkDatabase(db):
     
@@ -477,11 +453,13 @@ def insertCustomer(session, customer, city, state, country):
     
 def insertDummy(session):
     
+    dr3w = Customer('Kintanar', 'Andrew', 'Son', 1, '+639176232756', 'Miñoza St. Talamban', '6000')
     b3rx = Customer('Kintanar', 'Bertrand', 'Son', 1, '+639152754070', 'Miñoza St. Talamban', '6000')
-    hydz = Customer('Flores', 'Haidee', 'Buslon', 2, '+639158588080', 'Sawang', '6310')
+    ch4n = Customer('Kintanar', 'Christian', 'Son', 1, '+639167162398', 'Miñoza St. Talamban', '6000')
     
+    insertCustomer(session, dr3w, 'Cebu City', 'Cebu', 'Philippines')
     insertCustomer(session, b3rx, 'Cebu City', 'Cebu', 'Philippines')
-    insertCustomer(session, hydz, 'Guindulman', 'Bohol', 'Philippines')
+    insertCustomer(session, ch4n, 'Cebu City', 'Cebu', 'Philippines')
     
     plot = 'Seeking revenge for the death of his love, secret agent James Bond sets out to stop an environmentalist from taking control of a country\'s water supply'
     release = datetime.date(2008, 11, 5)
@@ -489,13 +467,13 @@ def insertDummy(session):
     writers = []
     casts   = []
     genres  = []
-    writers.append(Writer('Haggis', 'Paul', 1))
-    writers.append(Writer('Purvis', 'Neal', 1))
+    writers.append(Writer('Haggis', 'Paul'))
+    writers.append(Writer('Purvis', 'Neal'))
     
-    casts.append(Cast('Craig', 'Daniel', 1))
-    casts.append(Cast('Kurylenko', 'Olga', 2))
+    casts.append(Cast('Craig', 'Daniel'))
+    casts.append(Cast('Kurylenko', 'Olga'))
     
-    director = Director('Foster', 'Marc', 1)
+    director = Director('Foster', 'Marc')
     
     genres.append(Genre('Action'))
     genres.append(Genre('Adventure'))
