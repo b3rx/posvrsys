@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # POSvrSys - PyGTK POS Video Rental System
-# Copyright (C) 2008 Bertrand Kintanar <b3rxkintanar@gmail.com>
+# Copyright (C) 2008-2009 Bertrand Kintanar <b3rxkintanar@gmail.com>
 # http://posvrsys.googlecode.com/
 #
 # This program is free software; you can redistribute it and/or modify
@@ -238,6 +238,16 @@ class POSvrSys(object):
         
         #we are done with the dialog, hide it
         self.aboutDialog.hide()
+        
+    def on_inEntries_focus_in_event(self, widget, event):
+        
+        self.inGenresRemoveButton.set_sensitive(False)
+        self.inCastsRemoveButton.set_sensitive(False)
+        self.inWritersRemoveButton.set_sensitive(False)
+        
+        self.inGenresTreeview.get_selection().unselect_all()
+        self.inCastsTreeview.get_selection().unselect_all()
+        self.inWritersTreeview.get_selection().unselect_all()
         
     def on_inAddButton_clicked(self, widget):
         
