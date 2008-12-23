@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Mon Dec 22 22:09:52 2008 -->
+<!--Generated with glade3 3.4.3 on Wed Dec 24 03:11:46 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -241,9 +241,441 @@
                 <property name="show_tabs">False</property>
                 <property name="show_border">False</property>
                 <child>
-                  <widget class="GtkLabel" id="label9">
+                  <widget class="GtkTable" id="table7">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">page1</property>
+                    <property name="n_rows">2</property>
+                    <child>
+                      <widget class="GtkVBox" id="vbox9">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkHBox" id="reCuHbox">
+                            <property name="visible">True</property>
+                            <property name="border_width">5</property>
+                            <child>
+                              <widget class="GtkLabel" id="label3">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">_Enter Customer code:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">cuEntry</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="padding">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkEntry" id="reEntry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <signal name="key_press_event" handler="on_reEntry_key_press_event"/>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="padding">5</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkVBox" id="reCuVbox">
+                            <child>
+                              <widget class="GtkHBox" id="hbox7">
+                                <property name="visible">True</property>
+                                <property name="border_width">5</property>
+                                <child>
+                                  <widget class="GtkLabel" id="label3">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">_Enter Item code:</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">cuEntry</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="padding">5</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkEntry" id="reEntry2">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <signal name="key_press_event" handler="on_reEntry_key_press_event"/>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="padding">5</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkHBox" id="hbox34">
+                                <property name="visible">True</property>
+                                <child>
+                                  <widget class="GtkAspectFrame" id="aspectframe2">
+                                    <property name="visible">True</property>
+                                    <property name="label_xalign">0</property>
+                                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                                    <property name="ratio">9.9999997473787516e-005</property>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkFrame" id="frame1">
+                                    <property name="visible">True</property>
+                                    <property name="label_xalign">0</property>
+                                    <child>
+                                      <widget class="GtkHBox" id="hbox8">
+                                        <property name="visible">True</property>
+                                        <property name="spacing">10</property>
+                                        <child>
+                                          <widget class="GtkTable" id="table8">
+                                            <property name="visible">True</property>
+                                            <property name="n_rows">4</property>
+                                            <property name="n_columns">2</property>
+                                            <property name="column_spacing">5</property>
+                                            <property name="row_spacing">3</property>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuAddress">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="top_attach">2</property>
+                                                <property name="bottom_attach">3</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuName">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="top_attach">1</property>
+                                                <property name="bottom_attach">2</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuCode">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuAddressLabel">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Address:</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="top_attach">2</property>
+                                                <property name="bottom_attach">3</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options"></property>
+                                                <property name="x_padding">5</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuNameLabel">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Name:</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="top_attach">1</property>
+                                                <property name="bottom_attach">2</property>
+                                                <property name="y_options"></property>
+                                                <property name="x_padding">5</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuCodeLabel">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Code:</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="y_options"></property>
+                                                <property name="x_padding">5</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuAddress2">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="top_attach">3</property>
+                                                <property name="bottom_attach">4</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                          </widget>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="padding">15</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <widget class="GtkAspectFrame" id="aspectframe1">
+                                            <property name="visible">True</property>
+                                            <property name="label_xalign">0</property>
+                                            <property name="shadow_type">GTK_SHADOW_NONE</property>
+                                            <property name="ratio">1</property>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                          </widget>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <widget class="GtkTable" id="table8">
+                                            <property name="visible">True</property>
+                                            <property name="n_rows">4</property>
+                                            <property name="n_columns">2</property>
+                                            <property name="column_spacing">5</property>
+                                            <property name="row_spacing">3</property>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuLateBalanceLabel">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Late Balance:</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="y_options"></property>
+                                                <property name="x_padding">5</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuAccountBalanceLabel">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Account Balance:</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="top_attach">1</property>
+                                                <property name="bottom_attach">2</property>
+                                                <property name="y_options"></property>
+                                                <property name="x_padding">5</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuLastRentedLabel">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Last Rented:</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="top_attach">2</property>
+                                                <property name="bottom_attach">3</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options"></property>
+                                                <property name="x_padding">5</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuTotalRentedLabel">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Total Rented:</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="top_attach">3</property>
+                                                <property name="bottom_attach">4</property>
+                                                <property name="y_options"></property>
+                                                <property name="x_padding">5</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuLateBalance">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">&lt;span foreground='blue'&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/span&gt;</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuAccountBalance">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">&lt;span foreground='blue'&gt;&lt;b&gt;0.0&lt;/b&gt;&lt;/span&gt;</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="top_attach">1</property>
+                                                <property name="bottom_attach">2</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuLastRented">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">&lt;span foreground='blue'&gt;&lt;b&gt;-No Date-&lt;/b&gt;&lt;/span&gt;</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="top_attach">2</property>
+                                                <property name="bottom_attach">3</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkLabel" id="reCuTotalRented">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">&lt;span foreground='blue'&gt;&lt;b&gt;0&lt;/b&gt;&lt;/span&gt;</property>
+                                                <property name="use_markup">True</property>
+                                              </widget>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="right_attach">2</property>
+                                                <property name="top_attach">3</property>
+                                                <property name="bottom_attach">4</property>
+                                                <property name="y_options"></property>
+                                              </packing>
+                                            </child>
+                                          </widget>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="padding">10</property>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                      </widget>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="label2">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Customer</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="type">label_item</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkAspectFrame" id="aspectframe3">
+                                    <property name="visible">True</property>
+                                    <property name="label_xalign">0</property>
+                                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                                    <property name="ratio">9.9999997473787516e-005</property>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkScrolledWindow" id="scrolledwindow4">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="border_width">5</property>
+                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <child>
+                              <widget class="GtkTreeView" id="reTreeview">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="reRentalsAndSalesLabel">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">&lt;span size="4"&gt;&lt;b&gt;Rentals and Sales&lt;/b&gt;&lt;/span&gt;</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options"></property>
+                        <property name="x_padding">5</property>
+                        <property name="y_padding">5</property>
+                      </packing>
+                    </child>
                   </widget>
                 </child>
                 <child>
@@ -315,7 +747,7 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="inSearchButton">
+                              <widget class="GtkButton" id="inFindButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="can_default">True</property>
@@ -324,7 +756,7 @@
                                 <property name="label" translatable="yes">gtk-find</property>
                                 <property name="use_stock">True</property>
                                 <property name="response_id">0</property>
-                                <signal name="clicked" handler="on_inSearchButton_clicked"/>
+                                <signal name="clicked" handler="on_inFindButton_clicked"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -462,7 +894,7 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkButton" id="cuSearchButton">
+                              <widget class="GtkButton" id="cuFindButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="can_default">True</property>
@@ -471,6 +903,7 @@
                                 <property name="label" translatable="yes">gtk-find</property>
                                 <property name="use_stock">True</property>
                                 <property name="response_id">0</property>
+                                <signal name="clicked" handler="on_cuFindButton_clicked"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -487,6 +920,7 @@
                                 <property name="label" translatable="yes">Show A_ll</property>
                                 <property name="use_underline">True</property>
                                 <property name="response_id">0</property>
+                                <signal name="clicked" handler="on_cuShowAllButton_clicked"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -911,6 +1345,7 @@
                                               <widget class="GtkTreeView" id="inGenresTreeview">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
+                                                <property name="tooltip" translatable="yes">Genres that the movie belongs.</property>
                                                 <property name="headers_visible">False</property>
                                                 <signal name="cursor_changed" handler="on_inGenresTreeview_cursor_changed"/>
                                               </widget>
@@ -938,6 +1373,7 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <signal name="focus_in_event" handler="on_inEntries_focus_in_event"/>
+                                            <signal name="key_press_event" handler="on_inGenresEntry_key_press_event"/>
                                           </widget>
                                           <packing>
                                             <property name="padding">2</property>
@@ -948,6 +1384,7 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="tooltip" translatable="yes">Adds the genre entered to the list of genres.</property>
                                             <property name="label" translatable="yes">gtk-add</property>
                                             <property name="use_stock">True</property>
                                             <property name="response_id">0</property>
@@ -966,6 +1403,7 @@
                                             <property name="sensitive">False</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="tooltip" translatable="yes">Removes the currently selected genre from the list of genres.</property>
                                             <property name="label" translatable="yes">gtk-remove</property>
                                             <property name="use_stock">True</property>
                                             <property name="response_id">0</property>
@@ -1006,6 +1444,8 @@
                           <widget class="GtkEntry" id="inTitleEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tooltip" translatable="yes">Given title of the movie.</property>
+                            <property name="max_length">150</property>
                             <signal name="focus_in_event" handler="on_inEntries_focus_in_event"/>
                           </widget>
                           <packing>
@@ -1021,6 +1461,7 @@
                           <widget class="GtkEntry" id="inImdbCodeEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="max_length">15</property>
                             <signal name="focus_in_event" handler="on_inEntries_focus_in_event"/>
                           </widget>
                           <packing>
@@ -1105,6 +1546,7 @@
                           <widget class="GtkEntry" id="inDirectorEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tooltip" translatable="yes">Director of the movie.</property>
                             <signal name="focus_in_event" handler="on_inEntries_focus_in_event"/>
                           </widget>
                           <packing>
@@ -1121,6 +1563,8 @@
                           <widget class="GtkSpinButton" id="inRatingSpin">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tooltip" translatable="yes">Rating of the movie.</property>
+                            <property name="max_length">4</property>
                             <property name="adjustment">0 0 10 0.10000000000000001 10 0</property>
                             <property name="climb_rate">0.10000000149011612</property>
                             <property name="digits">1</property>
@@ -1173,6 +1617,8 @@
                           <widget class="GtkEntry" id="inPlotEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tooltip" translatable="yes">Plot of the movie.</property>
+                            <property name="max_length">500</property>
                             <signal name="focus_in_event" handler="on_inEntries_focus_in_event"/>
                           </widget>
                           <packing>
@@ -1269,6 +1715,7 @@
                                           <widget class="GtkTreeView" id="inWritersTreeview">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip" translatable="yes">Writers of the movie.</property>
                                             <property name="headers_visible">False</property>
                                             <signal name="cursor_changed" handler="on_inWritersTreeview_cursor_changed"/>
                                           </widget>
@@ -1296,6 +1743,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <signal name="focus_in_event" handler="on_inEntries_focus_in_event"/>
+                                        <signal name="key_press_event" handler="on_inWritersEntry_key_press_event"/>
                                       </widget>
                                       <packing>
                                         <property name="padding">2</property>
@@ -1306,6 +1754,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip" translatable="yes">Adds the name entered to the list of writers.</property>
                                         <property name="label" translatable="yes">gtk-add</property>
                                         <property name="use_stock">True</property>
                                         <property name="response_id">0</property>
@@ -1324,6 +1773,7 @@
                                         <property name="sensitive">False</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip" translatable="yes">Removes the currently selected name from the list of writers.</property>
                                         <property name="label" translatable="yes">gtk-remove</property>
                                         <property name="use_stock">True</property>
                                         <property name="response_id">0</property>
@@ -1399,6 +1849,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <signal name="focus_in_event" handler="on_inEntries_focus_in_event"/>
+                                        <signal name="key_press_event" handler="on_inCastsEntry_key_press_event"/>
                                       </widget>
                                       <packing>
                                         <property name="padding">2</property>
@@ -1409,6 +1860,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip" translatable="yes">Adds the name entered to the list of casts.</property>
                                         <property name="label" translatable="yes">gtk-add</property>
                                         <property name="use_stock">True</property>
                                         <property name="response_id">0</property>
@@ -1427,6 +1879,7 @@
                                         <property name="sensitive">False</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip" translatable="yes">Removes the currently selected name from the list of casts.</property>
                                         <property name="label" translatable="yes">gtk-remove</property>
                                         <property name="use_stock">True</property>
                                         <property name="response_id">0</property>
@@ -1462,6 +1915,7 @@
                                           <widget class="GtkTreeView" id="inCastsTreeview">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip" translatable="yes">Casts of the movie.</property>
                                             <property name="headers_visible">False</property>
                                             <signal name="cursor_changed" handler="on_inCastsTreeview_cursor_changed"/>
                                           </widget>

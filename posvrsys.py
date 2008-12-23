@@ -35,11 +35,12 @@ try:
     
     import base64
     import datetime
-    import sys
-    import gobject
-    import os
-    import locale
     import gettext
+    import gobject
+    import locale
+    import os
+    import re
+    import sys
     
 except ImportError, e:
     
@@ -144,6 +145,11 @@ class POSvrSys(object):
         self.wTree = gtk.glade.XML(self.gladefile, "mainWindow")
         self.main_window = self.wTree.get_widget("mainWindow")
         
+        self.reCuHbox = self.wTree.get_widget("reCuHbox")
+        self.reCuVbox = self.wTree.get_widget("reCuVbox")
+        self.reEntry  = self.wTree.get_widget("reEntry")
+        self.reEntry.grab_focus()
+        
         #Initialize some widgets
         self.initialize_widgets()
         
@@ -158,6 +164,8 @@ class POSvrSys(object):
         self.wTree.signal_autoconnect(self)
         
         self.main_window.show_all()
+        self.reCuVbox.hide()
+        self.reCuHbox.show_all()
         
     #***************************************************************************
     # Initialize
@@ -165,6 +173,7 @@ class POSvrSys(object):
     def initialize_widgets(self):
         
         self.notebook = self.wTree.get_widget("notebook")
+        self.root_window = self.main_window.get_root_window()
         
         self.create_buttonImages()
         self.create_statusbar()
@@ -265,9 +274,9 @@ class POSvrSys(object):
         self.context_id = self.statusbar.get_context_id("POSvrSys")
         self.statusbar.push(self.context_id, _("Welcome to %s %s") % (APP_NAME, __appversion__))
         
-    def create_inTreestore(self):
+    def create_inListstore(self):
         
-        self.inTreestore_columns = [
+        self.inListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
             , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Code"), 2, True, gtk.CellRendererText())
@@ -287,7 +296,7 @@ class POSvrSys(object):
         self.inTreeview.set_rules_hint(True)
 
         # Loop through the columns and initialize the Tree
-        for item_column in self.inTreestore_columns:
+        for item_column in self.inListstore_columns:
             #Add the column to the column dict
             self.__column_dict[item_column.ID] = item_column
             #Save the type for gtk.TreeStore creation
@@ -304,11 +313,11 @@ class POSvrSys(object):
                 self.inTreeview.append_column(column)
                 
         #Create the gtk.TreeStore Model to use with the inTreeview
-        self.inTreestore = gtk.TreeStore(*tree_type_list)
+        self.inListstore = gtk.ListStore(*tree_type_list)
         #Attache the model to the treeView
-        self.inTreeview.set_model(self.inTreestore)
+        self.inTreeview.set_model(self.inListstore)
         
-        self.populate_inTreestore()
+        self.populate_inListstore()
         
     def create_inGenreListstore(self):
         
@@ -436,9 +445,9 @@ class POSvrSys(object):
         self.inWritersTreeview.set_model(self.inWritersAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
-    def create_cuTreestore(self):
+    def create_cuListstore(self):
         
-        self.cuTreestore_columns = [
+        self.cuListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
             , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Code"), 2, True, gtk.CellRendererText())
@@ -462,7 +471,7 @@ class POSvrSys(object):
         self.cuTreeview.set_rules_hint(True)
 
         # Loop through the columns and initialize the Tree
-        for item_column in self.cuTreestore_columns:
+        for item_column in self.cuListstore_columns:
             #Add the column to the column dict
             self.__cu_column_dict[item_column.ID] = item_column
             #Save the type for gtk.TreeStore creation
@@ -479,11 +488,11 @@ class POSvrSys(object):
                 self.cuTreeview.append_column(column)
                 
         #Create the gtk.TreeStore Model to use with the inTreeview
-        self.cuTreestore = gtk.TreeStore(*tree_type_list)
+        self.cuListstore = gtk.ListStore(*tree_type_list)
         #Attache the model to the treeView
-        self.cuTreeview.set_model(self.cuTreestore)
+        self.cuTreeview.set_model(self.cuListstore)
         
-        self.populate_cuTreestore()
+        self.populate_cuListstore()
         
     def create_aboutDialog(self):
         
@@ -501,7 +510,7 @@ class POSvrSys(object):
     def create_inAddEditDialog(self):
         
         # create some controls
-        self.create_inTreestore()
+        self.create_inListstore()
         self.create_inGenreCombobox()
         
         wTree = gtk.glade.XML(self.gladefile, "inAddEditDialog")
@@ -543,19 +552,19 @@ class POSvrSys(object):
         self.inCastsListstore = gtk.ListStore(str)
         self.inWritersListstore = gtk.ListStore(str)
         
-        for instance in session.query(Director):
+        for instance in session.query(Director).order_by(Director.full_name):
             
             self.inDirectorListstore.append([instance.full_name])
             
-        for instance in session.query(Genre):
+        for instance in session.query(Genre).order_by(Genre.name):
             
             self.inGenresListstore.append([instance.name])
             
-        for instance in session.query(Cast):
+        for instance in session.query(Cast).order_by(Cast.full_name):
             
             self.inCastsListstore.append([instance.full_name])
             
-        for instance in session.query(Writer):
+        for instance in session.query(Writer).order_by(Writer.full_name):
             
             self.inWritersListstore.append([instance.full_name])
             
@@ -639,7 +648,7 @@ class POSvrSys(object):
         self.cuCountryLabel       = wTree.get_widget("cuCountryLabel")
         
         # create some controls
-        self.create_cuTreestore()
+        self.create_cuListstore()
         self.create_cuComboboxes()
         
         self.cuWidgets = \
@@ -683,7 +692,7 @@ class POSvrSys(object):
         
         self.inGenreListStore.append([_('All Genres')])
         
-        for genre in session.query(Genre):
+        for genre in session.query(Genre).order_by(Genre.name):
             
             self.inGenreListStore.append([genre.name])
             
@@ -831,6 +840,7 @@ class POSvrSys(object):
             self.inGenresAddEditListstore.append(genre)
             
         self.inGenresEntry.set_text("")
+        self.inGenresEntry.grab_focus()
         
     def on_inCastsAddButton_clicked(self, widget):
         
@@ -845,11 +855,17 @@ class POSvrSys(object):
             
         except NoResultFound:
             
-            c = Cast(self.inCastsEntry.get_text())
-            
-            cast.extend([c, -1, c.full_name])
-            
-            self.inCastsListstore.append([c.full_name])
+            if self.inCastsEntry.get_text() != "":
+                
+                c = Cast(self.inCastsEntry.get_text())
+                
+                cast.extend([c, -1, c.full_name])
+                
+                self.inCastsListstore.append([c.full_name])
+                
+            else:
+                
+                return
             
         _iter = self.inCastsAddEditListstore.get_iter_first()
         
@@ -883,11 +899,17 @@ class POSvrSys(object):
             
         except NoResultFound:
             
-            w = Writer(self.inWritersEntry.get_text())
-            
-            writer.extend([w, -1, w.full_name])
-            
-            self.inWritersListstore.append([w.full_name])
+            if self.inWritersEntry.get_text() != "":
+                
+                w = Writer(self.inWritersEntry.get_text())
+                
+                writer.extend([w, -1, w.full_name])
+                
+                self.inWritersListstore.append([w.full_name])
+                
+            else:
+                
+                return
             
         _iter = self.inWritersAddEditListstore.get_iter_first()
         
@@ -940,6 +962,24 @@ class POSvrSys(object):
         self.inWritersTreeview.get_selection().unselect_all()
         self.inWritersRemoveButton.set_sensitive(False)
         
+    def on_inGenresEntry_key_press_event(self, widget, event):
+        
+        if event.hardware_keycode == 13:
+            
+            self.on_inGenresAddButton_clicked(widget)
+            
+    def on_inCastsEntry_key_press_event(self, widget, event):
+        
+        if event.hardware_keycode == 13:
+            
+            self.on_inCastsAddButton_clicked(widget)
+            
+    def on_inWritersEntry_key_press_event(self, widget, event):
+        
+        if event.hardware_keycode == 13:
+            
+            self.on_inWritersAddButton_clicked(widget)
+            
     def on_cuAddButton_clicked(self, widget):
         
         self.cuLastnameEntry.grab_focus()
@@ -1011,7 +1051,7 @@ class POSvrSys(object):
             
             m = self.inPerformEdit(m)
             
-            self.inTreestore.set(inIter, 
+            self.inListstore.set(inIter, 
                 COL_OBJECT, m, 
                 COL_OBJECT_TYPE, m.id,
                 COL_CODE, m.id,
@@ -1023,7 +1063,23 @@ class POSvrSys(object):
         
     def on_inTreeview_key_press_event(self, widget, event):
         
-        print event.hardware_keycode
+        if event.hardware_keycode == 46:
+            
+            model = widget.get_model()
+            selected = widget.get_selection().get_selected()
+            
+            row = selected[0][selected[1]]
+            
+            instance = row[0]
+            
+            model.remove(selected[1])
+            
+            ## Show warning dialog here
+            
+            session.delete(instance)
+            session.commit()
+            #print session.query(Movie).filter(Movie.title==instance.title).count()
+            print session.query(Cast).filter(Cast.full_name=="Daniel Craig").count()
         
         pass
         
@@ -1105,7 +1161,7 @@ class POSvrSys(object):
             
             cust = self.cuPerformEdit(cust)
             
-            self.cuTreestore.set(cuIter, 
+            self.cuListstore.set(cuIter, 
                 COL_OBJECT, cust, 
                 COL_OBJECT_TYPE, cust.id,
                 COL_NAME, "%s %s" % (cust.full_name, gender[cust.gender]),
@@ -1117,12 +1173,46 @@ class POSvrSys(object):
         
         self.reset_widgets(self.cuWidgets)
         
+    def on_reEntry_key_press_event(self, widget, event):
+        
+        self.reCuCode = self.wTree.get_widget("reCuCode")
+        self.reCuName = self.wTree.get_widget("reCuName")
+        self.reCuAddress = self.wTree.get_widget("reCuAddress")
+        self.reCuAddress2 = self.wTree.get_widget("reCuAddress2")
+        self.reCuCity = self.wTree.get_widget("reCuCity")
+        self.reCuState = self.wTree.get_widget("reCuState")
+        
+        if event.hardware_keycode == 13:
+            
+            code = self.reEntry.get_text()
+            
+            try:
+                
+                customer = session.query(Customer).filter(Customer.id==code).one()
+                
+            except NoResultFound:
+                
+                self.reCuHbox.show_all()
+                self.reCuVbox.hide()
+                
+                return
+            
+            self.reCuCode.set_label("<span foreground='blue'><b>%s</b></span>" % customer.id)
+            self.reCuName.set_label("<span foreground='blue'><b>%s</b></span>" % customer.full_name)
+            self.reCuAddress.set_label("<span foreground='blue'><b>%s, %s</b></span>" % (customer.street, customer.city.name))
+            self.reCuAddress2.set_label("<span foreground='blue'><b>%s %s   %s</b></span>" % 
+                (customer.zip_code, customer.state.name, customer.country.name))
+            
+            self.reCuHbox.hide()
+            self.reCuVbox.show_all()
+            
     def on_inShowAllButton_clicked(self, widget):
         
         self.inEntry.set_text("")
         self.inGenreCombobox.set_active(0)
-        self.inTreestore.clear()
+        self.inListstore.clear()
         self.inEntry.grab_focus()
+        
         movieList = []
         for genre in session.query(Genre):
             
@@ -1132,9 +1222,26 @@ class POSvrSys(object):
                     
                     movieList += [movie]
             
-        self.update_inTreestore(movieList)
+        self.update_inListstore(movieList)
         
-    def on_inSearchButton_clicked(self, widget):
+    def on_cuShowAllButton_clicked(self, widget):
+        
+        self.cuEntry.set_text("")
+        self.cuListstore.clear()
+        self.cuEntry.grab_focus()
+        
+        customerList = []
+        for customer in session.query(Customer):
+                
+            if customer not in customerList:
+                    
+                customerList += [customer]
+            
+        self.update_cuListstore(customerList)
+        
+    def on_inFindButton_clicked(self, widget):
+        
+        self.set_cursor("watch")
         
         genreModel = self.inGenreCombobox.get_model()
         genreActive = self.inGenreCombobox.get_active()
@@ -1142,7 +1249,7 @@ class POSvrSys(object):
         searchTitle  = self.inEntry.get_text()
         searchFilter = genreModel[genreActive][0]
         
-        self.inTreestore.clear()
+        self.inListstore.clear()
         self.inEntry.grab_focus()
         
         if searchFilter == _("All Genres") and searchTitle == "":
@@ -1150,81 +1257,124 @@ class POSvrSys(object):
             self.on_inShowAllButton_clicked(widget)
             
             return
-        
+        else:
+            
+            regex = re.compile('%s' % searchTitle, re.IGNORECASE)
+            
         movieList = []
         if searchFilter != _('All Genres'):
             
-            for genre, movie, movie_genre in session.query(Genre, Movie, MovieGenre).\
-                filter(Genre.name==searchFilter).filter(Genre.id==MovieGenre.genre_id).\
-                filter(Movie.id==MovieGenre.movie_id).\
-                filter(or_(Movie.title.like("%" + "%s" % (searchTitle) + "%"), \
-                    Movie.id==searchTitle)):
-                
-                movieList += genre.movies
-                
+            query = session.query(Genre).filter(Genre.name==searchFilter).\
+                  order_by(Genre.name)
+            
         else:
             
-            print searchTitle
+            query = session.query(Genre).order_by(Genre.name)
             
-            for genre, movie, movie_genre in session.query(Genre, Movie, MovieGenre).\
-                filter(Genre.id==MovieGenre.genre_id).\
-                filter(Movie.id==MovieGenre.movie_id).\
-                filter(or_(Movie.title.like("%" + "%s" % (searchTitle) + "%"), \
-                    Movie.id==searchTitle)):
+        for genre in query:
+            
+            for movie in genre.movies:
                 
-                for movie in genre.movies:
+                movieList = self.get_moviesByCast(regex, movie, movieList)
+                
+                if (regex.search(movie.title) or regex.search(movie.release[0:4]) or \
+                   regex.search(str(movie.id)) or regex.search(movie.director.full_name)) \
+                   and movie not in movieList:
                     
-                    if movie not in movieList:
-                        
-                        movieList += [movie]
-                        
-                        print movie
-                        
-        self.update_inTreestore(movieList)
+                    movieList += [movie]
+                    
+        self.update_inListstore(movieList)
         
+        self.root_window.set_cursor(None)
+        
+    def on_cuFindButton_clicked(self, widget):
+        
+        self.set_cursor("watch")
+        
+        searchTitle = self.cuEntry.get_text()
+        
+        self.cuListstore.clear()
+        self.cuEntry.grab_focus()
+        
+        if searchFilter == _("All Genres") and searchTitle == "":
+            
+            self.on_inShowAllButton_clicked(widget)
+            
+            return
+        
+        else:
+            
+            regex = re.compile('%s' % searchTitle, re.IGNORECASE)
+            
+        customerList = []
+        for customer in session.query(Customer):
+            
+            if (regex.search(customer.first_name) or regex.search(customer.last_name) \
+               or regex.search(customer.middle_name) or regex.search(customer.street)) \
+               and customer not in customerList:
+                
+                customerList += [customer]
+                
+        self.update_cuListstore(customerList)
+        
+        self.root_window.set_cursor(None)
     def on_reButton_clicked(self, widget):
         
         self.notebook.set_current_page(0)
         
+        self.reEntry.grab_focus()
+        
     def on_inButton_clicked(self, widget):
         
         self.notebook.set_current_page(1)
+        self.reCuVbox.hide()
+        self.reCuHbox.show_all()
         
         self.inEntry = self.wTree.get_widget("inEntry")
-        self.inSearchButton = self.wTree.get_widget("inSearchButton")
+        self.inFindButton = self.wTree.get_widget("inFindButton")
         
         self.inEntry.set_activates_default(True)
         self.inEntry.grab_focus()
         
-        self.inSearchButton.grab_default()
+        self.inFindButton.grab_default()
         
     def on_cuButton_clicked(self, widget):
         
         self.notebook.set_current_page(2)
+        self.reCuVbox.hide()
+        self.reCuHbox.show_all()
         
         self.cuEntry = self.wTree.get_widget("cuEntry")
-        self.cuSearchButton = self.wTree.get_widget("cuSearchButton")
+        self.cuFindButton = self.wTree.get_widget("cuFindButton")
         
         self.cuEntry.set_activates_default(True)
         self.cuEntry.grab_focus()
         
-        self.cuSearchButton.grab_default()
+        self.cuFindButton.grab_default()
         
     def on_trButton_clicked(self, widget):
         
         self.notebook.set_current_page(3)
+        self.reCuVbox.hide()
+        self.reCuHbox.show_all()
         
     def on_rpButton_clicked(self, widget):
         
         self.notebook.set_current_page(4)
+        self.reCuVbox.hide()
+        self.reCuHbox.show_all()
         
     def on_maButton_clicked(self, widget):
         
         self.notebook.set_current_page(5)
+        self.reCuVbox.hide()
+        self.reCuHbox.show_all()
         
     def on_daButton_clicked(self, widget):
         
         self.notebook.set_current_page(6)
+        self.reCuVbox.hide()
+        self.reCuHbox.show_all()
         
     def on_menuButton_clicked(self, widget):
         
@@ -1241,12 +1391,12 @@ class POSvrSys(object):
         if label == _("_Customers"):
             
             self.cuEntry = self.wTree.get_widget("cuEntry")
-            self.cuSearchButton = self.wTree.get_widget("cuSearchButton")
+            self.cuFindButton = self.wTree.get_widget("cuFindButton")
             
             self.cuEntry.set_activates_default(True)
             self.cuEntry.grab_focus()
             
-            self.cuSearchButton.grab_default()
+            self.cuFindButton.grab_default()
         
     def reset_widgets(self, widgetsList, value=True, notebook=None):
         
@@ -1394,6 +1544,8 @@ class POSvrSys(object):
     
     def cuPerformEdit(self, cust):
         
+        self.set_cursor("watch")
+        
         gender = {_("Male"):1, _("Female"):2}
         
         gnModel = self.cuGenderCombobox.get_model()
@@ -1420,9 +1572,13 @@ class POSvrSys(object):
         
         cust = insertCustomer(session, cust, ci, sa, co)
         
+        self.root_window.set_cursor(None)
+        
         return cust
     
     def inPerformEdit(self, movie):
+        
+        self.set_cursor("watch")
         
         movie.title    = self.inTitleEntry.get_text()
         movie.imdbCode = self.inImdbCodeEntry.get_text()
@@ -1476,9 +1632,13 @@ class POSvrSys(object):
         session.add(movie)
         session.commit()
         
+        self.root_window.set_cursor(None)
+        
         return movie
     
     def inPerformAdd(self):
+        
+        self.set_cursor("watch")
         
         movie = Movie(self.inTitleEntry.get_text(), self.inImdbCodeEntry.get_text(),
             self.inReleaseCalendar.get_date(), self.inPlotEntry.get_text(),
@@ -1523,9 +1683,13 @@ class POSvrSys(object):
         movie = insertMovie(session, movie, director, self.inWritersSelectedList,
             self.inCastsSelectedList, self.inGenresSelectedList)
         
-        self.update_inTreestore([movie])
+        self.update_inListstore([movie])
+        
+        self.root_window.set_cursor(None)
         
     def cuPerformAdd(self):
+        
+        self.set_cursor("watch")
         
         gender = {_("Male"):1, _("Female"):2}
         
@@ -1552,9 +1716,11 @@ class POSvrSys(object):
         temp_cust = Customer(ln, fn, mn, gn, cn, st, zi)
         temp_cust = insertCustomer(session, temp_cust, ci, sa, co)
         
-        self.update_cuTreestore([temp_cust])
+        self.update_cuListstore([temp_cust])
         
-    def update_inTreestore(self, movieList):
+        self.root_window.set_cursor(None)
+        
+    def update_inListstore(self, movieList):
         
         for instance in movieList:
             
@@ -1567,9 +1733,9 @@ class POSvrSys(object):
             movie.append(list2str(instance.genres))
             movie.append(instance.director.full_name)
             
-            self.inTreestore.append(None, movie)
+            self.inListstore.append(movie)
             
-    def update_cuTreestore(self, cuList):
+    def update_cuListstore(self, cuList):
         
         gender = {1:_("(M)"), 2:_("(F)")}
         
@@ -1588,9 +1754,9 @@ class POSvrSys(object):
             customer.append(instance.zip_code)
             customer.append(instance.country.name)
             
-            self.cuTreestore.append(None, customer)
+            self.cuListstore.append(customer)
             
-    def populate_inTreestore(self):
+    def populate_inListstore(self):
         
         for instance in session.query(Movie):
             
@@ -1603,9 +1769,9 @@ class POSvrSys(object):
             movie.append(list2str(instance.genres))
             movie.append(instance.director.full_name)
             
-            self.inTreestore.append(None, movie)
+            self.inListstore.append(movie)
             
-    def populate_cuTreestore(self):
+    def populate_cuListstore(self):
         
         gender = {1:_("(M)"), 2:_("(F)")}
         
@@ -1624,7 +1790,7 @@ class POSvrSys(object):
             customer.append(instance.zip_code)
             customer.append(instance.country.name)
             
-            self.cuTreestore.append(None, customer)
+            self.cuListstore.append(customer)
             
     def add_image(self, parent, filename, text):
         
@@ -1702,6 +1868,14 @@ class POSvrSys(object):
         
         return ret_value
     
+    def set_cursor(self, value):
+        
+        cursor_dict = {"watch":gtk.gdk.WATCH}
+        
+        cursor = gtk.gdk.Cursor(cursor_dict[value])
+        
+        self.root_window.set_cursor(cursor)
+        
     def security(self):
         
         tries = 3
@@ -1725,7 +1899,16 @@ class POSvrSys(object):
         if ret_value != 0:
             
             sys.exit(1)
+    def get_moviesByCast(self, regex, movie, movieList):
+        
+        for cast in movie.casts:
             
+            if regex.search(cast.full_name) and movie not in movieList:
+                
+                movieList += [movie]
+                
+        return movieList
+    
 def list2str(li):
     
     string = ""

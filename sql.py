@@ -268,7 +268,7 @@ class Movie(Base):
     title         = Column(String(150))
     imdbCode      = Column(String(15))
     release       = Column(String(10))
-    plot          = Column(String(300))
+    plot          = Column(String(500))
     rating        = Column(String(4))
     
     # AssociationTables
@@ -792,7 +792,7 @@ def populateTables(session):
     genres = (
         'Action', 'Adventure', 'Animation', 'Biography', 'Comedy', 
         'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir', 
-        'Game-Show', 'History', 'Horror', 'Music', 'Musical', 'News', 
+        'Game-Show', 'History', 'Horror', 'Music', 'Musical', 'Mystery', 'News', 
         'Reality-TV', 'Romance', 'Sci-Fi', 'Short', 'Sport', 'Talk-Show', 
         'Thriller', 'War', 'Western'
     )
