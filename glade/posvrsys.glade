@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Mon Dec 22 11:04:37 2008 -->
+<!--Generated with glade3 3.4.3 on Mon Dec 22 22:09:52 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -384,6 +384,7 @@
                               <widget class="GtkTreeView" id="inTreeview">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <signal name="key_press_event" handler="on_inTreeview_key_press_event"/>
                                 <signal name="row_activated" handler="on_inTreeview_row_activated"/>
                               </widget>
                             </child>
@@ -1139,7 +1140,7 @@
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="xpad">10</property>
-                            <property name="label" translatable="yes">R_ating:</property>
+                            <property name="label" translatable="yes">Rati_ng:</property>
                             <property name="use_markup">True</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">inRatingSpin</property>

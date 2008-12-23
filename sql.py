@@ -70,24 +70,19 @@ class Cast(Base):
     __tablename__ = 'casts'
     
     id            = Column(Integer, primary_key=True)
-    last_name     = Column(String(50))
-    first_name    = Column(String(50))
     full_name     = Column(String(100))
     
     movieassoc = relation('MovieCast', cascade="all, delete-orphan", lazy=False)
     
     movies = AssociationProxy('movieassoc', 'movie', creator='MovieCast')
     
-    def __init__(self, last_name, first_name):
+    def __init__(self, full_name):
         
-        self.last_name   = last_name
-        self.first_name  = first_name
-        self.full_name   = "%s, %s" % (last_name, first_name)
+        self.full_name   = full_name
         
     def __repr__(self):
         
-        return "<Cast('%s', '%s', '%s')>" % (self.last_name, 
-            self.first_name, self.full_name)
+        return "<Cast('%s')>" % (self.full_name)
         
 class City(Base):
     
@@ -181,20 +176,15 @@ class Director(Base):
     __tablename__ = 'directors'
     
     id            = Column(Integer, primary_key=True)
-    last_name     = Column(String(50))
-    first_name    = Column(String(50))
     full_name     = Column(String(100))
     
-    def __init__(self, last_name, first_name):
+    def __init__(self, full_name):
         
-        self.last_name   = last_name
-        self.first_name  = first_name
-        self.full_name   = "%s, %s" % (last_name, first_name)
+        self.full_name   = full_name
         
     def __repr__(self):
         
-        return "<Director('%s', '%s', '%s')>" % (self.last_name, 
-            self.first_name, self.full_name)
+        return "<Director('%s')>" % (self.full_name)
         
 class Genre(Base):
     
@@ -365,8 +355,6 @@ class Writer(Base):
     __tablename__ = 'writers'
     
     id            = Column(Integer, primary_key=True)
-    last_name     = Column(String(50))
-    first_name    = Column(String(50))
     full_name     = Column(String(100))
     
     # AssociationTables
@@ -376,16 +364,13 @@ class Writer(Base):
     movies = AssociationProxy('movieassoc', 'movie', creator='MovieWriter')
 
     
-    def __init__(self, last_name, first_name):
+    def __init__(self, full_name):
         
-        self.last_name   = last_name
-        self.first_name  = first_name
-        self.full_name   = "%s, %s" % (last_name, first_name)
+        self.full_name   = full_name
         
     def __repr__(self):
         
-        return "<Writer('%s', '%s', '%s')>" % (self.last_name, 
-            self.first_name, self.full_name)
+        return "<Writer('%s')>" % (self.full_name)
         
 def checkDatabase(db):
     
@@ -412,13 +397,13 @@ def checkDatabase(db):
         
         if DEBUG:
         
-            print "creating tables...",
+            print "creating tables................",
             
             metadata = Base.metadata
             metadata.create_all(engine)
             
             print "Done"
-            print "populating tables...",
+            print "populating tables..............",
             
             session = populateTables(session)
             
@@ -467,13 +452,13 @@ def insertDummy(session):
     writers = []
     casts   = []
     genres  = []
-    writers.append(Writer('Haggis', 'Paul'))
-    writers.append(Writer('Purvis', 'Neal'))
+    writers.append(Writer('Paul Haggis'))
+    writers.append(Writer('Neal Purvis'))
     
-    casts.append(Cast('Craig', 'Daniel'))
-    casts.append(Cast('Kurylenko', 'Olga'))
+    casts.append(Cast('Daniel Craig'))
+    casts.append(Cast('Olga Kurylenko'))
     
-    director = Director('Foster', 'Marc')
+    director = Director('Marc Foster')
     
     genres.append(Genre('Action'))
     genres.append(Genre('Adventure'))
