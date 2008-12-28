@@ -7,7 +7,7 @@
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -145,11 +145,6 @@ class POSvrSys(object):
         self.wTree = gtk.glade.XML(self.gladefile, "mainWindow")
         self.main_window = self.wTree.get_widget("mainWindow")
         
-        self.reCuHbox = self.wTree.get_widget("reCuHbox")
-        self.reCuVbox = self.wTree.get_widget("reCuVbox")
-        self.reEntry  = self.wTree.get_widget("reEntry")
-        self.reEntry.grab_focus()
-        
         #Initialize some widgets
         self.initialize_widgets()
         
@@ -163,21 +158,23 @@ class POSvrSys(object):
         #Connect with yourself
         self.wTree.signal_autoconnect(self)
         
+        self.reCuEntry.grab_focus()
         self.main_window.show_all()
-        self.reCuVbox.hide()
-        self.reCuHbox.show_all()
         
     #***************************************************************************
     # Initialize
     #***************************************************************************
     def initialize_widgets(self):
         
-        self.notebook = self.wTree.get_widget("notebook")
+        self.notebook    = self.wTree.get_widget("notebook")
+        self.reNotebook  = self.wTree.get_widget("reNotebook")
+        self.reCuEntry   = self.wTree.get_widget("reCuEntry")
         self.root_window = self.main_window.get_root_window()
         
         self.create_buttonImages()
         self.create_statusbar()
         self.create_aboutDialog()
+        self.create_reCuListstore()
         self.create_inAddEditDialog()
         self.create_cuAddEditDialog()
         
@@ -494,6 +491,53 @@ class POSvrSys(object):
         
         self.populate_cuListstore()
         
+    def create_reCuListstore(self):
+        
+        self.reCuListstore_columns = [
+            TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
+            , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
+            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Code"), 2, True, gtk.CellRendererText())
+            , TVColumn(COL_NAME, gobject.TYPE_STRING, _("Name"), 3, True, gtk.CellRendererText())
+            , TVColumn(COL_NUMBER, gobject.TYPE_STRING, _("Contact Number"), 4, True, gtk.CellRendererText())
+            , TVColumn(COL_ADDRESS, gobject.TYPE_STRING, _("Address"), 5, True, gtk.CellRendererText())
+            , TVColumn(COL_CITY, gobject.TYPE_STRING, _("City/Town"), 6, True, gtk.CellRendererText())
+            , TVColumn(COL_PROV, gobject.TYPE_STRING, _("State/Province"), 7, True, gtk.CellRendererText())
+            , TVColumn(COL_ZIP, gobject.TYPE_STRING, _("Zip Code"), 8, True, gtk.CellRendererText())
+            , TVColumn(COL_COUNTRY, gobject.TYPE_STRING, _("Country"), 9, True, gtk.CellRendererText())
+        ]
+        
+        """Called when we want to initialize the tree.
+        """
+        tree_type_list = [] #For creating the TreeStore
+        self.__cu_column_dict = {} #For easy access later on
+
+        #Get the treeView from the widget Tree
+        self.reCuTreeview = self.wTree.get_widget("reCuTreeview")
+        #Make it so that the colours of each row can alternate
+        self.reCuTreeview.set_rules_hint(True)
+
+        # Loop through the columns and initialize the Tree
+        for item_column in self.reCuListstore_columns:
+            #Add the column to the column dict
+            self.__cu_column_dict[item_column.ID] = item_column
+            #Save the type for gtk.TreeStore creation
+            tree_type_list.append(item_column.type)
+            #is it visible?
+            if (item_column.visible):
+                #Create the Column
+                column = gtk.TreeViewColumn(item_column.name
+                    , item_column.cellrenderer
+                    , text=item_column.pos)
+                
+                column.set_resizable(True)
+                column.set_sort_column_id(item_column.pos)
+                self.reCuTreeview.append_column(column)
+                
+        #Create the gtk.TreeStore Model to use with the inTreeview
+        self.reCuListstore = gtk.ListStore(*tree_type_list)
+        #Attache the model to the treeView
+        self.reCuTreeview.set_model(self.reCuListstore)
+        
     def create_aboutDialog(self):
         
         #load the dialog from the glade file
@@ -534,6 +578,9 @@ class POSvrSys(object):
         self.inGenresEntry = wTree.get_widget("inGenresEntry")
         self.inCastsEntry = wTree.get_widget("inCastsEntry")
         self.inWritersEntry = wTree.get_widget("inWritersEntry")
+        self.inRentalCostSpin = wTree.get_widget("inRentalCostSpin")
+        self.inAllottedDaysSpin = wTree.get_widget("inAllottedDaysSpin")
+        self.inStatusCombobox = wTree.get_widget("inStatusCombobox")
         
         self.inGenresAddButton = wTree.get_widget("inGenresAddButton")
         self.inGenresRemoveButton = wTree.get_widget("inGenresRemoveButton")
@@ -541,6 +588,13 @@ class POSvrSys(object):
         self.inCastsRemoveButton = wTree.get_widget("inCastsRemoveButton")
         self.inWritersAddButton = wTree.get_widget("inWritersAddButton")
         self.inWritersRemoveButton = wTree.get_widget("inWritersRemoveButton")
+        
+        self.inRevenueLastMonth = wTree.get_widget("inRevenueLastMonth")
+        self.inRevenueThisMonth = wTree.get_widget("inRevenueThisMonth")
+        self.inRevenueTotal     = wTree.get_widget("inRevenueTotal")
+        self.inRentalLastMonth  = wTree.get_widget("inRentalLastMonth")
+        self.inRentalThisMonth  = wTree.get_widget("inRentalThisMonth")
+        self.inRentalTotal      = wTree.get_widget("inRentalTotal")
         
         self.inDirectorCompletion = gtk.EntryCompletion()
         self.inGenresCompletion = gtk.EntryCompletion()
@@ -583,21 +637,38 @@ class POSvrSys(object):
         self.inCastsCompletion.set_text_column(0)
         self.inWritersCompletion.set_text_column(0)
         
-        self.inTitleLabel    = wTree.get_widget("inTitleLabel")
-        self.inImdbCodeLabel = wTree.get_widget("inImdbCodeLabel")
-        self.inReleaseLabel  = wTree.get_widget("inReleaseLabel")
-        self.inDirectorLabel = wTree.get_widget("inDirectorLabel")
-        self.inRatingLabel   = wTree.get_widget("inRatingLabel")
-        self.inPlotLabel     = wTree.get_widget("inPlotLabel")
-        self.inGenresLabel   = wTree.get_widget("inGenresLabel")
-        self.inCastsLabel    = wTree.get_widget("inCastsLabel")
-        self.inWritersLabel  = wTree.get_widget("inWritersLabel")
+        self.inTitleLabel        = wTree.get_widget("inTitleLabel")
+        self.inImdbCodeLabel     = wTree.get_widget("inImdbCodeLabel")
+        self.inReleaseLabel      = wTree.get_widget("inReleaseLabel")
+        self.inDirectorLabel     = wTree.get_widget("inDirectorLabel")
+        self.inRatingLabel       = wTree.get_widget("inRatingLabel")
+        self.inPlotLabel         = wTree.get_widget("inPlotLabel")
+        self.inGenresLabel       = wTree.get_widget("inGenresLabel")
+        self.inCastsLabel        = wTree.get_widget("inCastsLabel")
+        self.inWritersLabel      = wTree.get_widget("inWritersLabel")
+        self.inRentalCostLabel   = wTree.get_widget("inRentalCostLabel")
+        self.inAllottedDaysLabel = wTree.get_widget("inAllottedDaysLabel")
+        self.inStatusLabel       = wTree.get_widget("inStatusLabel")
         
         self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
         self.create_inGenreListstore()
         self.create_inCastListstore()
         self.create_inWriterListstore()
+        
+        self.inStatusListstore = gtk.ListStore(str)
+        cellRenderer = gtk.CellRendererText()
+        
+        status = (_('Select one'), _('Available'), _('Rented'), _('Out of order'))
+        
+        for s in status:
+            
+            self.inStatusListstore.append([s])
+            
+        self.inStatusCombobox.pack_start(cellRenderer, True)
+        self.inStatusCombobox.add_attribute(cellRenderer, 'text', 0)
+        self.inStatusCombobox.set_model(self.inStatusListstore)
+        self.inStatusCombobox.set_active(0)
         
         self.inWidgets = \
             [
@@ -610,6 +681,9 @@ class POSvrSys(object):
                 [self.inGenresTreeview, self.inGenresLabel, _("G_enres:"), 0],
                 [self.inCastsTreeview, self.inCastsLabel, _("Cas_ts:"), 1],
                 [self.inWritersTreeview, self.inWritersLabel, _("_Writers:"), 1],
+                [self.inRentalCostSpin, self.inRentalCostLabel, _("_Rental Cost:"), 2],
+                [self.inAllottedDaysSpin, self.inAllottedDaysLabel, _("All_otted Days:"), 2],
+                [self.inStatusCombobox, self.inStatusLabel, _("Stat_us:"), 2],
             ]
         
         if DEBUG:
@@ -647,6 +721,8 @@ class POSvrSys(object):
         self.cuStateLabel         = wTree.get_widget("cuStateLabel")
         self.cuCountryLabel       = wTree.get_widget("cuCountryLabel")
         
+        self.cuContactnumberHbox  = wTree.get_widget("cuContactnumberHbox")
+        
         # create some controls
         self.create_cuListstore()
         self.create_cuComboboxes()
@@ -664,6 +740,17 @@ class POSvrSys(object):
             [self.cuStateCombobox, self.cuStateLabel, _("S_tate/Province:")], 
             [self.cuCountryCombobox, self.cuCountryLabel, _("Co_untry:")], 
         ]
+        
+        size_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        for widget in self.cuWidgets:
+            
+            if widget[2] != _("C_ontact Number:"):
+                
+                size_group.add_widget(widget[0])
+                
+            else:
+                
+                size_group.add_widget(self.cuContactnumberHbox)
         
         self.cuPrefixLabel.set_label(PREFIX)
         
@@ -778,6 +865,14 @@ class POSvrSys(object):
         
         self.inAddEditDialog.set_title(_("Add Movie Dialog"))
         self.inTitleEntry.grab_focus()
+        
+        self.inRevenueLastMonth.set_text('0.00')
+        self.inRevenueThisMonth.set_text('0.00')
+        self.inRevenueTotal.set_text('0.00')
+        
+        self.inRentalLastMonth.set_text('-')
+        self.inRentalThisMonth.set_text('-')
+        self.inRentalTotal.set_text('-')
         
         result = self.inAddEditDialog.run()
         
@@ -1004,6 +1099,8 @@ class POSvrSys(object):
         
     def on_inTreeview_row_activated(self, treeview, path, column):
         
+        #status = {1:_("Available"), 2:_("Rented"), 3:_("Out of order")}
+        
         self.inAddEditDialog.set_title(_("Edit Movie Dialog"))
         
         inModel = treeview.get_model()
@@ -1021,6 +1118,23 @@ class POSvrSys(object):
         self.inDirectorEntry.set_text(m.director.full_name)
         self.inRatingSpin.set_value(float(m.rating))
         self.inPlotEntry.set_text(m.plot)
+        self.inRentalCostSpin.set_value(float(m.rent))
+        self.inAllottedDaysSpin.set_value(float(m.allotted))
+        self.inStatusCombobox.set_active(m.status)
+        
+        if m.status == 2:
+            
+            self.inStatusCombobox.set_sensitive(False)
+        
+        revenue = m.revenue.split('|')
+        self.inRevenueLastMonth.set_text(revenue[0])
+        self.inRevenueThisMonth.set_text(revenue[1])
+        self.inRevenueTotal.set_text(revenue[2])
+        
+        rental = m.rental.split('|')
+        self.inRentalLastMonth.set_text(rental[0])
+        self.inRentalThisMonth.set_text(rental[1])
+        self.inRentalTotal.set_text(rental[2])
         
         for genre in m.genres:
             
@@ -1173,7 +1287,16 @@ class POSvrSys(object):
         
         self.reset_widgets(self.cuWidgets)
         
-    def on_reEntry_key_press_event(self, widget, event):
+    def on_reCuTreeview_row_activated(self, treeview, path, column):
+        
+        reCuModel = treeview.get_model()
+        reCuIter = reCuModel.get_iter(path)
+        
+        customer = reCuModel.get_value(reCuIter, 0)
+        
+        self.rePerformRental(customer)
+        
+    def on_reCuEntry_key_press_event(self, widget, event):
         
         self.reCuCode = self.wTree.get_widget("reCuCode")
         self.reCuName = self.wTree.get_widget("reCuName")
@@ -1184,27 +1307,31 @@ class POSvrSys(object):
         
         if event.hardware_keycode == 13:
             
-            code = self.reEntry.get_text()
+            string = self.reCuEntry.get_text()
             
             try:
                 
-                customer = session.query(Customer).filter(Customer.id==code).one()
+                customer = session.query(Customer).filter(Customer.id==string).one()
                 
             except NoResultFound:
                 
-                self.reCuHbox.show_all()
-                self.reCuVbox.hide()
+                regex = re.compile('%s' % string, re.IGNORECASE)
+                
+                customerList = []
+                for customer in session.query(Customer):
+                    
+                    if (regex.search(customer.first_name) or regex.search(customer.last_name) \
+                       or regex.search(customer.middle_name) or regex.search(customer.street) \
+                       or regex.search(str(customer.id))) and customer not in customerList:
+                        
+                        customerList += [customer]
+                        
+                self.update_reCuListstore(customerList)
+                self.reCuTreeview.set_headers_visible(True)
                 
                 return
-            
-            self.reCuCode.set_label("<span foreground='blue'><b>%s</b></span>" % customer.id)
-            self.reCuName.set_label("<span foreground='blue'><b>%s</b></span>" % customer.full_name)
-            self.reCuAddress.set_label("<span foreground='blue'><b>%s, %s</b></span>" % (customer.street, customer.city.name))
-            self.reCuAddress2.set_label("<span foreground='blue'><b>%s %s   %s</b></span>" % 
-                (customer.zip_code, customer.state.name, customer.country.name))
-            
-            self.reCuHbox.hide()
-            self.reCuVbox.show_all()
+                
+            self.rePerformRental(customer)
             
     def on_inShowAllButton_clicked(self, widget):
         
@@ -1296,9 +1423,9 @@ class POSvrSys(object):
         self.cuListstore.clear()
         self.cuEntry.grab_focus()
         
-        if searchFilter == _("All Genres") and searchTitle == "":
+        if searchTitle == "":
             
-            self.on_inShowAllButton_clicked(widget)
+            self.on_cuShowAllButton_clicked(widget)
             
             return
         
@@ -1310,8 +1437,8 @@ class POSvrSys(object):
         for customer in session.query(Customer):
             
             if (regex.search(customer.first_name) or regex.search(customer.last_name) \
-               or regex.search(customer.middle_name) or regex.search(customer.street)) \
-               and customer not in customerList:
+               or regex.search(customer.middle_name) or regex.search(customer.street) \
+               or regex.search(str(customer.id))) and customer not in customerList:
                 
                 customerList += [customer]
                 
@@ -1320,15 +1447,21 @@ class POSvrSys(object):
         self.root_window.set_cursor(None)
     def on_reButton_clicked(self, widget):
         
-        self.notebook.set_current_page(0)
+        # clear the liststore
+        self.reCuListstore.clear()
         
-        self.reEntry.grab_focus()
+        self.reCuEntry.grab_focus()
+        
+        # set some attributes
+        self.notebook.set_current_page(0)
+        self.reNotebook.set_current_page(0)
+        self.reCuEntry.set_text("")
+        self.reCuTreeview.set_headers_visible(False)
         
     def on_inButton_clicked(self, widget):
         
         self.notebook.set_current_page(1)
-        self.reCuVbox.hide()
-        self.reCuHbox.show_all()
+        self.reNotebook.set_current_page(0)
         
         self.inEntry = self.wTree.get_widget("inEntry")
         self.inFindButton = self.wTree.get_widget("inFindButton")
@@ -1341,8 +1474,7 @@ class POSvrSys(object):
     def on_cuButton_clicked(self, widget):
         
         self.notebook.set_current_page(2)
-        self.reCuVbox.hide()
-        self.reCuHbox.show_all()
+        self.reNotebook.set_current_page(0)
         
         self.cuEntry = self.wTree.get_widget("cuEntry")
         self.cuFindButton = self.wTree.get_widget("cuFindButton")
@@ -1355,26 +1487,22 @@ class POSvrSys(object):
     def on_trButton_clicked(self, widget):
         
         self.notebook.set_current_page(3)
-        self.reCuVbox.hide()
-        self.reCuHbox.show_all()
+        self.reNotebook.set_current_page(0)
         
     def on_rpButton_clicked(self, widget):
         
         self.notebook.set_current_page(4)
-        self.reCuVbox.hide()
-        self.reCuHbox.show_all()
+        self.reNotebook.set_current_page(0)
         
     def on_maButton_clicked(self, widget):
         
         self.notebook.set_current_page(5)
-        self.reCuVbox.hide()
-        self.reCuHbox.show_all()
+        self.reNotebook.set_current_page(0)
         
     def on_daButton_clicked(self, widget):
         
         self.notebook.set_current_page(6)
-        self.reCuVbox.hide()
-        self.reCuHbox.show_all()
+        self.reNotebook.set_current_page(0)
         
     def on_menuButton_clicked(self, widget):
         
@@ -1411,6 +1539,7 @@ class POSvrSys(object):
                 notebook.set_current_page(0)
             
             label.set_markup_with_mnemonic("%s" % text)
+            widget.set_sensitive(True)
             
             if value:
                 
@@ -1585,6 +1714,9 @@ class POSvrSys(object):
         movie.release  = str(self.inReleaseCalendar.get_date())
         movie.plot     = self.inPlotEntry.get_text()
         movie.rating   = self.inRatingSpin.get_value()
+        movie.rent     = self.inRentalCostSpin.get_value()
+        movie.allotted = self.inAllottedDaysSpin.get_value()
+        movie.status   = self.inStatusCombobox.get_active()
         
         self.inGenresSelectedList = []
         self.inCastsSelectedList = []
@@ -1642,7 +1774,8 @@ class POSvrSys(object):
         
         movie = Movie(self.inTitleEntry.get_text(), self.inImdbCodeEntry.get_text(),
             self.inReleaseCalendar.get_date(), self.inPlotEntry.get_text(),
-            self.inRatingSpin.get_value())
+            self.inRatingSpin.get_value(), self.inRentalCostSpin.get_value(),
+            self.inAllottedDaysSpin.get_value(), self.inStatusCombobox.get_active())
         
         self.inGenresSelectedList = []
         self.inCastsSelectedList = []
@@ -1720,6 +1853,17 @@ class POSvrSys(object):
         
         self.root_window.set_cursor(None)
         
+    def rePerformRental(self, customer):
+        
+        self.reNotebook.set_current_page(1)
+        
+        self.reCuCode.set_label("<span foreground='blue'><b>%s</b></span>" % customer.id)
+        self.reCuName.set_label("<span foreground='blue'><b>%s</b></span>" % customer.full_name)
+        self.reCuAddress.set_label("<span foreground='blue'><b>%s, %s</b></span>" % (customer.street, customer.city.name))
+        self.reCuAddress2.set_label("<span foreground='blue'><b>%s %s   %s</b></span>" % 
+            (customer.zip_code, customer.state.name, customer.country.name))
+        
+        
     def update_inListstore(self, movieList):
         
         for instance in movieList:
@@ -1755,6 +1899,27 @@ class POSvrSys(object):
             customer.append(instance.country.name)
             
             self.cuListstore.append(customer)
+            
+    def update_reCuListstore(self, cuList):
+        
+        gender = {1:_("(M)"), 2:_("(F)")}
+        
+        for instance in cuList:
+            
+            customer = []
+            
+            customer.append(instance)
+            customer.append(instance.id)
+            customer.append(instance.id)
+            customer.append("%s %s" % (instance.full_name, gender[instance.gender]))
+            customer.append(instance.contact_number)
+            customer.append(instance.street)
+            customer.append(instance.city.name)
+            customer.append(instance.state.name)
+            customer.append(instance.zip_code)
+            customer.append(instance.country.name)
+            
+            self.reCuListstore.append(customer)
             
     def populate_inListstore(self):
         

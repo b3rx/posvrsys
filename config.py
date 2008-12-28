@@ -7,7 +7,7 @@
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -34,5 +34,5 @@ APP_NAME = "POSvrSys"
 __author__     = "Bertrand Kintanar <b3rxkintanar@gmail.com>"
 __appversion__ = "0.1"
 __date__       = "Date: 2008/11/26"
-__copyright__  = "Copyright (c) 2008 Bertrand Kintanar"
+__copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
 __license__    = "GPL3"
