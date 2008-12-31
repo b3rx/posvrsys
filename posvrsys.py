@@ -42,6 +42,8 @@ try:
     import re
     import sys
     
+    print __copyright__
+    
 except ImportError, e:
     
     print _("Import error POSvsSys cannot start:"), e
@@ -169,12 +171,15 @@ class POSvrSys(object):
         self.notebook    = self.wTree.get_widget("notebook")
         self.reNotebook  = self.wTree.get_widget("reNotebook")
         self.reCuEntry   = self.wTree.get_widget("reCuEntry")
+        self.reInEntry   = self.wTree.get_widget("reInEntry")
+        self.reInAlertLabel = self.wTree.get_widget("reInAlertLabel")
         self.root_window = self.main_window.get_root_window()
         
         self.create_buttonImages()
         self.create_statusbar()
         self.create_aboutDialog()
         self.create_reCuListstore()
+        self.create_reInListstore()
         self.create_inAddEditDialog()
         self.create_cuAddEditDialog()
         
@@ -537,6 +542,60 @@ class POSvrSys(object):
         self.reCuListstore = gtk.ListStore(*tree_type_list)
         #Attache the model to the treeView
         self.reCuTreeview.set_model(self.reCuListstore)
+        
+    def create_reInListstore(self):
+        
+        self.reInListstore_columns = [
+            TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
+            , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
+            , TVColumn(COL_CODE, gobject.TYPE_STRING, _("Code"), 2, True, gtk.CellRendererText())
+            , TVColumn(COL_TITLE, gobject.TYPE_STRING, _("Title"), 3, True, gtk.CellRendererText())
+            , TVColumn(COL_GENRES, gobject.TYPE_STRING, _("Days"), 4, True, gtk.CellRendererText())
+            , TVColumn(COL_TYPE, gobject.TYPE_STRING, _("Price"), 5, True, gtk.CellRendererText())
+        ]
+        
+        """Called when we want to initialize the tree.
+        """
+        tree_type_list = [] #For creating the TreeStore
+        self.__cu_column_dict = {} #For easy access later on
+
+        #Get the treeView from the widget Tree
+        self.reInTreeview = self.wTree.get_widget("reInTreeview")
+        #Make it so that the colours of each row can alternate
+        self.reInTreeview.set_rules_hint(True)
+
+        # Loop through the columns and initialize the Tree
+        for item_column in self.reInListstore_columns:
+            #Add the column to the column dict
+            self.__cu_column_dict[item_column.ID] = item_column
+            #Save the type for gtk.TreeStore creation
+            tree_type_list.append(item_column.type)
+            #is it visible?
+            if (item_column.visible):
+                #Create the Column
+                
+                column = gtk.TreeViewColumn(item_column.name
+                    , item_column.cellrenderer
+                    , text=item_column.pos)
+                
+                if item_column.name == _("Price") or item_column.name == _("Days"):
+                    
+                    item_column.cellrenderer.set_property('xalign', 1)
+                    column.set_alignment(1)
+                    
+                if item_column.name == _("Title"):
+                    
+                    column.set_min_width(850)
+                    column.set_max_width(850)
+                    
+                column.set_resizable(True)
+                column.set_sort_column_id(item_column.pos)
+                self.reInTreeview.append_column(column)
+                
+        #Create the gtk.TreeStore Model to use with the inTreeview
+        self.reInListstore = gtk.ListStore(*tree_type_list)
+        #Attache the model to the treeView
+        self.reInTreeview.set_model(self.reInListstore)
         
     def create_aboutDialog(self):
         
@@ -1333,6 +1392,26 @@ class POSvrSys(object):
                 
             self.rePerformRental(customer)
             
+    def on_reInEntry_key_press_event(self, widget, event):
+        
+        if event.hardware_keycode == 13:
+        
+            string = self.reInEntry.get_text()
+            
+            try:
+                
+                movie = session.query(Movie).filter(Movie.id==string).one()
+                
+            except NoResultFound:
+                
+                self.reInAlertLabel.set_label("<span foreground='red'>Movie code %s isn't in the database.</span>" % string)
+                return
+            
+            if not self.in_movie_list(movie, self.reInListstore):
+                
+                self.update_reInListstore([movie])
+                
+            self.reInTreeview.set_headers_visible(True)
     def on_inShowAllButton_clicked(self, widget):
         
         self.inEntry.set_text("")
@@ -1449,6 +1528,7 @@ class POSvrSys(object):
         
         # clear the liststore
         self.reCuListstore.clear()
+        self.reInListstore.clear()
         
         self.reCuEntry.grab_focus()
         
@@ -1456,6 +1536,7 @@ class POSvrSys(object):
         self.notebook.set_current_page(0)
         self.reNotebook.set_current_page(0)
         self.reCuEntry.set_text("")
+        self.reInAlertLabel.set_label("")
         self.reCuTreeview.set_headers_visible(False)
         
     def on_inButton_clicked(self, widget):
@@ -1671,6 +1752,39 @@ class POSvrSys(object):
                 
         return ret_value
     
+    def in_movie_list(self, movie, liststore):
+        
+        _iter = liststore.get_iter_first()
+        return_val = False
+        
+        self.reInAlertLabel.set_label("")
+        
+        while _iter != None:
+            
+            m = liststore.get_value(_iter, 0)
+            
+            if m != movie:
+                
+                pass
+            
+            elif m == movie:
+                
+                return_val = True
+                self.reInAlertLabel.set_label("<span foreground='red'>%s is already in the list.</span>" % m.title)
+                
+            elif m.status != 2:
+                
+                return_val = True
+                
+            elif m.status == 2:
+                
+                return_val = True
+                self.reInAlertLabel.set_label("<span foreground='red'>%s has already been rented.</span>" % m.title)
+                
+            _iter = liststore.iter_next(_iter)
+                
+        return return_val
+        
     def cuPerformEdit(self, cust):
         
         self.set_cursor("watch")
@@ -1920,6 +2034,21 @@ class POSvrSys(object):
             customer.append(instance.country.name)
             
             self.reCuListstore.append(customer)
+            
+    def update_reInListstore(self, inList):
+        
+        for instance in inList:
+            
+            movie = []
+            
+            movie.append(instance)
+            movie.append(instance.id)
+            movie.append(instance.id)
+            movie.append(instance.title + " (%s)" % instance.release[0:4])
+            movie.append(instance.allotted)
+            movie.append(str(instance.rent) + ".00")
+            
+            self.reInListstore.append(movie)
             
     def populate_inListstore(self):
         

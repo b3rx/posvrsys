@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Sun Dec 28 14:48:00 2008 -->
+<!--Generated with glade3 3.4.3 on Sun Dec 28 18:42:30 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -378,16 +378,26 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkEntry" id="reEntry2">
+                                      <widget class="GtkEntry" id="reInEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
-                                        <signal name="key_press_event" handler="on_reEntry_key_press_event"/>
+                                        <signal name="key_press_event" handler="on_reInEntry_key_press_event"/>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">False</property>
                                         <property name="padding">5</property>
                                         <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <widget class="GtkLabel" id="reInAlertLabel">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="use_markup">True</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="position">2</property>
                                       </packing>
                                     </child>
                                   </widget>
@@ -720,7 +730,7 @@
                                 <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                 <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                 <child>
-                                  <widget class="GtkTreeView" id="reTreeview">
+                                  <widget class="GtkTreeView" id="reInTreeview">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                   </widget>
