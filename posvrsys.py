@@ -24,7 +24,7 @@
 #
 # POSvrSys needs the following to function properly:
 #   python >= 2.5.1, gtk >= 2.12.9, pygtk >= 2.12.2, 
-#   sqlite >= 2.3.5, sqlalchemy >= 0.5.0rc4
+#   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 _ = lambda x : x
 
@@ -41,8 +41,6 @@ try:
     import os
     import re
     import sys
-    
-    print __copyright__
     
 except ImportError, e:
     
@@ -86,19 +84,19 @@ from datepicker import CalendarEntry
 session = checkDatabase('posvrsys.sqlite')
 
 """Column IDs"""
-COL_OBJECT = 0
+COL_OBJECT      = 0
 COL_OBJECT_TYPE = 1
-COL_CODE = 2
-COL_TITLE = 3
-COL_NAME  = 3
-COL_GENRES = 4
-COL_NUMBER = 4
-COL_ADDRESS = 5
-COL_TYPE = 5
-COL_CITY = 6
-COL_PROV = 7
-COL_ZIP  = 8
-COL_COUNTRY = 9
+COL_CODE        = 2
+COL_TITLE       = 3
+COL_NAME        = 3
+COL_GENRES      = 4
+COL_NUMBER      = 4
+COL_ADDRESS     = 5
+COL_TYPE        = 5
+COL_CITY        = 6
+COL_PROV        = 7
+COL_ZIP         = 8
+COL_COUNTRY     = 9
 
 class TVColumn(object):
     """This is a class that represents a column in the todo tree.
@@ -168,11 +166,13 @@ class POSvrSys(object):
     #***************************************************************************
     def initialize_widgets(self):
         
-        self.notebook    = self.wTree.get_widget("notebook")
-        self.reNotebook  = self.wTree.get_widget("reNotebook")
-        self.reCuEntry   = self.wTree.get_widget("reCuEntry")
-        self.reInEntry   = self.wTree.get_widget("reInEntry")
+        self.notebook       = self.wTree.get_widget("notebook")
+        
+        self.reNotebook     = self.wTree.get_widget("reNotebook")
+        self.reCuEntry      = self.wTree.get_widget("reCuEntry")
+        self.reInEntry      = self.wTree.get_widget("reInEntry")
         self.reInAlertLabel = self.wTree.get_widget("reInAlertLabel")
+        
         self.root_window = self.main_window.get_root_window()
         
         self.create_buttonImages()
@@ -235,6 +235,9 @@ class POSvrSys(object):
         """
         gettext.install(APP_NAME, self.local_path)
         
+    #***************************************************************************
+    # Create Widgets
+    #***************************************************************************
     def create_buttonImages(self):
         
         self.reButton = self.wTree.get_widget("reButton")
@@ -274,7 +277,8 @@ class POSvrSys(object):
         self.statusbar = self.wTree.get_widget("statusbar")
         
         self.context_id = self.statusbar.get_context_id("POSvrSys")
-        self.statusbar.push(self.context_id, _("Welcome to %s %s") % (APP_NAME, __appversion__))
+        self.statusbar.push(self.context_id, _("Welcome to %s %s") \
+            % (APP_NAME, __appversion__))
         
     def create_inListstore(self):
         
@@ -309,6 +313,9 @@ class POSvrSys(object):
                 column = gtk.TreeViewColumn(item_column.name
                     , item_column.cellrenderer
                     , text=item_column.pos)
+                
+                # Set the column to expand if it is the column Title
+                column.set_expand(item_column.name == _("Title"))
                 
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
@@ -572,8 +579,8 @@ class POSvrSys(object):
             tree_type_list.append(item_column.type)
             #is it visible?
             if (item_column.visible):
-                #Create the Column
                 
+                #Create the Column
                 column = gtk.TreeViewColumn(item_column.name
                     , item_column.cellrenderer
                     , text=item_column.pos)
@@ -583,10 +590,8 @@ class POSvrSys(object):
                     item_column.cellrenderer.set_property('xalign', 1)
                     column.set_alignment(1)
                     
-                if item_column.name == _("Title"):
-                    
-                    column.set_min_width(850)
-                    column.set_max_width(850)
+                # Set the column to expand if it is the column Title
+                column.set_expand(item_column.name == _("Title"))
                     
                 column.set_resizable(True)
                 column.set_sort_column_id(item_column.pos)
@@ -936,7 +941,7 @@ class POSvrSys(object):
         result = self.inAddEditDialog.run()
         
         while result == gtk.RESPONSE_OK and \
-              self.check_widgets(self.inWidgets, self.inAddEditNotebook) == -1:
+              self.validate_widgets(self.inWidgets, self.inAddEditNotebook) == -1:
             
             result = self.inAddEditDialog.run()
             
@@ -1142,7 +1147,7 @@ class POSvrSys(object):
         
         result = self.cuAddEditDialog.run()
         
-        while result == gtk.RESPONSE_OK and self.check_widgets(self.cuWidgets) == -1:
+        while result == gtk.RESPONSE_OK and self.validate_widgets(self.cuWidgets) == -1:
             
             result = self.cuAddEditDialog.run()
             
@@ -1212,7 +1217,7 @@ class POSvrSys(object):
         result = self.inAddEditDialog.run()
         
         while result == gtk.RESPONSE_OK and \
-              self.check_widgets(self.inWidgets, self.inAddEditNotebook) == -1:
+              self.validate_widgets(self.inWidgets, self.inAddEditNotebook) == -1:
             
             result = self.inAddEditDialog.run()
             
@@ -1321,7 +1326,7 @@ class POSvrSys(object):
         
         result = self.cuAddEditDialog.run()
         
-        while result == gtk.RESPONSE_OK and self.check_widgets(self.cuWidgets) == -1:
+        while result == gtk.RESPONSE_OK and self.validate_widgets(self.cuWidgets) == -1:
             
             result = self.cuAddEditDialog.run()
             
@@ -1367,6 +1372,7 @@ class POSvrSys(object):
         if event.hardware_keycode == 13:
             
             string = self.reCuEntry.get_text()
+            self.reCuListstore.clear()
             
             try:
                 
@@ -1395,8 +1401,9 @@ class POSvrSys(object):
     def on_reInEntry_key_press_event(self, widget, event):
         
         if event.hardware_keycode == 13:
-        
+            
             string = self.reInEntry.get_text()
+            self.reInEntry.set_text("")
             
             try:
                 
@@ -1536,6 +1543,7 @@ class POSvrSys(object):
         self.notebook.set_current_page(0)
         self.reNotebook.set_current_page(0)
         self.reCuEntry.set_text("")
+        self.reInEntry.set_text("")
         self.reInAlertLabel.set_label("")
         self.reCuTreeview.set_headers_visible(False)
         
@@ -1655,7 +1663,9 @@ class POSvrSys(object):
                     
                     widget.set_value(0.0)
                     
-    def check_widgets(self, widgetsList, notebook=None):
+    def validate_widgets(self, widgetsList, notebook=None):
+        
+        """Validates all the widgets from the widgetList for possible errors."""
         
         types = (gtk.Entry, gtk.ComboBox, gtk.TreeView, gtk.SpinButton)
         
@@ -1754,6 +1764,8 @@ class POSvrSys(object):
     
     def in_movie_list(self, movie, liststore):
         
+        """Checks if the movie object is in the liststore."""
+        
         _iter = liststore.get_iter_first()
         return_val = False
         
@@ -1786,6 +1798,11 @@ class POSvrSys(object):
         return return_val
         
     def cuPerformEdit(self, cust):
+        
+        """
+        Performs the actual customer edit. This method updates both GUI 
+        and the database.
+        """
         
         self.set_cursor("watch")
         
@@ -1820,6 +1837,11 @@ class POSvrSys(object):
         return cust
     
     def inPerformEdit(self, movie):
+        
+        """
+        Performs the actual inventory edit. This method updates both GUI 
+        and the database.
+        """
         
         self.set_cursor("watch")
         
@@ -1884,6 +1906,11 @@ class POSvrSys(object):
     
     def inPerformAdd(self):
         
+        """
+        Performs the actual inventory add. This method updates both GUI 
+        and the database.
+        """
+        
         self.set_cursor("watch")
         
         movie = Movie(self.inTitleEntry.get_text(), self.inImdbCodeEntry.get_text(),
@@ -1936,6 +1963,11 @@ class POSvrSys(object):
         
     def cuPerformAdd(self):
         
+        """
+        Performs the actual customer add. This method updates both GUI 
+        and the database.
+        """
+        
         self.set_cursor("watch")
         
         gender = {_("Male"):1, _("Female"):2}
@@ -1980,6 +2012,10 @@ class POSvrSys(object):
         
     def update_inListstore(self, movieList):
         
+        """
+        Updates the inventory ListStore.
+        """
+        
         for instance in movieList:
             
             movie = []
@@ -1994,6 +2030,10 @@ class POSvrSys(object):
             self.inListstore.append(movie)
             
     def update_cuListstore(self, cuList):
+        
+        """
+        Updates the customer ListStore.
+        """
         
         gender = {1:_("(M)"), 2:_("(F)")}
         
@@ -2015,6 +2055,10 @@ class POSvrSys(object):
             self.cuListstore.append(customer)
             
     def update_reCuListstore(self, cuList):
+        
+        """
+        Updates the rental ListStore.
+        """
         
         gender = {1:_("(M)"), 2:_("(F)")}
         
@@ -2130,7 +2174,7 @@ class POSvrSys(object):
         
         result = self.loginDialog.run()
         
-        while result == gtk.RESPONSE_OK and self.check_widgets(self.loWidgets) == -1:
+        while result == gtk.RESPONSE_OK and self.validate_widgets(self.loWidgets) == -1:
             
             result = self.loginDialog.run()
             

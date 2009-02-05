@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Sun Dec 28 18:42:30 2008 -->
+<!--Generated with glade3 3.4.3 on Sun Feb 01 18:03:34 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="title" translatable="yes">POSvrSys</property>
@@ -1185,7 +1185,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 # If you find any bugs or have any suggestions email: b3rxkintanar@gmail.com
-# URL: http://posvrsys.googlecode.com/</property>
+# URL: http://posvrsys.googlecode.com/
+#
+# POSvrSys needs the following to function properly:
+#   python &gt;= 2.5.1, gtk &gt;= 2.12.9, pygtk &gt;= 2.12.2, 
+#   sqlite &gt;= 2.3.5, sqlalchemy &gt;= 0.5.0</property>
     <property name="authors">Bertrand Son Kintanar &lt;b3rxkintanar@gmail.com&gt;</property>
     <property name="logo">logo.ico</property>
     <signal name="close" handler="on_aboutDialog_close"/>
@@ -1729,7 +1733,7 @@
             <child>
               <widget class="GtkLabel" id="label1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_General</property>
+                <property name="label" translatable="yes">_1: General</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
@@ -2048,7 +2052,7 @@
             <child>
               <widget class="GtkLabel" id="label5">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Behind the Scenes</property>
+                <property name="label" translatable="yes">_2: Behind the Scenes</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
@@ -2083,7 +2087,7 @@
                       <widget class="GtkSpinButton" id="inRentalCostSpin">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip" translatable="yes">Allotted days the movie could be rented.</property>
+                        <property name="tooltip" translatable="yes">Rental cost of the movie.</property>
                         <property name="max_length">4</property>
                         <property name="xalign">1</property>
                         <property name="adjustment">0 0 50 5 10 0</property>
@@ -2174,6 +2178,7 @@
                     <child>
                       <widget class="GtkComboBox" id="inStatusCombobox">
                         <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Status of the movie.</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -2213,7 +2218,7 @@
             <child>
               <widget class="GtkLabel" id="label9">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Renta_ls</property>
+                <property name="label" translatable="yes">_3: Rentals</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
@@ -2465,7 +2470,7 @@
             <child>
               <widget class="GtkLabel" id="label6">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Stat_istics</property>
+                <property name="label" translatable="yes">_4: Statistics</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>

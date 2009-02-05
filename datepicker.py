@@ -24,7 +24,7 @@
 #
 # POSvrSys needs the following to function properly:
 #   python >= 2.5.1, gtk >= 2.12.9, pygtk >= 2.12.2, 
-#   sqlite >= 2.3.5, sqlalchemy >= 0.5.0rc4
+#   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 import pygtk
 import gtk

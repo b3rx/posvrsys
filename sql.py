@@ -24,7 +24,7 @@
 #
 # POSvrSys needs the following to function properly:
 #   python >= 2.5.1, gtk >= 2.12.9, pygtk >= 2.12.2, 
-#   sqlite >= 2.3.5, sqlalchemy >= 0.5.0rc4
+#   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 from config import *
 
@@ -44,15 +44,15 @@ try:
     
     try:
         
-        assert ver >= "0.5.0rc4"
+        assert ver >= "0.5.0"
         
         if DEBUG:
             
-            print "Checking sqlalchemy 0.5.0rc4... Found"
+            print "Checking sqlalchemy 0.5.0...... Found"
             
     except AssertionError:
         
-        print "%s requires SQLAlchemy 0.5.0rc4 or higher, but %s was found" \
+        print "%s requires SQLAlchemy 0.5.0 or higher, but %s was found" \
             % (APP_NAME, ver)
         
         sys.exit(1)
