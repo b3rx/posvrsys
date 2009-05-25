@@ -103,7 +103,7 @@ class TVColumn(object):
     It is simply a helper class that makes it easier to inialize the
     tree."""
 
-    def __init__(self, ID, type, name, pos, visible=False, cellrenderer = None):
+    def __init__(self, ID, type, name, pos, visible=False, cellrenderer=None):
         """
         @param ID - int - The Columns ID
         @param type - int  - A gobject.TYPE_ for the gtk.TreeStore
@@ -613,7 +613,7 @@ class POSvrSys(object):
         
         if DEBUG:
             
-            print _("   Creating aboutDialog......... Done")
+            print _("   Creating aboutDialog........ Done")
             
     def create_inAddEditDialog(self):
         
@@ -752,7 +752,7 @@ class POSvrSys(object):
         
         if DEBUG:
             
-            print _("   Creating inAddEditDialog..... Done")
+            print _("   Creating inAddEditDialog.... Done")
             
         wTree.signal_autoconnect(self)
         
@@ -827,7 +827,7 @@ class POSvrSys(object):
         
         if DEBUG:
             
-            print _("   Creating cuAddEditDialog..... Done")
+            print _("   Creating cuAddEditDialog.... Done")
             
         wTree.signal_autoconnect(self)
             
@@ -984,7 +984,7 @@ class POSvrSys(object):
         
         _iter = self.inGenresAddEditListstore.get_iter_first()
         
-        while _iter != None:
+        while _iter is not None:
             
             value = self.inGenresAddEditListstore.get_value(_iter, 2)
             
@@ -1028,7 +1028,7 @@ class POSvrSys(object):
             
         _iter = self.inCastsAddEditListstore.get_iter_first()
         
-        while _iter != None:
+        while _iter is not None:
             
             value = self.inCastsAddEditListstore.get_value(_iter, 2)
             
@@ -1072,7 +1072,7 @@ class POSvrSys(object):
             
         _iter = self.inWritersAddEditListstore.get_iter_first()
         
-        while _iter != None:
+        while _iter is not None:
             
             value = self.inWritersAddEditListstore.get_value(_iter, 2)
             
@@ -1286,7 +1286,7 @@ class POSvrSys(object):
         coIter = self.cuCountryCombobox.get_active_iter()
         coModel = self.cuCountryCombobox.get_model()
         
-        while ciIter != None:
+        while ciIter is not None:
             
             if ciModel[ciIter][0] != cust.city.name:
                 
@@ -1298,7 +1298,7 @@ class POSvrSys(object):
                 
                 break
             
-        while saIter != None:
+        while saIter is not None:
             
             if saModel[saIter][0] != cust.state.name:
                 
@@ -1310,7 +1310,7 @@ class POSvrSys(object):
                 
                 break
             
-        while coIter != None:
+        while coIter is not None:
             
             if coModel[coIter][0] != cust.country.name:
                 
@@ -1632,15 +1632,15 @@ class POSvrSys(object):
             
             if value:
                 
-                if type(widget) == gtk.Entry:
+                if isinstance(widget, gtk.Entry):
                     
                     widget.set_text("")
                     
-                elif type(widget) == gtk.ComboBox:
+                elif isinstance(widget, gtk.ComboBox):
                     
                     widget.set_active(0)
                     
-                elif type(widget) == gtk.TreeView:
+                elif isinstance(widget, gtk.TreeView):
                     
                     model = widget.get_model()
                     model.clear()
@@ -1659,13 +1659,15 @@ class POSvrSys(object):
                         
                     widget.get_selection().unselect_all()
                     
-                elif type(widget) == gtk.SpinButton:
+                elif isinstance(widget, gtk.SpinButton):
                     
                     widget.set_value(0.0)
                     
     def validate_widgets(self, widgetsList, notebook=None):
         
-        """Validates all the widgets from the widgetList for possible errors."""
+        """Widget Validator
+        Validates all the widgets from the widgetList for possible errors.
+        """
         
         types = (gtk.Entry, gtk.ComboBox, gtk.TreeView, gtk.SpinButton)
         
@@ -1681,7 +1683,7 @@ class POSvrSys(object):
                 
                 notebook.set_current_page(w[3])
                 
-            if type(widget) == types[0]:
+            if isinstance(widget, types[0]):
                 
                 if widget.get_text() == "":
                     
@@ -1697,7 +1699,7 @@ class POSvrSys(object):
                     
                     label.set_markup_with_mnemonic("%s" % text)
                     
-            elif type(widget) == types[1]:
+            elif isinstance(widget, types[1]):
                 
                 model = widget.get_model()
                 active = widget.get_active()
@@ -1716,7 +1718,7 @@ class POSvrSys(object):
                     
                     label.set_markup_with_mnemonic("%s" % text)
                     
-            elif type(widget) == types[2]:
+            elif isinstance(widget, types[2]):
                 
                 entries = {
                     "inGenresAddEditListstore"  : self.inGenresEntry,
@@ -1726,7 +1728,7 @@ class POSvrSys(object):
                 
                 model = widget.get_model()
                 
-                if len(model) == 0:
+                if not model:
                     
                     entry = entries[model.get_name()]
                     
@@ -1744,7 +1746,7 @@ class POSvrSys(object):
                     
                     label.set_markup_with_mnemonic("%s" % text)
                     
-            elif type(widget) == types[3]:
+            elif isinstance(widget, types[3]):
                 
                 if widget.get_value() == 0.0:
                     
@@ -1771,7 +1773,7 @@ class POSvrSys(object):
         
         self.reInAlertLabel.set_label("")
         
-        while _iter != None:
+        while _iter is not None:
             
             m = liststore.get_value(_iter, 0)
             
@@ -1870,7 +1872,7 @@ class POSvrSys(object):
             
         # selected genres
         _iter = self.inGenresAddEditListstore.get_iter_first()
-        while _iter != None:
+        while _iter is not None:
             
             self.inGenresSelectedList.append(self.inGenresAddEditListstore.get_value(_iter, 0))
             
@@ -1878,7 +1880,7 @@ class POSvrSys(object):
             
         # selected casts
         _iter = self.inCastsAddEditListstore.get_iter_first()
-        while _iter != None:
+        while _iter is not None:
             
             self.inCastsSelectedList.append(self.inCastsAddEditListstore.get_value(_iter, 0))
             
@@ -1886,7 +1888,7 @@ class POSvrSys(object):
             
         # selected writers
         _iter = self.inWritersAddEditListstore.get_iter_first()
-        while _iter != None:
+        while _iter is not None:
             
             self.inWritersSelectedList.append(self.inWritersAddEditListstore.get_value(_iter, 0))
             
@@ -1932,7 +1934,7 @@ class POSvrSys(object):
             
         # selected genres
         _iter = self.inGenresAddEditListstore.get_iter_first()
-        while _iter != None:
+        while _iter is not None:
             
             self.inGenresSelectedList.append(self.inGenresAddEditListstore.get_value(_iter, 0))
             
@@ -1940,7 +1942,7 @@ class POSvrSys(object):
             
         # selected casts
         _iter = self.inCastsAddEditListstore.get_iter_first()
-        while _iter != None:
+        while _iter is not None:
             
             self.inCastsSelectedList.append(self.inCastsAddEditListstore.get_value(_iter, 0))
             
@@ -1948,7 +1950,7 @@ class POSvrSys(object):
             
         # selected writers
         _iter = self.inWritersAddEditListstore.get_iter_first()
-        while _iter != None:
+        while _iter is not None:
             
             self.inWritersSelectedList.append(self.inWritersAddEditListstore.get_value(_iter, 0))
             
