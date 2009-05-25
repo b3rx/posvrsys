@@ -36,5 +36,3 @@ DEBUG    = True
 LOGIN    = False
 PREFIX   = "+63"
 APP_NAME = "POSvrSys"
-
-
