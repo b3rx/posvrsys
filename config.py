@@ -27,6 +27,7 @@
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 __version__ = "$Revision$"
+__date__    = "$Date$"
 # $Source$
 
 DEBUG    = True
@@ -36,6 +37,5 @@ APP_NAME = "POSvrSys"
 
 __author__     = "Bertrand Kintanar <b3rxkintanar@gmail.com>"
 __appversion__ = "0.1"
-__date__       = "Date: 2008/11/26"
 __copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
 __license__    = "GPL3"
