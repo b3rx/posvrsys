@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# package  : POSvrSys - PyGTK POS Video Rental System
+# version  : $Id$
+# copyright: Copyright (c) 2008-2009 Bertrand Kintanar <b3rxkintanar@gmail.com>
+# license  : http://opensource.org/licenses/gpl-3.0.html
+# url      : http://posvrsys.googlecode.com/
+
 import os, sys, shutil, zipfile
 
 BASE_DIR = os.path.dirname(__file__)

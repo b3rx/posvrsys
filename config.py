@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# POSvrSys - PyGTK POS Video Rental System
-# Copyright (C) 2008-2009 Bertrand Kintanar <b3rxkintanar@gmail.com>
-# http://posvrsys.googlecode.com/
+# package  : POSvrSys - PyGTK POS Video Rental System
+# version  : $Id$
+# copyright: Copyright (c) 2008-2009 Bertrand Kintanar <b3rxkintanar@gmail.com>
+# license  : http://opensource.org/licenses/gpl-3.0.html
+# url      : http://posvrsys.googlecode.com/
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +29,8 @@
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 __author__     = "Bertrand Kintanar <b3rxkintanar@gmail.com>"
-__date__       = "$Date$"
-__appversion__ = "$Revision$"
+__appversion__ = "0.1"
+__date__       = "Date: 2008/11/26"
 __copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
 __license__    = "GPL3"
 
