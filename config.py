@@ -26,8 +26,11 @@
 #   python >= 2.5.1, gtk >= 2.12.9, pygtk >= 2.12.2, 
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
-__version__ = "$Revision$"
-__date__    = "$Date$"
+__author__     = "Bertrand Kintanar <b3rxkintanar@gmail.com>"
+__date__       = "$Date$"
+__appversion__ = "0.1 $Revision$"
+__copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
+__license__    = "GPL3"
 # $Source$
 
 DEBUG    = True
@@ -35,7 +38,4 @@ LOGIN    = False
 PREFIX   = "+63"
 APP_NAME = "POSvrSys"
 
-__author__     = "Bertrand Kintanar <b3rxkintanar@gmail.com>"
-__appversion__ = "0.1"
-__copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
-__license__    = "GPL3"
+
