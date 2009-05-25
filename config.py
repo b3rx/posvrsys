@@ -28,7 +28,7 @@
 
 __author__     = "Bertrand Kintanar <b3rxkintanar@gmail.com>"
 __date__       = "$Date$"
-__appversion__ = "0.1 $Revision$"
+__appversion__ = "$Revision$"
 __copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
 __license__    = "GPL3"
 # $Source$
