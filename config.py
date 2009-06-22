@@ -29,7 +29,7 @@
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 __version__ = "$Rev$"
-# $Source$
+# $HeadURL$
 
 __author__     = "Bertrand Kintanar <b3rxkintanar@gmail.com>"
 __appversion__ = "0.1"
