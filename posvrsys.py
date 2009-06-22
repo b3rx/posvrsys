@@ -951,7 +951,7 @@ class POSvrSys(object):
         directors = [re.findall('/">(.*?)</a>', entry) for entry in directors][0]
         
         # Get Writers
-        writers = re.findall('<h5>Writers(.*?)</div>', data, re.MULTILINE | re.DOTALL)
+        writers = re.findall('<h5>Writer(.*?)</div>', data, re.MULTILINE | re.DOTALL)
         writers = [re.findall('/">(.*?)</a>', entry) for entry in writers][0]
         
         # Get Plot
@@ -969,10 +969,25 @@ class POSvrSys(object):
         genres = re.findall('<h5>Genre(.*?)more', data, re.MULTILINE | re.DOTALL)
         genres = [re.findall('/">(.*?)</a>', entry) for entry in genres][0]
         
+        # get the Casts
+        casts = re.findall('<h3>Cast(.*?)more</a></div>', data, re.MULTILINE | re.DOTALL)
+        casts = [re.findall('<a href.*?/name/.*?/">(.*?)</a>',entry) for entry in casts][0]
+        
+        # Populate inGenresAddEditListstore
         for genre in genres:
             
             self.on_inGenresAddButton_clicked(self, genre)
             
+        # Populate inWritersAddEditListstore
+        for writer in writers:
+            
+            self.on_inWritersAddButton_clicked(self, writer)
+            
+        # Populate inCastsAddEditListstore
+        for cast in casts:
+            
+            self.on_inCastsAddButton_clicked(self, cast)
+        
         self.inTitleEntry.set_text(title[0])
         self.inDirectorEntry.set_text(directors[0])
         self.inReleaseCalendar.set_date(releaseDate)
@@ -1061,22 +1076,26 @@ class POSvrSys(object):
             self.inGenresEntry.set_text("")
             self.inGenresEntry.grab_focus()
         
-    def on_inCastsAddButton_clicked(self, widget):
+    def on_inCastsAddButton_clicked(self, widget, text=None):
+        
+        if text is None:
+            
+            text = self.inCastsEntry.get_text()
         
         cast = []
         in_liststore = False
         
         try:
             
-            c = session.query(Cast).filter(self.inCastsEntry.get_text()==Cast.full_name).one()
+            c = session.query(Cast).filter(text==Cast.full_name).one()
             
             cast.extend([c, c.id, c.full_name])
             
         except NoResultFound:
             
-            if self.inCastsEntry.get_text() != "":
+            if text != "":
                 
-                c = Cast(self.inCastsEntry.get_text())
+                c = Cast(text)
                 
                 cast.extend([c, -1, c.full_name])
                 
@@ -1102,25 +1121,31 @@ class POSvrSys(object):
             
             self.inCastsAddEditListstore.append(cast)
             
-        self.inCastsEntry.set_text("")
-        self.inCastsEntry.grab_focus()
+        if text is None:
+            
+            self.inCastsEntry.set_text("")
+            self.inCastsEntry.grab_focus()
         
-    def on_inWritersAddButton_clicked(self, widget):
+    def on_inWritersAddButton_clicked(self, widget, text=None):
+        
+        if text is None:
+            
+            text = self.inWritersEntry.get_text()
         
         writer = []
         in_liststore = False
         
         try:
             
-            w = session.query(Writer).filter(self.inWritersEntry.get_text()==Writer.full_name).one()
+            w = session.query(Writer).filter(text==Writer.full_name).one()
             
             writer.extend([w, w.id, w.full_name])
             
         except NoResultFound:
             
-            if self.inWritersEntry.get_text() != "":
+            if text != "":
                 
-                w = Writer(self.inWritersEntry.get_text())
+                w = Writer(text)
                 
                 writer.extend([w, -1, w.full_name])
                 
@@ -1146,8 +1171,10 @@ class POSvrSys(object):
             
             self.inWritersAddEditListstore.append(writer)
             
-        self.inWritersEntry.set_text("")
-        self.inWritersEntry.grab_focus()
+        if text is None:
+            
+            self.inWritersEntry.set_text("")
+            self.inWritersEntry.grab_focus()
         
     def on_inGenresRemoveButton_clicked(self, widget):
         
@@ -1965,7 +1992,7 @@ class POSvrSys(object):
         session.add(movie)
         session.commit()
         
-        self.root_window.set_cursor(None)
+        #self.root_window.set_cursor(None)
         
         return movie
     
@@ -2024,7 +2051,7 @@ class POSvrSys(object):
         
         self.update_inListstore([movie])
         
-        self.root_window.set_cursor(None)
+        #self.root_window.set_cursor(None)
         
     def cuPerformAdd(self):
         
@@ -2062,7 +2089,7 @@ class POSvrSys(object):
         
         self.update_cuListstore([temp_cust])
         
-        self.root_window.set_cursor(None)
+        #self.root_window.set_cursor(None)
         
     def rePerformRental(self, customer):
         
