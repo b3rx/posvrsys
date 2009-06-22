@@ -43,6 +43,7 @@ try:
     import os
     import re
     import sys
+    import urllib2
     
 except ImportError, e:
     
@@ -54,6 +55,7 @@ try:
     
     import pygtk
     pygtk.require20()
+    
     import gtk
     import gtk.glade
     
@@ -738,8 +740,8 @@ class POSvrSys(object):
         
         self.inWidgets = \
             [
-                [self.inTitleEntry, self.inTitleLabel, _("_Title:"), 0],
                 [self.inImdbCodeEntry, self.inImdbCodeLabel, _("_IMDB Code:"), 0],
+                [self.inTitleEntry, self.inTitleLabel, _("_Title:"), 0],
                 [self.inReleaseCalendar.entry, self.inReleaseLabel, _("_Release:"), 0],
                 [self.inDirectorEntry, self.inDirectorLabel, _("_Director:"), 0],
                 [self.inRatingSpin, self.inRatingLabel, _("Rati_ng:"), 0],
@@ -927,10 +929,56 @@ class POSvrSys(object):
         self.inCastsTreeview.get_selection().unselect_all()
         self.inWritersTreeview.get_selection().unselect_all()
         
+    def on_inTitleConnectButton_clicked(self, widget):
+        
+        req=urllib2.Request('http://www.imdb.com/title/%s/' % self.inImdbCodeEntry.get_text())
+        sock=urllib2.urlopen(req)
+        data = sock.read()
+        
+        months = {'January':1, 'February':2, 'March':3, 'April':4, 'May':5,
+              'June':6, 'July':7, 'August':8, 'September':9, 'October':10,
+              'November':11, 'December':12}
+        
+        # Get Title
+        title = re.findall('<meta name="title" content="(.*?) \(.*?\)">', data)
+        
+        # Get Directors
+        directors = re.findall('id="director-info" class="info">(.*?)</div>', data, re.MULTILINE | re.DOTALL)
+        directors = [re.findall('/">(.*?)</a>', entry) for entry in directors][0]
+        
+        # Get Writers
+        writers = re.findall('<h5>Writers(.*?)</div>', data, re.MULTILINE | re.DOTALL)
+        writers = [re.findall('/">(.*?)</a>', entry) for entry in writers][0]
+        
+        # Get Plot
+        plot = re.findall("<h5>Plot:</h5>\n(.*?)<a", data, re.MULTILINE | re.DOTALL)[0]
+        
+        # Get Release Date
+        rDate = re.findall("<h5>Release Date:</h5> \n(.*?)\n <a", data, re.MULTILINE | re.DOTALL)[0]
+        rDate = rDate.split(" ")
+        releaseDate = datetime.date(int(rDate[2]), int(months[rDate[1]]), int(rDate[0]))
+        
+        # Get User Rating
+        rating = float(re.findall("<h5>User Rating:</h5>.*<b>(.*?)/10</b>", data, re.MULTILINE | re.DOTALL)[0])
+        
+        # Get Genres
+        genres = re.findall('<h5>Genre(.*?)more', data, re.MULTILINE | re.DOTALL)
+        genres = [re.findall('/">(.*?)</a>', entry) for entry in genres][0]
+        
+        for genre in genres:
+            
+            self.on_inGenresAddButton_clicked(self, genre)
+            
+        self.inTitleEntry.set_text(title[0])
+        self.inDirectorEntry.set_text(directors[0])
+        self.inReleaseCalendar.set_date(releaseDate)
+        self.inPlotEntry.set_text(plot)
+        self.inRatingSpin.set_value(rating)
+        
     def on_inAddButton_clicked(self, widget):
         
         self.inAddEditDialog.set_title(_("Add Movie Dialog"))
-        self.inTitleEntry.grab_focus()
+        self.inImdbCodeEntry.grab_focus()
         
         self.inRevenueLastMonth.set_text('0.00')
         self.inRevenueThisMonth.set_text('0.00')
@@ -969,14 +1017,18 @@ class POSvrSys(object):
         
         self.inWritersRemoveButton.set_sensitive(True)
         
-    def on_inGenresAddButton_clicked(self, widget):
+    def on_inGenresAddButton_clicked(self, widget, text=None):
+        
+        if text is None:
+            
+            text = self.inGenresEntry.get_text()
         
         genre = []
         in_liststore = False
         
         try:
             
-            g = session.query(Genre).filter(self.inGenresEntry.get_text()==Genre.name).one()
+            g = session.query(Genre).filter(text==Genre.name).one()
             
             genre.extend([g, g.id, g.name])
             
@@ -1000,8 +1052,10 @@ class POSvrSys(object):
             
             self.inGenresAddEditListstore.append(genre)
             
-        self.inGenresEntry.set_text("")
-        self.inGenresEntry.grab_focus()
+        if text is None:
+            
+            self.inGenresEntry.set_text("")
+            self.inGenresEntry.grab_focus()
         
     def on_inCastsAddButton_clicked(self, widget):
         
@@ -1456,7 +1510,7 @@ class POSvrSys(object):
         
     def on_inFindButton_clicked(self, widget):
         
-        self.set_cursor("watch")
+        #self.set_cursor("watch")
         
         genreModel = self.inGenreCombobox.get_model()
         genreActive = self.inGenreCombobox.get_active()
@@ -1504,7 +1558,7 @@ class POSvrSys(object):
         
     def on_cuFindButton_clicked(self, widget):
         
-        self.set_cursor("watch")
+        #self.set_cursor("watch")
         
         searchTitle = self.cuEntry.get_text()
         
@@ -1808,7 +1862,7 @@ class POSvrSys(object):
         and the database.
         """
         
-        self.set_cursor("watch")
+        #self.set_cursor("watch")
         
         gender = {_("Male"):1, _("Female"):2}
         
@@ -1847,7 +1901,7 @@ class POSvrSys(object):
         and the database.
         """
         
-        self.set_cursor("watch")
+        #self.set_cursor("watch")
         
         movie.title    = self.inTitleEntry.get_text()
         movie.imdbCode = self.inImdbCodeEntry.get_text()
@@ -1870,7 +1924,10 @@ class POSvrSys(object):
             
             director = Director(self.inDirectorEntry.get_text())
             
-            self.inDirectorListstore.append(director, -1, director.full_name)
+            print director
+            
+            ## TODO: Error here
+            self.inDirectorListstore.append([director.full_name])
             
         # selected genres
         _iter = self.inGenresAddEditListstore.get_iter_first()
@@ -1915,7 +1972,7 @@ class POSvrSys(object):
         and the database.
         """
         
-        self.set_cursor("watch")
+        #self.set_cursor("watch")
         
         movie = Movie(self.inTitleEntry.get_text(), self.inImdbCodeEntry.get_text(),
             self.inReleaseCalendar.get_date(), self.inPlotEntry.get_text(),
@@ -1972,7 +2029,7 @@ class POSvrSys(object):
         and the database.
         """
         
-        self.set_cursor("watch")
+        #self.set_cursor("watch")
         
         gender = {_("Male"):1, _("Female"):2}
         
