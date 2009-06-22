@@ -28,9 +28,10 @@
 #   python >= 2.5.1, gtk >= 2.12.9, pygtk >= 2.12.2, 
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
-_ = lambda x : x
+__version__ = "$Rev$"
+# $Source$
 
-revision = "$Rev$"
+_ = lambda x : x
 
 from config import *
 from config import __appversion__
@@ -158,7 +159,7 @@ class POSvrSys(object):
             
             self.security()
             
-        self.main_window.set_title(APP_NAME + " " + __appversion__) 
+        self.main_window.set_title(APP_NAME + " " + __appversion__ + " r" + __version__.split(" ")[1]) 
         self.main_window.maximize()
         
         #Connect with yourself
