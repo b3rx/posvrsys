@@ -30,6 +30,8 @@
 
 _ = lambda x : x
 
+revision = "$Rev$"
+
 from config import *
 from config import __appversion__
 
