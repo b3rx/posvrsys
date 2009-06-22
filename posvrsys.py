@@ -617,6 +617,7 @@ class POSvrSys(object):
         #Get the actual dialog widget
         self.aboutDialog = wTree.get_widget("aboutDialog")
         #self.aboutDialog.set_icon()
+        self.aboutDialog.set_version(__appversion__ + " r" + __version__.split(" ")[1])
         
         if DEBUG:
             
