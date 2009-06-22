@@ -702,7 +702,7 @@ def insertDummy(session):
     session.add(Director("Scott Derrickson"))
     session.add(Director("Seth Gordon"))
     
-    director = Director('Marc Foster')
+    director = Director('Marc Forster')
     
     genres.append(Genre('Action'))
     genres.append(Genre('Adventure'))

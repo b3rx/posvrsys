@@ -973,6 +973,10 @@ class POSvrSys(object):
         casts = re.findall('<h3>Cast(.*?)more</a></div>', data, re.MULTILINE | re.DOTALL)
         casts = [re.findall('<a href.*?/name/.*?/">(.*?)</a>',entry) for entry in casts][0]
         
+        self.inGenresAddEditListstore.clear()
+        self.inWritersAddEditListstore.clear()
+        self.inCastsAddEditListstore.clear()
+        
         # Populate inGenresAddEditListstore
         for genre in genres:
             
@@ -1585,7 +1589,7 @@ class POSvrSys(object):
                     
         self.update_inListstore(movieList)
         
-        self.root_window.set_cursor(None)
+        #self.root_window.set_cursor(None)
         
     def on_cuFindButton_clicked(self, widget):
         
@@ -1617,7 +1621,7 @@ class POSvrSys(object):
                 
         self.update_cuListstore(customerList)
         
-        self.root_window.set_cursor(None)
+        #self.root_window.set_cursor(None)
     def on_reButton_clicked(self, widget):
         
         # clear the liststore
@@ -1921,7 +1925,7 @@ class POSvrSys(object):
         
         cust = insertCustomer(session, cust, ci, sa, co)
         
-        self.root_window.set_cursor(None)
+        #self.root_window.set_cursor(None)
         
         return cust
     
@@ -2304,7 +2308,7 @@ class POSvrSys(object):
         
         cursor = gtk.gdk.Cursor(cursor_dict[value])
         
-        self.root_window.set_cursor(cursor)
+        #self.root_window.set_cursor(cursor)
         
     def security(self):
         
