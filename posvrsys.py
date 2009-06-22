@@ -75,8 +75,8 @@ try:
     
     if DEBUG:
         
-        print _("Checking pygtk 2.0............. Found")
-        print _("Checking gtk+ 2.14.1........... Found")
+        print _("Checking pygtk >= 2.0.......... Found")
+        print _("Checking gtk+  >= 2.14.1....... Found")
         print _("Checking glade................. Found")
         
 except ImportError, e:

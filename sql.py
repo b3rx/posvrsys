@@ -53,7 +53,7 @@ try:
         
         if DEBUG:
             
-            print "Checking sqlalchemy 0.5.0...... Found"
+            print "Checking sqlalchemy >= 0.5.0... Found"
             
     except AssertionError:
         
