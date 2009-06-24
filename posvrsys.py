@@ -760,7 +760,7 @@ class POSvrSys(object):
             [
                 [self.inImdbCodeEntry, self.inImdbCodeLabel, _("_IMDB Code:"), 0],
                 [self.inTitleEntry, self.inTitleLabel, _("_Title:"), 0],
-                [self.inReleaseCalendar.entry, self.inReleaseLabel, _("_Release:"), 0],
+                [self.inReleaseCalendar.entry, self.inReleaseLabel, _("Re_lease:"), 0],
                 [self.inDirectorEntry, self.inDirectorLabel, _("_Director:"), 0],
                 [self.inRatingSpin, self.inRatingLabel, _("Rati_ng:"), 0],
                 [self.inPlotEntry, self.inPlotLabel, _("_Plot:"), 0],
