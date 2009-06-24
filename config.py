@@ -25,7 +25,7 @@
 # URL: http://posvrsys.googlecode.com/
 #
 # POSvrSys needs the following to function properly:
-#   python >= 2.5.1, gtk >= 2.12.9, pygtk >= 2.12.2, 
+#   python >= 2.5.1, gtk >= 2.14.1, pygtk >= 2.12.2, 
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 __version__ = "$Rev$"
@@ -38,6 +38,6 @@ __copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
 __license__    = "GPL3"
 
 DEBUG    = True
-LOGIN    = False
+LOGIN    = True
 PREFIX   = "+63"
 APP_NAME = "POSvrSys"

@@ -25,7 +25,7 @@
 # URL: http://posvrsys.googlecode.com/
 #
 # POSvrSys needs the following to function properly:
-#   python >= 2.5.1, gtk >= 2.12.9, pygtk >= 2.12.2, 
+#   python >= 2.5.1, gtk >= 2.14.1, pygtk >= 2.12.2, 
 #   sqlite >= 2.3.5, sqlalchemy >= 0.5.0
 
 __version__ = "$Rev$"
@@ -50,7 +50,7 @@ try:
     
 except ImportError, e:
     
-    print _("Import error POSvsSys cannot start:"), e
+    print _("Import error POSvrSys cannot start:"), e
     
     sys.exit(1)
 
@@ -88,7 +88,7 @@ except ImportError, e:
 from sql import *
 from datepicker import CalendarEntry
 
-session = checkDatabase('posvrsys.sqlite')
+session = checkDatabase("posvrsys.sqlite")
 
 """Column IDs"""
 COL_OBJECT      = 0
@@ -106,9 +106,11 @@ COL_ZIP         = 8
 COL_COUNTRY     = 9
 
 class TVColumn(object):
-    """This is a class that represents a column in the todo tree.
+    """
+    This is a class that represents a column in the todo tree.
     It is simply a helper class that makes it easier to inialize the
-    tree."""
+    tree.
+    """
 
     def __init__(self, ID, type, name, pos, visible=False, cellrenderer=None):
         """
@@ -204,7 +206,7 @@ class POSvrSys(object):
             langs = [lc]
             
         # Now lets get all of the supported languages on the system
-        language = os.environ.get('LANGUAGE', None)
+        language = os.environ.get("LANGUAGE", None)
         
         if (language):
             """
@@ -288,6 +290,12 @@ class POSvrSys(object):
             % (APP_NAME, __appversion__))
         
     def create_inListstore(self):
+    
+        """
+        Creates and populates the inListstore. inListstore contains list of 
+        movies in the inventory. It displays it in a table form displaying 
+        the id, title, genres, and the director of a given movie.
+        """
         
         self.inListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
@@ -333,10 +341,13 @@ class POSvrSys(object):
         #Attache the model to the treeView
         self.inTreeview.set_model(self.inListstore)
         
-        self.populate_inListstore()
+    def create_inGenreAddEditListstore(self):
         
-    def create_inGenreListstore(self):
-        
+        """
+        Creates the inGenreListore. inGenreListstore is used by the 
+        inAddEditDialog. This doesn't populate the liststore it just
+        creates it.
+        """
         self.inGenresListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
             , TVColumn(COL_OBJECT_TYPE, gobject.TYPE_INT, "object_type", 1)
@@ -373,11 +384,11 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inGenresTreeview.append_column(column)
                 
-        self.inGenresAddEditListstore.set_name('inGenresAddEditListstore')
+        self.inGenresAddEditListstore.set_name("inGenresAddEditListstore")
         self.inGenresTreeview.set_model(self.inGenresAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
-    def create_inCastListstore(self):
+    def create_inCastAddEditListstore(self):
         
         self.inCastsListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
@@ -415,11 +426,11 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inCastsTreeview.append_column(column)
                 
-        self.inCastsAddEditListstore.set_name('inCastsAddEditListstore')
+        self.inCastsAddEditListstore.set_name("inCastsAddEditListstore")
         self.inCastsTreeview.set_model(self.inCastsAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
-    def create_inWriterListstore(self):
+    def create_inWriterAddEditListstore(self):
         
         self.inWritersListstore_columns = [
             TVColumn(COL_OBJECT, gobject.TYPE_PYOBJECT, "object", 0)
@@ -457,7 +468,7 @@ class POSvrSys(object):
                 column.set_sort_column_id(item_column.pos)
                 self.inWritersTreeview.append_column(column)
                 
-        self.inWritersAddEditListstore.set_name('inWritersAddEditListstore')
+        self.inWritersAddEditListstore.set_name("inWritersAddEditListstore")
         self.inWritersTreeview.set_model(self.inWritersAddEditListstore)
         #self.inGenresTreeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
@@ -508,7 +519,7 @@ class POSvrSys(object):
         #Attache the model to the treeView
         self.cuTreeview.set_model(self.cuListstore)
         
-        self.populate_cuListstore()
+        
         
     def create_reCuListstore(self):
         
@@ -594,7 +605,7 @@ class POSvrSys(object):
                 
                 if item_column.name == _("Price") or item_column.name == _("Days"):
                     
-                    item_column.cellrenderer.set_property('xalign', 1)
+                    item_column.cellrenderer.set_property("xalign", 1)
                     column.set_alignment(1)
                     
                 # Set the column to expand if it is the column Title
@@ -625,9 +636,10 @@ class POSvrSys(object):
             
     def create_inAddEditDialog(self):
         
-        # create some controls
+        # create and populate some controls
         self.create_inListstore()
         self.create_inGenreCombobox()
+        self.populate_inListstore()
         
         wTree = gtk.glade.XML(self.gladefile, "inAddEditDialog")
         self.inAddEditDialog = wTree.get_widget("inAddEditDialog")
@@ -638,7 +650,7 @@ class POSvrSys(object):
         
         self.inAddEditNotebook = wTree.get_widget("inAddEditNotebook")
         
-        self.inReleaseCalendar = CalendarEntry('')
+        self.inReleaseCalendar = CalendarEntry("")
         self.inAddEditTable.attach(self.inReleaseCalendar, 1, 2 , 2, 3)
         self.inReleaseCalendar.show_all()
         
@@ -722,23 +734,25 @@ class POSvrSys(object):
         self.inAllottedDaysLabel = wTree.get_widget("inAllottedDaysLabel")
         self.inStatusLabel       = wTree.get_widget("inStatusLabel")
         
+        self.inAddEditDialog.set_icon_from_file(os.path.join("img", "movie-new.png"))
+        
         self.inReleaseLabel.set_mnemonic_widget(self.inReleaseCalendar.entry)
         
-        self.create_inGenreListstore()
-        self.create_inCastListstore()
-        self.create_inWriterListstore()
+        self.create_inGenreAddEditListstore()
+        self.create_inCastAddEditListstore()
+        self.create_inWriterAddEditListstore()
         
         self.inStatusListstore = gtk.ListStore(str)
         cellRenderer = gtk.CellRendererText()
         
-        status = (_('Select one'), _('Available'), _('Rented'), _('Out of order'))
+        status = (_("Select one"), _("Available"), _("Rented"), _("Out of order"))
         
         for s in status:
             
             self.inStatusListstore.append([s])
             
         self.inStatusCombobox.pack_start(cellRenderer, True)
-        self.inStatusCombobox.add_attribute(cellRenderer, 'text', 0)
+        self.inStatusCombobox.add_attribute(cellRenderer, "text", 0)
         self.inStatusCombobox.set_model(self.inStatusListstore)
         self.inStatusCombobox.set_active(0)
         
@@ -795,9 +809,12 @@ class POSvrSys(object):
         
         self.cuContactnumberHbox  = wTree.get_widget("cuContactnumberHbox")
         
-        # create some controls
+        self.cuAddEditDialog.set_icon_from_file(os.path.join("img", "customer-new.png"))
+        
+        # create and pupulate some controls
         self.create_cuListstore()
         self.create_cuComboboxes()
+        self.populate_cuListstore()
         
         self.cuWidgets = \
         [
@@ -847,9 +864,9 @@ class POSvrSys(object):
         cellRenderer = gtk.CellRendererText()
         
         self.inGenreCombobox.pack_start(cellRenderer, True)
-        self.inGenreCombobox.add_attribute(cellRenderer, 'text', 0)
+        self.inGenreCombobox.add_attribute(cellRenderer, "text", 0)
         
-        self.inGenreListStore.append([_('All Genres')])
+        self.inGenreListStore.append([_("All Genres")])
         
         for genre in session.query(Genre).order_by(Genre.name):
             
@@ -867,34 +884,34 @@ class POSvrSys(object):
         cellRenderer = gtk.CellRendererText()
         
         self.cuGenderCombobox.pack_start(cellRenderer, True)
-        self.cuGenderCombobox.add_attribute(cellRenderer, 'text', 0)
+        self.cuGenderCombobox.add_attribute(cellRenderer, "text", 0)
         self.cuCityCombobox.pack_start(cellRenderer, True)
-        self.cuCityCombobox.add_attribute(cellRenderer, 'text', 0)
+        self.cuCityCombobox.add_attribute(cellRenderer, "text", 0)
         self.cuStateCombobox.pack_start(cellRenderer, True)
-        self.cuStateCombobox.add_attribute(cellRenderer, 'text', 0)
+        self.cuStateCombobox.add_attribute(cellRenderer, "text", 0)
         self.cuCountryCombobox.pack_start(cellRenderer, True)
-        self.cuCountryCombobox.add_attribute(cellRenderer, 'text', 0)
+        self.cuCountryCombobox.add_attribute(cellRenderer, "text", 0)
         
         # Gender
-        li = [_('Select one'), _('Male'), _('Female')]
+        li = [_("Select one"), _("Male"), _("Female")]
         for item in li:
             
             self.cuGenderListStore.append([item])
             
         # City
-        self.cuCityListStore.append([_('Select one')])
+        self.cuCityListStore.append([_("Select one")])
         for city in session.query(City):
             
             self.cuCityListStore.append([city.name])
             
         # State
-        self.cuStateListStore.append([_('Select one')])
+        self.cuStateListStore.append([_("Select one")])
         for state in session.query(State).order_by(State.name):
             
             self.cuStateListStore.append([state.name])
             
         # Country
-        self.cuCountryListStore.append([_('Select one')])
+        self.cuCountryListStore.append([_("Select one")])
         for country in session.query(Country).order_by(Country.name):
             
             self.cuCountryListStore.append([country.name])
@@ -935,30 +952,42 @@ class POSvrSys(object):
         
     def on_inTitleConnectButton_clicked(self, widget):
         
-        req=urllib2.Request('http://www.imdb.com/title/%s/' % self.inImdbCodeEntry.get_text())
-        sock=urllib2.urlopen(req)
-        data = sock.read()
+        #req  = urllib2.Request("http://www.imdb.com/title/%s/" % self.inImdbCodeEntry.get_text())
+        #req  = urllib2.Request("file:///C:/Documents%20and%20Settings/bkintanar/My%20Documents/src/posvrsys/tt1111422.html")
         
-        months = {'January':1, 'February':2, 'March':3, 'April':4, 'May':5,
-              'June':6, 'July':7, 'August':8, 'September':9, 'October':10,
-              'November':11, 'December':12}
+        url = "file:///C:/Documents%20and%20Settings/bkintanar/My%20Documents/src/posvrsys/tt1111422.html"
+        charset = "utf-8"
+        data = ""
+        
+        req = urllib2.Request(url)
+        response = urllib2.urlopen(req)
+        data = response.read()
+        info = response.info()
+        print info
+        
+        print sys.getdefaultencoding()
+        #ignore, charset = info["Content-Type"].split("charset=")
+        
+        months = {"January":1, "February":2, "March":3, "April":4, "May":5,
+              "June":6, "July":7, "August":8, "September":9, "October":10,
+              "November":11, "December":12}
         
         # Get Title
-        title = re.findall('<meta name="title" content="(.*?) \(.*?\)">', data)
+        title = re.findall("<meta name=\"title\" content=\"(.*?) \(.*?\)\">", data)
         
         # Get Directors
-        directors = re.findall('id="director-info" class="info">(.*?)</div>', data, re.MULTILINE | re.DOTALL)
-        directors = [re.findall('/">(.*?)</a>', entry) for entry in directors][0]
+        directors = re.findall("id=\"director-info\" class=\"info\">(.*?)</div>", data, re.MULTILINE | re.DOTALL)
+        directors = [re.findall("/\">(.*?)</a>", entry) for entry in directors][0]
         
         # Get Writers
-        writers = re.findall('<h5>Writer(.*?)</div>', data, re.MULTILINE | re.DOTALL)
-        writers = [re.findall('/">(.*?)</a>', entry) for entry in writers][0]
+        writers = re.findall("<h5>Writer(.*?)</div>", data, re.MULTILINE | re.DOTALL)
+        writers = [re.findall("/\">(.*?)</a>", entry) for entry in writers][0]
         
         # Get Plot
-        plot = re.findall("<h5>Plot:</h5>\n(.*?)<a", data, re.MULTILINE | re.DOTALL)[0]
+        plot = re.findall("<h5>Plot:</h5>\r*\n(.*?)\r*\n<a", data, re.MULTILINE | re.DOTALL)[0]
         
         # Get Release Date
-        rDate = re.findall("<h5>Release Date:</h5> \n(.*?)\n <a", data, re.MULTILINE | re.DOTALL)[0]
+        rDate = re.findall("<h5>Release Date:</h5> \r*\n(.*?)\r*\n <a", data, re.MULTILINE | re.DOTALL)[0]
         rDate = rDate.split(" ")
         releaseDate = datetime.date(int(rDate[2]), int(months[rDate[1]]), int(rDate[0]))
         
@@ -966,12 +995,12 @@ class POSvrSys(object):
         rating = float(re.findall("<h5>User Rating:</h5>.*<b>(.*?)/10</b>", data, re.MULTILINE | re.DOTALL)[0])
         
         # Get Genres
-        genres = re.findall('<h5>Genre(.*?)more', data, re.MULTILINE | re.DOTALL)
-        genres = [re.findall('/">(.*?)</a>', entry) for entry in genres][0]
+        genres = re.findall("<h5>Genre(.*?)more", data, re.MULTILINE | re.DOTALL)
+        genres = [re.findall("/\">(.*?)</a>", entry) for entry in genres][0]
         
         # get the Casts
-        casts = re.findall('<h3>Cast(.*?)more</a></div>', data, re.MULTILINE | re.DOTALL)
-        casts = [re.findall('<a href.*?/name/.*?/">(.*?)</a>',entry) for entry in casts][0]
+        casts = re.findall("<h3>Cast(.*?)more</a></div>", data, re.MULTILINE | re.DOTALL)
+        casts = [re.findall("<a href.*?/name/.*?/\">(.*?)</a>",entry) for entry in casts][0]
         
         self.inGenresAddEditListstore.clear()
         self.inWritersAddEditListstore.clear()
@@ -985,10 +1014,17 @@ class POSvrSys(object):
         # Populate inWritersAddEditListstore
         for writer in writers:
             
+            #writer = writer.replace("&#", "\\")
+            #writer = writer.replace(";", "")
             self.on_inWritersAddButton_clicked(self, writer)
             
         # Populate inCastsAddEditListstore
         for cast in casts:
+        
+            #cast = cast.replace("&#", "\\")
+            #cast = cast.replace(";", "")
+            #print repr(cast.encode("ascii", "replace"))
+            #cast = u"%s" % cast
             
             self.on_inCastsAddButton_clicked(self, cast)
         
@@ -1000,16 +1036,17 @@ class POSvrSys(object):
         
     def on_inAddButton_clicked(self, widget):
         
-        self.inAddEditDialog.set_title(_("Add Movie Dialog"))
         self.inImdbCodeEntry.grab_focus()
         
-        self.inRevenueLastMonth.set_text('0.00')
-        self.inRevenueThisMonth.set_text('0.00')
-        self.inRevenueTotal.set_text('0.00')
+        self.inAddEditDialog.set_title(_("Add Movie Dialog"))
         
-        self.inRentalLastMonth.set_text('-')
-        self.inRentalThisMonth.set_text('-')
-        self.inRentalTotal.set_text('-')
+        self.inRevenueLastMonth.set_text("0.00")
+        self.inRevenueThisMonth.set_text("0.00")
+        self.inRevenueTotal.set_text("0.00")
+        
+        self.inRentalLastMonth.set_text("-")
+        self.inRentalThisMonth.set_text("-")
+        self.inRentalTotal.set_text("-")
         
         result = self.inAddEditDialog.run()
         
@@ -1040,18 +1077,18 @@ class POSvrSys(object):
         
         self.inWritersRemoveButton.set_sensitive(True)
         
-    def on_inGenresAddButton_clicked(self, widget, text=None):
+    def on_inGenresAddButton_clicked(self, widget, entry_value=None):
         
-        if text is None:
+        if entry_value is None:
             
-            text = self.inGenresEntry.get_text()
+            entry_value = self.inGenresEntry.get_text()
         
         genre = []
         in_liststore = False
         
         try:
             
-            g = session.query(Genre).filter(text==Genre.name).one()
+            g = session.query(Genre).filter(entry_value==Genre.name).one()
             
             genre.extend([g, g.id, g.name])
             
@@ -1075,31 +1112,31 @@ class POSvrSys(object):
             
             self.inGenresAddEditListstore.append(genre)
             
-        if text is None:
+        if entry_value is None:
             
             self.inGenresEntry.set_text("")
             self.inGenresEntry.grab_focus()
         
-    def on_inCastsAddButton_clicked(self, widget, text=None):
+    def on_inCastsAddButton_clicked(self, widget, entry_value=None):
         
-        if text is None:
+        if entry_value is None:
             
-            text = self.inCastsEntry.get_text()
+            entry_value = self.inCastsEntry.get_text()
         
         cast = []
         in_liststore = False
         
         try:
             
-            c = session.query(Cast).filter(text==Cast.full_name).one()
+            c = session.query(Cast).filter(entry_value==Cast.full_name).one()
             
             cast.extend([c, c.id, c.full_name])
             
         except NoResultFound:
             
-            if text != "":
+            if entry_value != "":
                 
-                c = Cast(text)
+                c = Cast(entry_value)
                 
                 cast.extend([c, -1, c.full_name])
                 
@@ -1125,31 +1162,31 @@ class POSvrSys(object):
             
             self.inCastsAddEditListstore.append(cast)
             
-        if text is None:
+        if entry_value is None:
             
             self.inCastsEntry.set_text("")
             self.inCastsEntry.grab_focus()
         
-    def on_inWritersAddButton_clicked(self, widget, text=None):
+    def on_inWritersAddButton_clicked(self, widget, entry_value=None):
         
-        if text is None:
+        if entry_value is None:
             
-            text = self.inWritersEntry.get_text()
+            entry_value = self.inWritersEntry.get_text()
         
         writer = []
         in_liststore = False
         
         try:
             
-            w = session.query(Writer).filter(text==Writer.full_name).one()
+            w = session.query(Writer).filter(entry_value==Writer.full_name).one()
             
             writer.extend([w, w.id, w.full_name])
             
         except NoResultFound:
             
-            if text != "":
+            if entry_value != "":
                 
-                w = Writer(text)
+                w = Writer(entry_value)
                 
                 writer.extend([w, -1, w.full_name])
                 
@@ -1175,7 +1212,7 @@ class POSvrSys(object):
             
             self.inWritersAddEditListstore.append(writer)
             
-        if text is None:
+        if entry_value is None:
             
             self.inWritersEntry.set_text("")
             self.inWritersEntry.grab_focus()
@@ -1190,7 +1227,7 @@ class POSvrSys(object):
         self.inGenresTreeview.get_selection().unselect_all()
         self.inGenresRemoveButton.set_sensitive(False)
         
-        print 'on_inGenresRemoveButton_clicked'
+        print "on_inGenresRemoveButton_clicked"
         
     def on_inCastsRemoveButton_clicked(self, widget):
         
@@ -1266,7 +1303,7 @@ class POSvrSys(object):
         self.inTitleEntry.set_text(m.title)
         self.inImdbCodeEntry.set_text(m.imdbCode)
         
-        rDate = m.release.split('-')
+        rDate = m.release.split("-")
         self.inReleaseCalendar.set_date(datetime.date(int(rDate[0]), int(rDate[1]), int(rDate[2])))
         self.inReleaseCalendar.update_entry()
         
@@ -1281,12 +1318,12 @@ class POSvrSys(object):
             
             self.inStatusCombobox.set_sensitive(False)
         
-        revenue = m.revenue.split('|')
+        revenue = m.revenue.split("|")
         self.inRevenueLastMonth.set_text(revenue[0])
         self.inRevenueThisMonth.set_text(revenue[1])
         self.inRevenueTotal.set_text(revenue[2])
         
-        rental = m.rental.split('|')
+        rental = m.rental.split("|")
         self.inRentalLastMonth.set_text(rental[0])
         self.inRentalThisMonth.set_text(rental[1])
         self.inRentalTotal.set_text(rental[2])
@@ -1471,7 +1508,7 @@ class POSvrSys(object):
                 
             except NoResultFound:
                 
-                regex = re.compile('%s' % string, re.IGNORECASE)
+                regex = re.compile("%s" % string, re.IGNORECASE)
                 
                 customerList = []
                 for customer in session.query(Customer):
@@ -1563,10 +1600,10 @@ class POSvrSys(object):
             return
         else:
             
-            regex = re.compile('%s' % searchTitle, re.IGNORECASE)
+            regex = re.compile("%s" % searchTitle, re.IGNORECASE)
             
         movieList = []
-        if searchFilter != _('All Genres'):
+        if searchFilter != _("All Genres"):
             
             query = session.query(Genre).filter(Genre.name==searchFilter).\
                   order_by(Genre.name)
@@ -1608,7 +1645,7 @@ class POSvrSys(object):
         
         else:
             
-            regex = re.compile('%s' % searchTitle, re.IGNORECASE)
+            regex = re.compile("%s" % searchTitle, re.IGNORECASE)
             
         customerList = []
         for customer in session.query(Customer):
@@ -1795,7 +1832,7 @@ class POSvrSys(object):
                 model = widget.get_model()
                 active = widget.get_active()
                 
-                if model[active][0] == _('Select one'):
+                if model[active][0] == _("Select one"):
                     
                     label.set_markup_with_mnemonic("<span style='italic' foreground='red'>%s</span>" % text)
                     
@@ -2333,6 +2370,7 @@ class POSvrSys(object):
         if ret_value != 0:
             
             sys.exit(1)
+            
     def get_moviesByCast(self, regex, movie, movieList):
         
         for cast in movie.casts:
@@ -2352,7 +2390,7 @@ def list2str(li):
         
         if l != li[-1]:
             
-            string += ', '
+            string += ", "
             
     return string
     
