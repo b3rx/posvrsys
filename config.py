@@ -38,6 +38,6 @@ __copyright__  = "Copyright (c) 2008-2009 Bertrand Kintanar"
 __license__    = "GPL3"
 
 DEBUG    = True
-LOGIN    = True
+LOGIN    = False
 PREFIX   = "+63"
 APP_NAME = "POSvrSys"

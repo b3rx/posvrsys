@@ -1191,7 +1191,7 @@
 # URL: http://posvrsys.googlecode.com/
 #
 # POSvrSys needs the following to function properly:
-#   python &gt;= 2.5.1, gtk &gt;= 2.12.9, pygtk &gt;= 2.12.2, 
+#   python &gt;= 2.5.1, gtk &gt;= 2.14.1, pygtk &gt;= 2.12.2, 
 #   sqlite &gt;= 2.3.5, sqlalchemy &gt;= 0.5.0</property>
     <property name="authors">Bertrand Son Kintanar &lt;b3rxkintanar@gmail.com&gt;</property>
     <property name="logo">logo.ico</property>
