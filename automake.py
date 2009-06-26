@@ -38,11 +38,11 @@ from os.path import dirname, split, exists, join
 from zipfile import ZipFile
 
 BASE_DIR = dirname(__file__)
-OUT_DIR  = join(BASE_DIR, 'dist')
-B_DIR    = join(BASE_DIR, 'build')
-GTK_ZIP  = join('tools', 'windows', 'gtk', 'gtk_to_copy.zip')
-INNO_SCRIPT = join('tools', 'config-inno.iss')
-INNO_EXECUTABLE = '"c:\\Program Files\\Inno Setup 5\\ISCC.exe"'
+OUT_DIR  = join(BASE_DIR, "dist")
+B_DIR    = join(BASE_DIR, "build")
+GTK_ZIP  = join("tools", "windows", "gtk", "gtk_to_copy.zip")
+INNO_SCRIPT = join("tools", "config-inno.iss")
+INNO_EXECUTABLE = ""c:\\Program Files\\Inno Setup 5\\ISCC.exe""
 
 def path_name(name):
     
@@ -66,7 +66,7 @@ class Unzip(object):
 
     def __init__(self, from_file, to_dir, verbose = False):
         
-        zipfile = ZipFile(from_file, 'r')
+        zipfile = ZipFile(from_file, "r")
         names   = zipfile.namelist()
         
         for name in path_names(names):
@@ -77,7 +77,7 @@ class Unzip(object):
         
         for name in file_names(names):
             
-            outfile = file(join(to_dir, name), 'wb')
+            outfile = file(join(to_dir, name), "wb")
             outfile.write(zipfile.read(name))
             outfile.close()
         
@@ -95,7 +95,7 @@ def delete_old_out_dir():
 def run_py2exe():
 
     # A hack really, but remember setup.py will run on import
-    sys.argv.append('py2exe')
+    sys.argv.append("py2exe")
     import setup
 
 
@@ -120,8 +120,8 @@ def main():
     # build the single file installer
     run_inno()
     # prevent the windows command prompt from just closing
-    raw_input('Done..')
+    raw_input("Done...")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     
     main()

@@ -39,14 +39,14 @@ import gobject
 
 class CalendarEntry (gtk.HBox):
     __gsignals__ = {
-        'changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))
+        "changed": (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, ))
     }
     def __init__ (self, entryLabel, displayAge = False):
         gtk.HBox.__init__ (self, False, 0)
         self.calendar = gtk.Calendar ()
         self.entry = gtk.Entry ()
         self.entry.set_editable(False)
-        self.button = gtk.Button (label = '...')
+        self.button = gtk.Button (label = "...")
         self.ageLabel = gtk.Label (entryLabel)
         self.ageEntry = gtk.Entry ()
         self.cwindow = gtk.Window (gtk.WINDOW_POPUP)
@@ -60,7 +60,7 @@ class CalendarEntry (gtk.HBox):
         
         self.ageEntry.set_editable (False)
         self.ageEntry.set_width_chars (3)
-        self.ageEntry.set_property ('can-focus', False)
+        self.ageEntry.set_property ("can-focus", False)
         self.ageEntry.set_alignment (0.5)
         
         self.entry.set_width_chars (10)
@@ -73,11 +73,11 @@ class CalendarEntry (gtk.HBox):
         self.set_display_age (displayAge)
     
     def __connect_signals (self):
-        self.day_selected_handle = self.calendar.connect ('day-selected', self.update_entry)
-        self.day_selected_double_handle = self.calendar.connect ('day-selected-double-click', self.hide_widget)
-        self.clicked_handle = self.button.connect ('clicked', self.show_widget)
-        self.activate = self.entry.connect ('activate', self.update_calendar)
-        self.focus_out = self.entry.connect ('focus-out-event', self.focus_out_event)
+        self.day_selected_handle = self.calendar.connect ("day-selected", self.update_entry)
+        self.day_selected_double_handle = self.calendar.connect ("day-selected-double-click", self.hide_widget)
+        self.clicked_handle = self.button.connect ("clicked", self.show_widget)
+        self.activate = self.entry.connect ("activate", self.update_calendar)
+        self.focus_out = self.entry.connect ("focus-out-event", self.focus_out_event)
         
     def __block_signals (self):
         self.calendar.handler_block (self.day_selected_handle)
@@ -154,7 +154,7 @@ class CalendarEntry (gtk.HBox):
         text = self.currentDate.strftime ("%d/%m/%Y")
         self.entry.set_text (text)
         self.update_age_display (self.currentDate)
-        self.emit ('changed', self.currentDate)
+        self.emit ("changed", self.currentDate)
 
     def update_calendar (self, *args):
         try:
@@ -163,7 +163,7 @@ class CalendarEntry (gtk.HBox):
             try:
                 dt = datetime.datetime.strptime (self.entry.get_text (), "%d/%m/%y")
             except:
-                print 'CalendarEntry.update_calendar: Error parsing date, setting it as today...'
+                print "CalendarEntry.update_calendar: Error parsing date, setting it as today..."
                 dt = datetime.date.fromtimestamp(time.time())
             
         self.set_date (dt)

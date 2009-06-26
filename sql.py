@@ -72,14 +72,14 @@ Base = declarative_base()
 
 class Cast(Base):
     
-    __tablename__ = 'casts'
+    __tablename__ = "casts"
     
     id            = Column(Integer, primary_key=True)
     full_name     = Column(String(100))
     
-    movieassoc = relation('MovieCast', cascade="all, delete-orphan", lazy=False)
+    movieassoc = relation("MovieCast", cascade="all, delete-orphan", lazy=False)
     
-    movies = AssociationProxy('movieassoc', 'movie', creator='MovieCast')
+    movies = AssociationProxy("movieassoc", "movie", creator="MovieCast")
     
     def __init__(self, full_name):
         
@@ -91,7 +91,7 @@ class Cast(Base):
         
 class City(Base):
     
-    __tablename__ = 'cities'
+    __tablename__ = "cities"
     
     id            = Column(Integer, primary_key=True)
     name          = Column(String(100))
@@ -108,7 +108,7 @@ class City(Base):
     
 class Country(Base):
     
-    __tablename__ = 'countries'
+    __tablename__ = "countries"
     
     id       = Column(Integer, primary_key=True)
     code     = Column(String(2))
@@ -127,7 +127,7 @@ class Country(Base):
     
 class Customer(Base):
     
-    __tablename__  = 'customers'
+    __tablename__  = "customers"
     
     id             = Column(Integer, primary_key=True)
     last_name      = Column(String(50))
@@ -137,15 +137,15 @@ class Customer(Base):
     gender         = Column(Integer)
     contact_number = Column(String(50))
     street         = Column(String(50))
-    city_id        = Column(Integer, ForeignKey('cities.id'))
-    state_id       = Column(Integer, ForeignKey('states.id'))
+    city_id        = Column(Integer, ForeignKey("cities.id"))
+    state_id       = Column(Integer, ForeignKey("states.id"))
     zip_code       = Column(String(10))
-    country_id     = Column(Integer, ForeignKey('countries.id'))
+    country_id     = Column(Integer, ForeignKey("countries.id"))
     
     # One2Many
-    city    = relation('City', backref=backref('customers', order_by=id))
-    state   = relation('State', backref=backref('customers', order_by=id))
-    country = relation('Country', backref=backref('customers', order_by=id))
+    city    = relation("City", backref=backref("customers", order_by=id))
+    state   = relation("State", backref=backref("customers", order_by=id))
+    country = relation("Country", backref=backref("customers", order_by=id))
     
     def __init__(self, last_name, first_name, middle_name, gender, 
         contact_number, street, zip_code):
@@ -167,7 +167,7 @@ class Customer(Base):
     
     def display(self):
         
-        gender = {1:'(M)', 2:'(F)'}
+        gender = {1:"(M)", 2:"(F)"}
         
         print "Customer ID:", self.id
         print "Name       :", self.full_name, gender[self.gender]
@@ -178,7 +178,7 @@ class Customer(Base):
     
 class Director(Base):
     
-    __tablename__ = 'directors'
+    __tablename__ = "directors"
     
     id            = Column(Integer, primary_key=True)
     full_name     = Column(String(100))
@@ -193,16 +193,16 @@ class Director(Base):
         
 class Genre(Base):
     
-    __tablename__ = 'genres'
+    __tablename__ = "genres"
     
     id            = Column(Integer, primary_key=True)
     name          = Column(String(50), unique=True)
     
     # AssociationTables
-    movieassoc = relation('MovieGenre', cascade="all, delete-orphan", lazy=False)
+    movieassoc = relation("MovieGenre", cascade="all, delete-orphan", lazy=False)
     
     # Many2Many
-    movies = AssociationProxy('movieassoc', 'movie', creator='MovieGenre')
+    movies = AssociationProxy("movieassoc", "movie", creator="MovieGenre")
     
     def __init__(self, name):
         
@@ -214,13 +214,13 @@ class Genre(Base):
     
 class MovieGenre(Base):
     
-    __tablename__ = 'movie_genres'
+    __tablename__ = "movie_genres"
     
-    movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
-    genre_id = Column(Integer, ForeignKey('genres.id'), primary_key=True)
+    movie_id = Column(Integer, ForeignKey("movies.id"), primary_key=True)
+    genre_id = Column(Integer, ForeignKey("genres.id"), primary_key=True)
     
-    genre = relation('Genre', lazy=False)
-    movie = relation('Movie', lazy=False)
+    genre = relation("Genre", lazy=False)
+    movie = relation("Movie", lazy=False)
     
     def __init__(self, genre):
         self.genre = genre
@@ -231,13 +231,13 @@ class MovieGenre(Base):
     
 class MovieCast(Base):
     
-    __tablename__ = 'movie_casts'
+    __tablename__ = "movie_casts"
     
-    movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
-    cast_id  = Column(Integer, ForeignKey('casts.id'), primary_key=True)
+    movie_id = Column(Integer, ForeignKey("movies.id"), primary_key=True)
+    cast_id  = Column(Integer, ForeignKey("casts.id"), primary_key=True)
     
-    cast = relation('Cast', lazy=False)
-    movie = relation('Movie', lazy=False)
+    cast = relation("Cast", lazy=False)
+    movie = relation("Movie", lazy=False)
     
     def __init__(self, cast):
         self.cast = cast
@@ -248,7 +248,7 @@ class MovieCast(Base):
     
 class MovieWriter(Base):
     
-    __tablename__ = 'movie_writers'
+    __tablename__ = "movie_writers"
     
     movie_id  = Column(Integer, ForeignKey('movies.id'), primary_key=True)
     writer_id = Column(Integer, ForeignKey('writers.id'), primary_key=True)
@@ -266,10 +266,10 @@ class MovieWriter(Base):
         
 class Movie(Base):
     
-    __tablename__ = 'movies'
+    __tablename__ = "movies"
     
     id            = Column(Integer, primary_key=True)
-    director_id   = Column(Integer, ForeignKey('directors.id'))
+    director_id   = Column(Integer, ForeignKey("directors.id"))
     title         = Column(String(150))
     imdbCode      = Column(String(15))
     release       = Column(String(10))
@@ -282,17 +282,17 @@ class Movie(Base):
     rental        = Column(String(150))
     
     # AssociationTables
-    genreassoc = relation('MovieGenre', cascade="all, delete-orphan", lazy=False)
-    writerassoc = relation('MovieWriter', cascade="all, delete-orphan", lazy=False)
-    castassoc = relation('MovieCast', cascade="all, delete-orphan", lazy=False)
+    genreassoc = relation("MovieGenre", cascade="all, delete-orphan", lazy=False)
+    writerassoc = relation("MovieWriter", cascade="all, delete-orphan", lazy=False)
+    castassoc = relation("MovieCast", cascade="all, delete-orphan", lazy=False)
     
     # One2Many
-    director      = relation('Director', backref=backref('movies', order_by=id))
+    director      = relation("Director", backref=backref("movies", order_by=id))
     
     # Many2Many
-    genres  = AssociationProxy('genreassoc', 'genre', creator=MovieGenre)
-    writers = AssociationProxy('writerassoc', 'writer', creator=MovieWriter)
-    casts   = AssociationProxy('castassoc', 'cast', creator=MovieCast)
+    genres  = AssociationProxy("genreassoc", "genre", creator=MovieGenre)
+    writers = AssociationProxy("writerassoc", "writer", creator=MovieWriter)
+    casts   = AssociationProxy("castassoc", "cast", creator=MovieCast)
     
     def __init__(self, title, imdbCode, release, plot, rating, rent, allotted, status):
         
@@ -304,8 +304,8 @@ class Movie(Base):
         self.rent     = rent
         self.allotted = allotted
         self.status   = status
-        self.revenue  = '0.00|0.00|0.00'
-        self.rental   = '-.-|-.-|-.-'
+        self.revenue  = "0.00|0.00|0.00"
+        self.rental   = "-.-|-.-|-.-"
         
     def __repr__(self):
         
@@ -324,11 +324,11 @@ class Movie(Base):
             
             print writer.full_name,
             if writer != self.writers[-1]:
-                print ';',
+                print ";",
     
 class State(Base):
     
-    __tablename__ = 'states'
+    __tablename__ = "states"
     
     id            = Column(Integer, primary_key=True)
     code          = Column(String(6))
@@ -367,16 +367,16 @@ class User(Base):
     
 class Writer(Base):
     
-    __tablename__ = 'writers'
+    __tablename__ = "writers"
     
     id            = Column(Integer, primary_key=True)
     full_name     = Column(String(100))
     
     # AssociationTables
-    movieassoc = relation('MovieWriter', cascade="all, delete-orphan", lazy=False)
+    movieassoc = relation("MovieWriter", cascade="all, delete-orphan", lazy=False)
     
     # Many2Many
-    movies = AssociationProxy('movieassoc', 'movie', creator='MovieWriter')
+    movies = AssociationProxy("movieassoc", "movie", creator="MovieWriter")
 
     
     def __init__(self, full_name):
@@ -406,7 +406,7 @@ def checkDatabase(db):
     try:
         
         # Try to open file for reading.
-        fp = open(db, 'r')
+        fp = open(db, "r")
         
     except IOError:
         
@@ -453,27 +453,27 @@ def insertCustomer(session, customer, city, state, country):
     
 def insertDummy(session):
     
-    dr3w = Customer('Kintanar', 'Andrew', 'Son', 1, '+639176232756', 'Miñoza St. Talamban', '6000')
-    b3rx = Customer('Kintanar', 'Bertrand', 'Son', 1, '+639152754070', 'Miñoza St. Talamban', '6000')
-    ch4n = Customer('Kintanar', 'Christian', 'Son', 1, '+639167162398', 'Miñoza St. Talamban', '6000')
-    p4p4 = Customer('Kintanar', 'Nestor', 'Ridad', 1, '+639195874254', 'Silliman Ave. Ext. corner Cervantes St.', '6200')
+    dr3w = Customer("Kintanar", "Andrew", "Son", 1, "+639176232756", "Miñoza St. Talamban", "6000")
+    b3rx = Customer("Kintanar", "Bertrand", "Son", 1, "+639152754070", "Miñoza St. Talamban", "6000")
+    ch4n = Customer("Kintanar", "Christian", "Son", 1, "+639167162398", "Miñoza St. Talamban", "6000")
+    p4p4 = Customer("Kintanar", "Nestor", "Ridad", 1, "+639195874254", "Silliman Ave. Ext. corner Cervantes St.", "6200")
     
-    insertCustomer(session, dr3w, 'Cebu City', 'Cebu', 'Philippines')
-    insertCustomer(session, b3rx, 'Cebu City', 'Cebu', 'Philippines')
-    insertCustomer(session, ch4n, 'Cebu City', 'Cebu', 'Philippines')
-    insertCustomer(session, p4p4, 'Dumaguete', 'Negros Oriental', 'Philippines')
+    insertCustomer(session, dr3w, "Cebu City", "Cebu", "Philippines")
+    insertCustomer(session, b3rx, "Cebu City", "Cebu", "Philippines")
+    insertCustomer(session, ch4n, "Cebu City", "Cebu", "Philippines")
+    insertCustomer(session, p4p4, "Dumaguete", "Negros Oriental", "Philippines")
     
-    plot = 'Seeking revenge for the death of his love, secret agent James Bond sets out to stop an environmentalist from taking control of a country\'s water supply'
+    plot = "Seeking revenge for the death of his love, secret agent James Bond sets out to stop an environmentalist from taking control of a country's water supply"
     release = datetime.date(2008, 11, 5)
     
     writers = []
     casts   = []
     genres  = []
-    writers.append(Writer('Paul Haggis'))
-    writers.append(Writer('Neal Purvis'))
+    writers.append(Writer("Paul Haggis"))
+    writers.append(Writer("Neal Purvis"))
     
-    casts.append(Cast('Daniel Craig'))
-    casts.append(Cast('Olga Kurylenko'))
+    casts.append(Cast("Daniel Craig"))
+    casts.append(Cast("Olga Kurylenko"))
     
     session.add(Cast("Aasif Mandvi"))
     session.add(Cast("Adam Sandler"))
@@ -702,17 +702,17 @@ def insertDummy(session):
     session.add(Director("Scott Derrickson"))
     session.add(Director("Seth Gordon"))
     
-    director = Director('Marc Forster')
+    director = Director("Marc Forster")
     
-    genres.append(Genre('Action'))
-    genres.append(Genre('Adventure'))
-    genres.append(Genre('Thriller'))
+    genres.append(Genre("Action"))
+    genres.append(Genre("Adventure"))
+    genres.append(Genre("Thriller"))
     
-    movie = Movie('Quantum of Solace', 'tt0830515', release, plot, '7.1', 15, 3, 1)
+    movie = Movie("Quantum of Solace", "tt0830515", release, plot, "7.1", 15, 3, 1)
     
     insertMovie(session, movie, director, writers, casts, genres)
     
-    b3rx = User('b3rx', 'retardko')
+    b3rx = User("b3rx", "retardko")
     b3rx.user_type = 1
     
     session.add(b3rx)
@@ -742,303 +742,303 @@ def insertMovie(session, movie, director, writers, casts, genres):
 def populateTables(session):
     
     states = {
-        'PH-ABR':'Abra', 'PH-AGN':'Agusan del Norte', 
-        'PH-AGS':'Agusan del Sur', 'PH-AKL':'Aklan', 'PH-ALB':'Albay', 
-        'PH-ANT':'Antique', 'PH-APA':'Apayao', 'PH-AUR':'Aurora', 
-        'PH-BAS':'Basilan', 'PH-BAN':'Bataan', 'PH-BTN':'Batanes', 
-        'PH-BTG':'Batangas', 'PH-BEN':'Benguet', 'PH-BIL':'Biliran', 
-        'PH-BOH':'Bohol', 'PH-BUK':'Bukidnon', 'PH-BUL':'Bulacan', 
-        'PH-CAG':'Cagayan', 'PH-CAN':'Camarines Norte', 'PH-CAS':'Camarines Sur', 
-        'PH-CAM':'Camiguin', 'PH-CAP':'Capiz', 'PH-CAT':'Catanduanes', 
-        'PH-CAV':'Cavite', 'PH-CEB':'Cebu', 'PH-COM':'Compostela Valley', 
-        'PH-DAV':'Davao del Norte', 'PH-DAS':'Davao del Sur', 
-        'PH-DAO':'Davao Oriental', 'PH-EAS':'Eastern Samar', 
-        'PH-GUI':'Guimaras', 'PH-IFU':'Ifugao', 'PH-ILN':'Ilocos Norte', 
-        'PH-ILS':'Ilocos Sur', 'PH-ILI':'Iloilo', 'PH-ISA':'Isabela', 
-        'PH-KAL':'Kalinga', 'PH-LAG':'Laguna', 'PH-LAN':'Lanao del Norte', 
-        'PH-LAS':'Lanao del Sur', 'PH-LUN':'La Union', 'PH-LEY':'Leyte', 
-        'PH-MAG':'Maguindanao', 'PH-MAD':'Marinduque', 'PH-MAS':'Masbate', 
-        'PH-MDC':'Mindoro Occidental', 'PH-MDR':'Mindoro Oriental', 
-        'PH-MSC':'Misamis Occidental', 'PH-MSR':'Misamis Oriental', 
-        'PH-MOU':'Mountain Province', 'PH-NEC':'Negros Occidental', 
-        'PH-NER':'Negros Oriental', 'PH-NCO':'Cotabato', 
-        'PH-NSA':'Northern Samar', 'PH-NUE':'Nueva Ecija', 
-        'PH-NUV':'Nueva Vizcaya', 'PH-PLW':'Palawan', 'PH-PAM':'Pampanga', 
-        'PH-PAN':'Pangasinan', 'PH-QUE':'Quezon', 'PH-QUI':'Quirino', 
-        'PH-RIZ':'Rizal', 'PH-ROM':'Romblon', 'PH-SAR':'Sarangani', 
-        'PH-SIG':'Siquijor', 'PH-SOR':'Sorsogon', 'PH-SCO':'South Cotabato', 
-        'PH-SLE':'Southern Leyte', 'PH-SUK':'Sultan Kudarat', 'PH-SLU':'Sulu', 
-        'PH-SUN':'Surigao del Norte', 'PH-SUR':'Surigao del Sur', 
-        'PH-TAR':'Tarlac', 'PH-TAW':'Tawi-Tawi', 'PH-WSA':'Samar', 
-        'PH-ZMB':'Zambales', 'PH-ZAN':'Zamboanga del Norte', 
-        'PH-ZAS':'Zamboanga del Sur', 'PH-ZSI':'Zamboanga Sibugay'
+        "PH-ABR":"Abra", "PH-AGN":"Agusan del Norte", 
+        "PH-AGS":"Agusan del Sur", "PH-AKL":"Aklan", "PH-ALB":"Albay", 
+        "PH-ANT":"Antique", "PH-APA":"Apayao", "PH-AUR":"Aurora", 
+        "PH-BAS":"Basilan", "PH-BAN":"Bataan", "PH-BTN":"Batanes", 
+        "PH-BTG":"Batangas", "PH-BEN":"Benguet", "PH-BIL":"Biliran", 
+        "PH-BOH":"Bohol", "PH-BUK":"Bukidnon", "PH-BUL":"Bulacan", 
+        "PH-CAG":"Cagayan", "PH-CAN":"Camarines Norte", "PH-CAS":"Camarines Sur", 
+        "PH-CAM":"Camiguin", "PH-CAP":"Capiz", "PH-CAT":"Catanduanes", 
+        "PH-CAV":"Cavite", "PH-CEB":"Cebu", "PH-COM":"Compostela Valley", 
+        "PH-DAV":"Davao del Norte", "PH-DAS":"Davao del Sur", 
+        "PH-DAO":"Davao Oriental", "PH-EAS":"Eastern Samar", 
+        "PH-GUI":"Guimaras", "PH-IFU":"Ifugao", "PH-ILN":"Ilocos Norte", 
+        "PH-ILS":"Ilocos Sur", "PH-ILI":"Iloilo", "PH-ISA":"Isabela", 
+        "PH-KAL":"Kalinga", "PH-LAG":"Laguna", "PH-LAN":"Lanao del Norte", 
+        "PH-LAS":"Lanao del Sur", "PH-LUN":"La Union", "PH-LEY":"Leyte", 
+        "PH-MAG":"Maguindanao", "PH-MAD":"Marinduque", "PH-MAS":"Masbate", 
+        "PH-MDC":"Mindoro Occidental", "PH-MDR":"Mindoro Oriental", 
+        "PH-MSC":"Misamis Occidental", "PH-MSR":"Misamis Oriental", 
+        "PH-MOU":"Mountain Province", "PH-NEC":"Negros Occidental", 
+        "PH-NER":"Negros Oriental", "PH-NCO":"Cotabato", 
+        "PH-NSA":"Northern Samar", "PH-NUE":"Nueva Ecija", 
+        "PH-NUV":"Nueva Vizcaya", "PH-PLW":"Palawan", "PH-PAM":"Pampanga", 
+        "PH-PAN":"Pangasinan", "PH-QUE":"Quezon", "PH-QUI":"Quirino", 
+        "PH-RIZ":"Rizal", "PH-ROM":"Romblon", "PH-SAR":"Sarangani", 
+        "PH-SIG":"Siquijor", "PH-SOR":"Sorsogon", "PH-SCO":"South Cotabato", 
+        "PH-SLE":"Southern Leyte", "PH-SUK":"Sultan Kudarat", "PH-SLU":"Sulu", 
+        "PH-SUN":"Surigao del Norte", "PH-SUR":"Surigao del Sur", 
+        "PH-TAR":"Tarlac", "PH-TAW":"Tawi-Tawi", "PH-WSA":"Samar", 
+        "PH-ZMB":"Zambales", "PH-ZAN":"Zamboanga del Norte", 
+        "PH-ZAS":"Zamboanga del Sur", "PH-ZSI":"Zamboanga Sibugay"
     }
     
     cities = (
-        'Aborlan', 'Abra de Ilog', 'Abucay', 'Abulug', 'Abuyog', 'Adams', 
-        'Agdangan', 'Aglipay', 'Agno', 'Agoncillo', 'Agoo', 'Aguilar', 
-        'Aguinaldo', 'Agutaya', 'Ajuy', 'Akbar', 'Alabat', 'Alabel', 'Alamada', 
-        'Alaminos', 'Alaminos City', 'Alangalang', 'Al-Barka', 'Albuera', 
-        'Alburquerque', 'Alcala', 'Alcantara', 'Alcoy', 'Alegria', 'Aleosan', 
-        'Alfonso', 'Alfonso Castaneda', 'Alfonso Lista', 'Aliaga', 'Alicia', 
-        'Alilem', 'Alimodian', 'Alitagtag', 'Allacapan', 'Allen', 'Almagro', 
-        'Almeria', 'Aloguinsan', 'Aloran', 'Altavas', 'Alubijid', 'Amadeo', 
-        'Ambaguio', 'Amlan', 'Ampatuan', 'Amulung', 'Anahawan', 'Anao', 
-        'Anda', 'Angadanan', 'Angat', 'Angeles City', 'Angono', 'Anilao', 
-        'Anini-y', 'Antequera', 'Antipas', 'Antipolo City', 'Apalit', 'Aparri', 
-        'Araceli', 'Arakan', 'Arayat', 'Argao', 'Aringay', 'Aritao', 'Aroroy', 
-        'Arteche', 'Asingan', 'Asipulo', 'Asturias', 'Asuncion', 'Atimonan', 
-        'Atok', 'Aurora', 'Ayungon', 'Baao', 'Babatngon', 'Bacacay', 'Bacarra', 
-        'Baclayon', 'Bacnotan', 'Baco', 'Bacolod', 'Bacolod City', 
-        'Bacolod-Kalawi', 'Bacolor', 'Bacong', 'Bacoor', 'Bacuag', 'Bacungan', 
-        'Badian', 'Badiangan', 'Badoc', 'Bagabag', 'Bagac', 'Bagamanoc', 
-        'Baganga', 'Baggao', 'Bago City', 'Baguio City', 'Bagulin', 'Bagumbayan', 
-        'Bais', 'Bakun', 'Balabac', 'Balabagan', 'Balagtas', 'Balamban', 
-        'Balanga City', 'Balangiga', 'Balangkayan', 'Balaoan', 'Balasan', 
-        'Balatan', 'Balayan', 'Balbalan', 'Baleno', 'Baler', 'Balete', 
-        'Baliangao', 'Baliguian', 'Balilihan', 'Balindong', 'Balingasag', 
-        'Balingoan', 'Baliuag', 'Ballesteros', 'Baloi', 'Balud', 'Balungao', 
-        'Bamban', 'Bambang', 'Banate', 'Banaue', 'Banaybanay', 'Banayoyo', 
-        'Banga', 'Bangar', 'Bangued', 'Bangui', 'Bani', 'Banisilan', 
-        'Banna', 'Bansalan', 'Bansud', 'Bantay', 'Bantayan', 'Banton', 'Baras', 
-        'Barbaza', 'Barcelona', 'Barili', 'Barira', 'Barlig', 'Barobo', 
-        'Barotac Nuevo', 'Barotac Viejo', 'Baroy', 'Barugo', 'Basay', 
-        'Basco', 'Basey', 'Basilisia (Rizal)', 'Basista', 'Basud', 'Batac City', 
-        'Batad', 'Batan', 'Batangas City', 'Bataraza', 'Bato', 'Batuan', 'Bauan', 
-        'Bauang', 'Bauko', 'Baungon', 'Bautista', 'Bay', 'Bayabas', 'Bayambang', 
-        'Bayang', 'Bayawan', 'Baybay City', 'Bayog', 'Bayombong', 'Bayugan', 
-        'Belison', 'Benito Soliven', 'Besao', 'Bien Unido', 'Bilar', 'Biliran', 
-        'Binalbagan', 'Binalonan', 'Biñan', 'Binangonan', 'Bindoy', 
-        'Bingawan', 'Binidayan', 'Binmaley', 'Binuangan', 'Biri', 'Bislig City', 
-        'Boac', 'Bobon', 'Bocaue', 'Bogo City', 'Bokod', 'Bolinao', 'Boliney', 
-        'Boljoon', 'Bombon', 'Bongabon', 'Bongabong', 'Bongao', 'Bonifacio', 
-        'Bontoc', 'Borbon', 'Borongan City', 'Boston', 'Botolan', 
-        'Braulio E. Dujali', 'Brooke\'s Point', 'Buadiposo-Buntong', 'Bubong', 
-        'Bucay', 'Bucloc', 'Buenavista', 'Bugallon', 'Bugasong', 'Buguey', 
-        'Buguias', 'Buhi', 'Bula', 'Bulacan', 'Bulalacao', 'Bulan', 'Buldon', 
-        'Buluan', 'Bulusan', 'Bumbaran', 'Bunawan', 'Burauen', 'Burdeos', 
-        'Burgos', 'Buruanga', 'Bustos', 'Busuanga', 'Butig', 'Butuan City', 
-        'Buug', 'Caba', 'Cabadbaran City', 'Cabagan', 'Cabanatuan City', 
-        'Cabangan', 'Cabanglasan', 'Cabarroguis', 'Cabatuan', 'Cabiao', 
-        'Cabucgayan', 'Cabugao', 'Cabusao', 'Cabuyao', 'Cadiz City', 
-        'Cagayan de Oro', 'Cagayancillo', 'Cagdianao', 'Cagwait', 'Caibiran', 
-        'Cainta', 'Cajidiocan', 'Calabanga', 'Calaca', 'Calamba', 'Calamba City', 
-        'Calanasan', 'Calanogas', 'Calapan City', 'Calape', 'Calasiao', 
-        'Calatagan', 'Calatrava', 'Calauag', 'Calauan', 'Calayan', 
-        'Calbayog City', 'Calbiga', 'Calinog', 'Calintaan', 'Caloocan', 
-        'Calubian', 'Calumpit', 'Caluya', 'Camalaniugan', 'Camalig', 'Camaligan', 
-        'Camiling', 'Canaman', 'Can-avid', 'Candaba', 'Candelaria', 'Candijay', 
-        'Candon City', 'Candoni', 'Canlaon', 'Cantilan', 'Caoayan', 'Capalonga', 
-        'Capas', 'Capoocan', 'Capul', 'Caraga', 'Caramoan', 'Caramoran', 
-        'Carasi', 'Carcar City', 'Cardona', 'Carigara', 'Carles', 'Carmen', 
-        'Carmona', 'Carranglan', 'Carrascal', 'Casiguran', 'Castilla', 
-        'Castillejos', 'Cataingan', 'Catanauan', 'Catarman', 'Catbalogan City', 
-        'Cateel', 'Catigbian', 'Catmon', 'Catubig', 'Cauayan', 'Cauayan City', 
-        'Cavinti', 'Cavite City', 'Cawayan', 'Cebu City', 'Cervantes', 'Clarin', 
-        'Claver', 'Claveria', 'Columbio', 'Compostela', 'Concepcion', 'Conner', 
-        'Consolacion', 'Corcuera', 'Cordoba', 'Cordon', 'Corella', 'Coron', 
-        'Cortes', 'Cotabato City', 'Cuartero', 'Cuenca', 'Culaba', 'Culasi', 
-        'Culion', 'Currimao', 'Cuyapo', 'Cuyo', 'Daanbantayan', 'Daet', 'Dagami', 
-        'Dagohoy', 'Daguioman', 'Dagupan City', 'Dalaguete', 'Damulog', 'Danao', 
-        'Danao City', 'Dangcagan', 'Danglas', 'Dao', 'Dapa', 'Dapitan City', 
-        'Daraga', 'Daram', 'Dasmariñas', 'Dasol', 'Datu Abdullah Sangki', 
-        'Datu Anggal Midtimbang', 'Datu Blah T. Sinsuat', 'Datu Odin Sinsuat', 
-        'Datu Paglas', 'Datu Piang', 'Datu Saudi-Ampatuan', 'Datu Unsay', 
-        'Dauin', 'Dauis', 'Davao City', 'Del Carmen', 'Del Gallego', 
-        'Delfin Albano', 'Diadi', 'Diffun', 'Digos City', 'Dilasag', 
-        'Dimasalang', 'Dimataling', 'Dimiao', 'Dinagat', 'Dinalungan', 
-        'Dinalupihan', 'Dinapigue', 'Dinas', 'Dingalan', 'Dingle', 'Dingras', 
-        'Dipaculao', 'Diplahan', 'Dipolog City', 'Ditsaan-Ramain', 'Divilacan', 
-        'Dolores', 'Don Carlos', 'Don Marcelino', 'Don Victoriano Chiongbian', 
-        'Doña Remedios Trinidad', 'Donsol', 'Dueñas', 'Duero', 'Dulag', 
-        'Dumaguete', 'Dumalag', 'Dumalinao', 'Dumalneg', 'Dumangas', 'Dumanjug', 
-        'Dumaran', 'Dumarao', 'Dumingag', 'Dupax del Norte', 'Dupax del Sur', 
-        'Echague', 'El Nido', 'El Salvador', 'El Salvador City', 'Enrile', 
-        'Enrique B. Magalona', 'Enrique Villanueva', 'Escalante City', 
-        'Esperanza', 'Estancia', 'Famy', 'Ferrol', 'Flora', 'Floridablanca', 
-        'Gabaldon', 'Gainza', 'Galimuyod', 'Gamay', 'Gamu', 'Ganassi', 'Gandara', 
-        'Gapan City', 'Garchitorena', 'Garcia Hernandez', 'Gasan', 'Gattaran', 
-        'Gen. Emilio Aguinaldo', 'Gen. Mariano Alvarez', 'Gen. S. K. Pendatun', 
-        'Gen. Trias', 'General Luna', 'General MacArthur', 
-        'General Mamerto Natividad', 'General Nakar', 'General Santos City', 
-        'General Tinio', 'Gerona', 'Gigaquit', 'Gigmoto', 'Ginatilan', 
-        'Gingoog City', 'Giporlos', 'Gitagum', 'Glan', 'Gloria', 'Goa', 'Godod', 
-        'Gonzaga', 'Governor Generoso', 'Gregorio Del Pilar', 'Guagua', 'Gubat', 
-        'Guiguinto', 'Guihulngan', 'Guimba', 'Guimbal', 'Guinayangan', 
-        'Guindulman', 'Guindulungan', 'Guinobatan', 'Guinsiliban', 'Guipos', 
-        'Guiuan', 'Gumaca', 'Gutalac', 'Hadji Mohammad Aju', 
-        'Hadji Panglima Tahil', 'Hagonoy', 'Hamtic', 'Hermosa', 'Hernani', 
-        'Hilongos', 'Himamaylan City', 'Hinabangan', 'Hinatuan', 'Hindang', 
-        'Hingyon', 'Hinigaran', 'Hinoba-an', 'Hinunangan', 'Hinundayan', 
-        'Hungduan', 'Iba', 'Ibaan', 'Ibajay', 'Igbaras', 'Iguig', 'Ilagan', 
-        'Iligan City', 'Ilog', 'Iloilo City', 'Imelda', 'Impasug-Ong', 'Imus', 
-        'Inabanga', 'Indanan', 'Indang', 'Infanta', 'Initao', 'Inopacan', 'Ipil', 
-        'Iriga City', 'Irosin', 'Isabel', 'Isabela', 'Isabela City', 
-        'Island Garden City of Samal', 'Isulan', 'Itbayat', 'Itogon', 'Ivana', 
-        'Ivisan', 'Jabonga', 'Jaen', 'Jagna', 'Jalajala', 'Jamindan', 'Janiuay', 
-        'Jaro', 'Jasaan', 'Javier', 'Jetafe', 'Jiabong', 'Jimalalud', 'Jimenez', 
-        'Jipapad', 'Jolo', 'Jomalig', 'Jones', 'Jordan', 'Jose Abad Santos', 
-        'Jose Dalman', 'Jose Panganiban', 'Josefina', 'Jovellar', 'Juban', 
-        'Julita', 'Kabacan', 'Kabankalan City', 'Kabasalan', 'Kabayan', 
-        'Kabugao', 'Kabuntalan', 'Kadingilan', 'Kalamansig', 'Kalawit', 
-        'Kalayaan', 'Kalibo', 'Kalilangan', 'Kalingalan Caluang', 'Kananga', 
-        'Kapai', 'Kapalong', 'Kapangan', 'Kapatagan', 'Kasibu', 'Katipunan', 
-        'Kauswagan', 'Kawayan', 'Kawit', 'Kayapa', 'Kiamba', 'Kiangan', 'Kibawe', 
-        'Kiblawan', 'Kibungan', 'Kidapawan City', 'Kinoguitan', 'Kitaotao', 
-        'Kitcharao', 'Kolambugan', 'Koronadal City', 'Kumalarang', 
-        'La Carlota City', 'La Castellana', 'La Libertad', 'La Paz', 
-        'La Trinidad', 'Laak', 'Labangan', 'Labason', 'Labo', 'Labrador', 
-        'Lacub', 'Lagangilang', 'Lagawe', 'Lagayan', 'Lagonglong', 'Lagonoy', 
-        'Laguindingan', 'Lake Sebu', 'Lakewood', 'Lala', 'Lal-Lo', 'Lambayong', 
-        'Lambunao', 'Lamitan City', 'Lamut', 'Langiden', 'Languyan', 'Lantapan', 
-        'Lantawan', 'Lanuza', 'Laoac', 'Laoag City', 'Laoang', 'Lapinig', 
-        'Lapu-Lapu City', 'Lapuyan', 'Larena', 'Las Navas', 'Las Nieves', 
-        'Las Piñas', 'Lasam', 'Laua-an', 'Laur', 'Laurel', 'Lavezares', 
-        'Lawaan', 'Lazi', 'Lebak', 'Leganes', 'Legazpi City', 'Lemery', 'Leon', 
-        'Leyte', 'Lezo', 'Lian', 'Lianga', 'Libacao', 'Libagon', 'Libertad', 
-        'Libjo (Albor)', 'Libmanan', 'Libon', 'Libona', 'Libungan', 'Licab', 
-        'Licuan-Baay', 'Lidlidda', 'Ligao City', 'Lila', 'Liliw', 'Liloan', 
-        'Liloy', 'Limasawa', 'Limay', 'Linamon', 'Linapacan', 'Lingayen', 
-        'Lingig', 'Lipa City', 'Llanera', 'Llorente', 'Loay', 'Lobo', 'Loboc', 
-        'Looc', 'Loon', 'Lope de Vega', 'Lopez', 'Lopez Jaena', 'Loreto', 
-        'Los Baños', 'Luba', 'Lubang', 'Lubao', 'Lubuagan', 'Lucban', 
-        'Lucena City', 'Lugait', 'Lugus', 'Luisiana', 'Lumba-Bayabao', 
-        'Lumbaca-Unayan', 'Lumban', 'Lumbatan', 'Lumbayanague', 'Luna', 'Lupao', 
-        'Lupi', 'Lupon', 'Lutayan', 'Luuk', 'Maasim', 'Maasin', 'Maasin City', 
-        'Ma-ayon', 'Mabalacat', 'Mabinay', 'Mabini', 'Mabitac', 'Mabuhay', 
-        'Macabebe', 'Macalelon', 'Macarthur', 'Maco', 'Maconacon', 'Macrohon', 
-        'Madalag', 'Madalum', 'Madamba', 'Maddela', 'Madrid', 'Madridejos', 
-        'Magalang', 'Magallanes', 'Magarao', 'Magdalena', 'Magdiwang', 'Magpet', 
-        'Magsaysay', 'Magsingal', 'Maguing', 'Mahaplag', 'Mahatao', 'Mahayag', 
-        'Mahinog', 'Maigo', 'Maimbung', 'Mainit', 'Maitum', 'Majayjay', 'Makati', 
-        'Makato', 'Makilala', 'Malabang', 'Malabon', 'Malabuyoc', 'Malalag', 
-        'Malangas', 'Malapatan', 'Malasiqui', 'Malay', 'Malaybalay City', 
-        'Malibcong', 'Malilipot', 'Malimono', 'Malinao', 'Malita', 
-        'Malitbog', 'Mallig', 'Malolos City', 'Malungon', 'Maluso', 'Malvar', 
-        'Mamasapano', 'Mambajao', 'Mamburao', 'Mambusao', 'Manabo', 'Manaoag', 
-        'Manapla', 'Manay', 'Mandaluyong', 'Mandaon', 'Mandaue City', 
-        'Mangaldan', 'Mangatarem', 'Mangudadatu', 'Manila', 'Manito', 'Manjuyod', 
-        'Mankayan', 'Manolo Fortich', 'Mansalay', 'Manticao', 'Manukan', 
-        'Mapanas', 'Mapandan', 'Mapun', 'Marabut', 'Maragondon', 'Maragusan', 
-        'Maramag', 'Marantao', 'Marawi City', 'Marcos', 'Margosatubig', 'Maria', 
-        'Maria Aurora', 'Maribojoc', 'Marihatag', 'Marikina', 'Marilao', 
-        'Maripipi', 'Mariveles', 'Marogong', 'Masantol', 'Masbate City', 
-        'Masinloc', 'Masiu', 'Maslog', 'Mataas na Kahoy', 'Matag-ob', 'Matalom', 
-        'Matanao', 'Matanog', 'Mati City', 'Matnog', 'Matuguinao', 'Matungao', 
-        'Mauban', 'Mawab', 'Mayantoc', 'Maydolong', 'Mayorga', 'Mayoyao', 
-        'Medellin', 'Medina', 'Mendez', 'Mercedes', 'Merida', 'Mexico', 
-        'Meycauayan City', 'Miagao', 'Midsalip', 'Midsayap', 'Milagros', 
-        'Milaor', 'Mina', 'Minalabac', 'Minalin', 'Minglanilla', 'M\'Lang', 
-        'Moalboal', 'Mobo', 'Mogpog', 'Moises Padilla', 'Molave', 'Moncada', 
-        'Mondragon', 'Monkayo', 'Monreal', 'Montevista', 'Morong', 'Motiong', 
-        'Mulanay', 'Mulondo', 'Munai', 'Muntinlupa', 'Murcia', 'Mutia', 'Naawan', 
-        'Nabas', 'Nabua', 'Nabunturan', 'Naga', 'Naga City', 'Nagbukel', 
-        'Nagcarlan', 'Nagtipunan', 'Naguilian', 'Naic', 'Nampicuan', 'Narra', 
-        'Narvacan', 'Nasipit', 'Nasugbu', 'Natividad', 'Natonin', 'Naujan', 
-        'Naval', 'Navotas', 'New Bataan', 'New Corella', 'New Lucena', 
-        'New Washington', 'Norala', 'Northern Kabuntalan', 'Norzagaray', 
-        'Noveleta', 'Nueva Era', 'Nueva Valencia', 'Numancia', 'Nunungan', 'Oas', 
-        'Obando', 'Ocampo', 'Odiongan', 'Old Panamao', 'Olongapo City', 
-        'Olutanga', 'Omar', 'Opol', 'Orani', 'Oras', 'Orion', 'Ormoc City', 
-        'Oroquieta City', 'Oslob', 'Oton', 'Ozamis City', 'Padada', 
-        'Padre Burgos', 'Padre Garcia', 'Paete', 'Pagadian City', 'Pagagawan', 
-        'Pagalungan', 'Pagayawan', 'Pagbilao', 'Paglat', 'Pagsanghan', 
-        'Pagsanjan', 'Pagudpud', 'Pakil', 'Palanan', 'Palanas', 'Palapag', 
-        'Palauig', 'Palayan City', 'Palimbang', 'Palo', 'Palompon', 'Paluan', 
-        'Pambujan', 'Pamplona', 'Panabo City', 'Panaon', 'Panay', 
-        'Pandag', 'Pandami', 'Pandan', 'Pandi', 'Panganiban', 
-        'Pangantucan', 'Pangil', 'Panglao', 'Panglima Estino', 'Panglima Sugala', 
-        'Pangutaran', 'Paniqui', 'Panitan', 'Pantabangan', 'Pantao Ragat', 
-        'Pantar', 'Pantukan', 'Panukulan', 'Paoay', 'Paombong', 'Paracale', 
-        'Paracelis', 'Parañaque', 'Paranas', 'Parang', 'Pasacao', 'Pasay', 
-        'Pasig', 'Pasil', 'Passi City', 'Pastrana', 'Pasuquin', 'Pata', 
-        'Pateros', 'Patikul', 'Patnanungan', 'Patnongon', 'Pavia', 'Payao', 
-        'Peñablanca', 'Peñaranda', 'Peñarrubia', 'Perez', 'Piagapo', 'Piat', 
-        'Picong', 'Piddig', 'Pidigan', 'Pigkawayan', 'Pikit', 'Pila', 'Pilar', 
-        'Pili', 'Pililla', 'Pinabacdao', 'Pinamalayan', 'Pinamungahan', 'Piñan', 
-        'Pinili', 'Pintuyan', 'Pinukpuk', 'Pio Duran', 'Pio V. Corpuz', 'Pitogo', 
-        'Placer', 'Plaridel', 'Pola', 'Polanco', 'Polangui', 'Polillo', 
-        'Polomolok', 'Pontevedra', 'Poona Bayabao', 'Poona Piagapo', 'Porac', 
-        'Poro', 'Pototan', 'Pozzorubio', 'Pres. Carlos P. Garcia', 
-        'Pres. Manuel A. Roxas', 'Presentacion', 'President Quirino', 
-        'Prieto Diaz', 'Prosperidad', 'Pualas', 'Pudtol', 'Puerto Galera', 
-        'Puerto Princesa City', 'Pugo', 'Pulilan', 'Pulupandan', 'Pura', 
-        'Quezon', 'Quezon City', 'Quinapondan', 'Quirino', 'Ragay', 
-        'Rajah Buayan', 'Ramon', 'Ramon Magsaysay', 'Ramos', 'Rapu-Rapu', 'Real', 
-        'Reina Mercedes', 'Remedios T. Romualdez', 'Rizal', 'Rodriguez', 
-        'Romblon', 'Ronda', 'Rosales', 'Rosario', 'Roseller Lim', 'Roxas', 
-        'Roxas City', 'Sabangan', 'Sablan', 'Sablayan', 'Sabtang', 'Sadanga', 
-        'Sagada', 'Sagay', 'Sagay City', 'Sagbayan', 'Sagñay', 'Saguday', 
-        'Saguiaran', 'Saint Bernard', 'Salay', 'Salcedo', 'Sallapadan', 'Salug', 
-        'Salvador', 'Salvador Benedicto', 'Samal', 'Samboan', 'Sampaloc', 
-        'San Agustin', 'San Andres', 'San Antonio', 'San Benito', 
-        'San Carlos City', 'San Clemente', 'San Dionisio', 'San Emilio', 
-        'San Enrique', 'San Esteban', 'San Fabian', 'San Felipe', 'San Fernando', 
-        'San Fernando City', 'San Francisco', 'San Gabriel', 'San Guillermo', 
-        'San Ildefonso', 'San Isidro', 'San Jacinto', 'San Joaquin', 'San Jorge', 
-        'San Jose', 'San Jose City', 'San Jose De Buan', 
-        'San Jose del Monte City', 'San Juan', 'San Julian', 'San Leonardo', 
-        'San Lorenzo', 'San Lorenzo Ruiz', 'San Luis', 'San Manuel', 
-        'San Marcelino', 'San Mariano', 'San Mateo', 'San Miguel', 'San Narciso', 
-        'San Nicolas', 'San Pablo', 'San Pablo City', 'San Pascual', 'San Pedro', 
-        'San Policarpo', 'San Quintin', 'San Rafael', 'San Remigio', 
-        'San Ricardo', 'San Roque', 'San Sebastian', 'San Simon', 'San Teodoro', 
-        'San Vicente', 'Sanchez-Mira', 'Santa', 'Santa Ana', 'Santa Barbara', 
-        'Santa Catalina', 'Santa Cruz', 'Santa Elena', 'Santa Fe', 
-        'Santa Ignacia', 'Santa Josefa', 'Santa Lucia', 'Santa Magdalena', 
-        'Santa Marcela', 'Santa Margarita', 'Santa Maria', 'Santa Monica', 
-        'Santa Praxedes', 'Santa Rita', 'Santa Rosa', 'Santa Rosa City', 
-        'Santa Teresita', 'Santander', 'Santiago', 'Santiago City', 
-        'Santo Domingo', 'Santo Niño', 'Santo Tomas', 'Santol', 'Sapad', 
-        'Sapang Dalaga', 'Sapa-Sapa', 'Sapi-an', 'Sara', 'Sarangani', 'Sariaya', 
-        'Sarrat', 'Sasmuan', 'Science City of Muñoz', 'Sebaste', 
-        'Sen. Ninoy Aquino', 'Sergio Osmeña Sr.', 'Sevilla', 'Shariff Aguak', 
-        'Siasi', 'Siaton', 'Siay', 'Siayan', 'Sibagat', 'Sibalom', 'Sibonga', 
-        'Sibuco', 'Sibulan', 'Sibunag', 'Sibutad', 'Sibutu', 'Sierra Bullones', 
-        'Sigay', 'Sigma', 'Sikatuna', 'Silago', 'Silang', 'Silay City', 
-        'Silvino Lobos', 'Simunul', 'Sinacaban', 'Sinait', 'Sindangan', 
-        'Siniloan', 'Siocon', 'Sipalay City', 'Sipocot', 'Siquijor', 'Sirawai', 
-        'Siruma', 'Sison', 'Sitangkai', 'Socorro', 'Sofronio Española', 'Sogod', 
-        'Solana', 'Solano', 'Solsona', 'Sominot', 'Sorsogon City', 'South Ubian', 
-        'South Upi', 'Sual', 'Subic', 'Sudipen', 'Sugbongcogon', 'Sugpon', 
-        'Sulat', 'Sulop', 'Sultan Dumalondong', 'Sultan Kudarat', 'Sultan Mastura', 
-        'Sultan Naga Dimaporo', 'Sultan sa Barongis', 'Sumilao', 'Sumisip', 
-        'Surallah', 'Surigao City', 'Suyo', 'Taal', 'Tabaco City', 'Tabango', 
-        'Tabina', 'Tabogon', 'Tabontabon', 'Tabuelan', 'Tabuk City', 
-        'Tacloban City', 'Tacurong City', 'Tadian', 'Taft', 'Tagana-an', 
-        'Tagapul-an', 'Tagaytay City', 'Tagbilaran City', 'Tagbina', 
-        'Tagkawayan', 'Tago', 'Tagoloan', 'Tagoloan Ii', 'Tagudin', 'Taguig', 
-        'Tagum City', 'Talacogon', 'Talaingod', 'Talakag', 'Talalora', 
-        'Talavera', 'Talayan', 'Talibon', 'Talipao', 'Talisay', 'Talisay City', 
-        'Talisayan', 'Talitay', 'Talugtug', 'Talusan', 'Tambulig', 'Tampakan', 
-        'Tamparan', 'Tampilisan', 'Tanauan', 'Tanauan City', 'Tanay', 
-        'Tandag City', 'Tandubas', 'Tangalan', 'Tangcal', 'Tangub City', 
-        'Tanjay', 'Tantangan', 'Tanudan', 'Tanza', 'Tapaz', 'Tapul', 'Taraka', 
-        'Tarangnan', 'Tarlac City', 'Tarragona', 'Tayabas City', 'Tayasan', 
-        'Taysan', 'Taytay', 'Tayug', 'Tayum', 'T\'Boli', 'Teresa', 'Ternate', 
-        'Tiaong', 'Tibiao', 'Tigaon', 'Tigbao', 'Tigbauan', 'Tinambac', 'Tineg', 
-        'Tinglayan', 'Tingloy', 'Tinoc', 'Tipo-Tipo', 'Titay', 'Tiwi', 
-        'Tobias Fornier', 'Toboso', 'Toledo City', 'Tolosa', 'Tomas Oppus', 
-        'Tongkil', 'Torrijos', 'Trece Martires City', 'Trento', 'Trinidad', 
-        'Tuao', 'Tuba', 'Tubajon', 'Tubao', 'Tubaran', 'Tubay', 'Tubigon', 
-        'Tublay', 'Tubo', 'Tubod', 'Tubungan', 'Tuburan', 'Tudela', 'Tugaya', 
-        'Tuguegarao City', 'Tukuran', 'Tulunan', 'Tumauini', 'Tunga', 'Tungawan', 
-        'Tupi', 'Turtle Islands', 'Tuy', 'Ubay', 'Umingan', 'Ungkaya Pukan', 
-        'Unisan', 'Upi', 'Urbiztondo', 'Urdaneta City', 'Uson', 'Uyugan', 
-        'Valderrama', 'Valencia', 'Valencia City', 'Valenzuela', 'Valladolid', 
-        'Vallehermoso', 'Veruela', 'Victoria', 'Victorias City', 'Viga', 
-        'Vigan City', 'Villaba', 'Villanueva', 'Villareal', 'Villasis', 
-        'Villaverde', 'Villaviciosa', 'Vincenzo A. Sagun', 'Vintar', 'Vinzons', 
-        'Virac', 'Wao', 'Zamboanga City', 'Zamboanguita', 'Zaragoza', 'Zarraga', 
-        'Zumarraga'
+        "Aborlan", "Abra de Ilog", "Abucay", "Abulug", "Abuyog", "Adams", 
+        "Agdangan", "Aglipay", "Agno", "Agoncillo", "Agoo", "Aguilar", 
+        "Aguinaldo", "Agutaya", "Ajuy", "Akbar", "Alabat", "Alabel", "Alamada", 
+        "Alaminos", "Alaminos City", "Alangalang", "Al-Barka", "Albuera", 
+        "Alburquerque", "Alcala", "Alcantara", "Alcoy", "Alegria", "Aleosan", 
+        "Alfonso", "Alfonso Castaneda", "Alfonso Lista", "Aliaga", "Alicia", 
+        "Alilem", "Alimodian", "Alitagtag", "Allacapan", "Allen", "Almagro", 
+        "Almeria", "Aloguinsan", "Aloran", "Altavas", "Alubijid", "Amadeo", 
+        "Ambaguio", "Amlan", "Ampatuan", "Amulung", "Anahawan", "Anao", 
+        "Anda", "Angadanan", "Angat", "Angeles City", "Angono", "Anilao", 
+        "Anini-y", "Antequera", "Antipas", "Antipolo City", "Apalit", "Aparri", 
+        "Araceli", "Arakan", "Arayat", "Argao", "Aringay", "Aritao", "Aroroy", 
+        "Arteche", "Asingan", "Asipulo", "Asturias", "Asuncion", "Atimonan", 
+        "Atok", "Aurora", "Ayungon", "Baao", "Babatngon", "Bacacay", "Bacarra", 
+        "Baclayon", "Bacnotan", "Baco", "Bacolod", "Bacolod City", 
+        "Bacolod-Kalawi", "Bacolor", "Bacong", "Bacoor", "Bacuag", "Bacungan", 
+        "Badian", "Badiangan", "Badoc", "Bagabag", "Bagac", "Bagamanoc", 
+        "Baganga", "Baggao", "Bago City", "Baguio City", "Bagulin", "Bagumbayan", 
+        "Bais", "Bakun", "Balabac", "Balabagan", "Balagtas", "Balamban", 
+        "Balanga City", "Balangiga", "Balangkayan", "Balaoan", "Balasan", 
+        "Balatan", "Balayan", "Balbalan", "Baleno", "Baler", "Balete", 
+        "Baliangao", "Baliguian", "Balilihan", "Balindong", "Balingasag", 
+        "Balingoan", "Baliuag", "Ballesteros", "Baloi", "Balud", "Balungao", 
+        "Bamban", "Bambang", "Banate", "Banaue", "Banaybanay", "Banayoyo", 
+        "Banga", "Bangar", "Bangued", "Bangui", "Bani", "Banisilan", 
+        "Banna", "Bansalan", "Bansud", "Bantay", "Bantayan", "Banton", "Baras", 
+        "Barbaza", "Barcelona", "Barili", "Barira", "Barlig", "Barobo", 
+        "Barotac Nuevo", "Barotac Viejo", "Baroy", "Barugo", "Basay", 
+        "Basco", "Basey", "Basilisia (Rizal)", "Basista", "Basud", "Batac City", 
+        "Batad", "Batan", "Batangas City", "Bataraza", "Bato", "Batuan", "Bauan", 
+        "Bauang", "Bauko", "Baungon", "Bautista", "Bay", "Bayabas", "Bayambang", 
+        "Bayang", "Bayawan", "Baybay City", "Bayog", "Bayombong", "Bayugan", 
+        "Belison", "Benito Soliven", "Besao", "Bien Unido", "Bilar", "Biliran", 
+        "Binalbagan", "Binalonan", "Biñan", "Binangonan", "Bindoy", 
+        "Bingawan", "Binidayan", "Binmaley", "Binuangan", "Biri", "Bislig City", 
+        "Boac", "Bobon", "Bocaue", "Bogo City", "Bokod", "Bolinao", "Boliney", 
+        "Boljoon", "Bombon", "Bongabon", "Bongabong", "Bongao", "Bonifacio", 
+        "Bontoc", "Borbon", "Borongan City", "Boston", "Botolan", 
+        "Braulio E. Dujali", "Brooke's Point", "Buadiposo-Buntong", "Bubong", 
+        "Bucay", "Bucloc", "Buenavista", "Bugallon", "Bugasong", "Buguey", 
+        "Buguias", "Buhi", "Bula", "Bulacan", "Bulalacao", "Bulan", "Buldon", 
+        "Buluan", "Bulusan", "Bumbaran", "Bunawan", "Burauen", "Burdeos", 
+        "Burgos", "Buruanga", "Bustos", "Busuanga", "Butig", "Butuan City", 
+        "Buug", "Caba", "Cabadbaran City", "Cabagan", "Cabanatuan City", 
+        "Cabangan", "Cabanglasan", "Cabarroguis", "Cabatuan", "Cabiao", 
+        "Cabucgayan", "Cabugao", "Cabusao", "Cabuyao", "Cadiz City", 
+        "Cagayan de Oro", "Cagayancillo", "Cagdianao", "Cagwait", "Caibiran", 
+        "Cainta", "Cajidiocan", "Calabanga", "Calaca", "Calamba", "Calamba City", 
+        "Calanasan", "Calanogas", "Calapan City", "Calape", "Calasiao", 
+        "Calatagan", "Calatrava", "Calauag", "Calauan", "Calayan", 
+        "Calbayog City", "Calbiga", "Calinog", "Calintaan", "Caloocan", 
+        "Calubian", "Calumpit", "Caluya", "Camalaniugan", "Camalig", "Camaligan", 
+        "Camiling", "Canaman", "Can-avid", "Candaba", "Candelaria", "Candijay", 
+        "Candon City", "Candoni", "Canlaon", "Cantilan", "Caoayan", "Capalonga", 
+        "Capas", "Capoocan", "Capul", "Caraga", "Caramoan", "Caramoran", 
+        "Carasi", "Carcar City", "Cardona", "Carigara", "Carles", "Carmen", 
+        "Carmona", "Carranglan", "Carrascal", "Casiguran", "Castilla", 
+        "Castillejos", "Cataingan", "Catanauan", "Catarman", "Catbalogan City", 
+        "Cateel", "Catigbian", "Catmon", "Catubig", "Cauayan", "Cauayan City", 
+        "Cavinti", "Cavite City", "Cawayan", "Cebu City", "Cervantes", "Clarin", 
+        "Claver", "Claveria", "Columbio", "Compostela", "Concepcion", "Conner", 
+        "Consolacion", "Corcuera", "Cordoba", "Cordon", "Corella", "Coron", 
+        "Cortes", "Cotabato City", "Cuartero", "Cuenca", "Culaba", "Culasi", 
+        "Culion", "Currimao", "Cuyapo", "Cuyo", "Daanbantayan", "Daet", "Dagami", 
+        "Dagohoy", "Daguioman", "Dagupan City", "Dalaguete", "Damulog", "Danao", 
+        "Danao City", "Dangcagan", "Danglas", "Dao", "Dapa", "Dapitan City", 
+        "Daraga", "Daram", "Dasmariñas", "Dasol", "Datu Abdullah Sangki", 
+        "Datu Anggal Midtimbang", "Datu Blah T. Sinsuat", "Datu Odin Sinsuat", 
+        "Datu Paglas", "Datu Piang", "Datu Saudi-Ampatuan", "Datu Unsay", 
+        "Dauin", "Dauis", "Davao City", "Del Carmen", "Del Gallego", 
+        "Delfin Albano", "Diadi", "Diffun", "Digos City", "Dilasag", 
+        "Dimasalang", "Dimataling", "Dimiao", "Dinagat", "Dinalungan", 
+        "Dinalupihan", "Dinapigue", "Dinas", "Dingalan", "Dingle", "Dingras", 
+        "Dipaculao", "Diplahan", "Dipolog City", "Ditsaan-Ramain", "Divilacan", 
+        "Dolores", "Don Carlos", "Don Marcelino", "Don Victoriano Chiongbian", 
+        "Doña Remedios Trinidad", "Donsol", "Dueñas", "Duero", "Dulag", 
+        "Dumaguete", "Dumalag", "Dumalinao", "Dumalneg", "Dumangas", "Dumanjug", 
+        "Dumaran", "Dumarao", "Dumingag", "Dupax del Norte", "Dupax del Sur", 
+        "Echague", "El Nido", "El Salvador", "El Salvador City", "Enrile", 
+        "Enrique B. Magalona", "Enrique Villanueva", "Escalante City", 
+        "Esperanza", "Estancia", "Famy", "Ferrol", "Flora", "Floridablanca", 
+        "Gabaldon", "Gainza", "Galimuyod", "Gamay", "Gamu", "Ganassi", "Gandara", 
+        "Gapan City", "Garchitorena", "Garcia Hernandez", "Gasan", "Gattaran", 
+        "Gen. Emilio Aguinaldo", "Gen. Mariano Alvarez", "Gen. S. K. Pendatun", 
+        "Gen. Trias", "General Luna", "General MacArthur", 
+        "General Mamerto Natividad", "General Nakar", "General Santos City", 
+        "General Tinio", "Gerona", "Gigaquit", "Gigmoto", "Ginatilan", 
+        "Gingoog City", "Giporlos", "Gitagum", "Glan", "Gloria", "Goa", "Godod", 
+        "Gonzaga", "Governor Generoso", "Gregorio Del Pilar", "Guagua", "Gubat", 
+        "Guiguinto", "Guihulngan", "Guimba", "Guimbal", "Guinayangan", 
+        "Guindulman", "Guindulungan", "Guinobatan", "Guinsiliban", "Guipos", 
+        "Guiuan", "Gumaca", "Gutalac", "Hadji Mohammad Aju", 
+        "Hadji Panglima Tahil", "Hagonoy", "Hamtic", "Hermosa", "Hernani", 
+        "Hilongos", "Himamaylan City", "Hinabangan", "Hinatuan", "Hindang", 
+        "Hingyon", "Hinigaran", "Hinoba-an", "Hinunangan", "Hinundayan", 
+        "Hungduan", "Iba", "Ibaan", "Ibajay", "Igbaras", "Iguig", "Ilagan", 
+        "Iligan City", "Ilog", "Iloilo City", "Imelda", "Impasug-Ong", "Imus", 
+        "Inabanga", "Indanan", "Indang", "Infanta", "Initao", "Inopacan", "Ipil", 
+        "Iriga City", "Irosin", "Isabel", "Isabela", "Isabela City", 
+        "Island Garden City of Samal", "Isulan", "Itbayat", "Itogon", "Ivana", 
+        "Ivisan", "Jabonga", "Jaen", "Jagna", "Jalajala", "Jamindan", "Janiuay", 
+        "Jaro", "Jasaan", "Javier", "Jetafe", "Jiabong", "Jimalalud", "Jimenez", 
+        "Jipapad", "Jolo", "Jomalig", "Jones", "Jordan", "Jose Abad Santos", 
+        "Jose Dalman", "Jose Panganiban", "Josefina", "Jovellar", "Juban", 
+        "Julita", "Kabacan", "Kabankalan City", "Kabasalan", "Kabayan", 
+        "Kabugao", "Kabuntalan", "Kadingilan", "Kalamansig", "Kalawit", 
+        "Kalayaan", "Kalibo", "Kalilangan", "Kalingalan Caluang", "Kananga", 
+        "Kapai", "Kapalong", "Kapangan", "Kapatagan", "Kasibu", "Katipunan", 
+        "Kauswagan", "Kawayan", "Kawit", "Kayapa", "Kiamba", "Kiangan", "Kibawe", 
+        "Kiblawan", "Kibungan", "Kidapawan City", "Kinoguitan", "Kitaotao", 
+        "Kitcharao", "Kolambugan", "Koronadal City", "Kumalarang", 
+        "La Carlota City", "La Castellana", "La Libertad", "La Paz", 
+        "La Trinidad", "Laak", "Labangan", "Labason", "Labo", "Labrador", 
+        "Lacub", "Lagangilang", "Lagawe", "Lagayan", "Lagonglong", "Lagonoy", 
+        "Laguindingan", "Lake Sebu", "Lakewood", "Lala", "Lal-Lo", "Lambayong", 
+        "Lambunao", "Lamitan City", "Lamut", "Langiden", "Languyan", "Lantapan", 
+        "Lantawan", "Lanuza", "Laoac", "Laoag City", "Laoang", "Lapinig", 
+        "Lapu-Lapu City", "Lapuyan", "Larena", "Las Navas", "Las Nieves", 
+        "Las Piñas", "Lasam", "Laua-an", "Laur", "Laurel", "Lavezares", 
+        "Lawaan", "Lazi", "Lebak", "Leganes", "Legazpi City", "Lemery", "Leon", 
+        "Leyte", "Lezo", "Lian", "Lianga", "Libacao", "Libagon", "Libertad", 
+        "Libjo (Albor)", "Libmanan", "Libon", "Libona", "Libungan", "Licab", 
+        "Licuan-Baay", "Lidlidda", "Ligao City", "Lila", "Liliw", "Liloan", 
+        "Liloy", "Limasawa", "Limay", "Linamon", "Linapacan", "Lingayen", 
+        "Lingig", "Lipa City", "Llanera", "Llorente", "Loay", "Lobo", "Loboc", 
+        "Looc", "Loon", "Lope de Vega", "Lopez", "Lopez Jaena", "Loreto", 
+        "Los Baños", "Luba", "Lubang", "Lubao", "Lubuagan", "Lucban", 
+        "Lucena City", "Lugait", "Lugus", "Luisiana", "Lumba-Bayabao", 
+        "Lumbaca-Unayan", "Lumban", "Lumbatan", "Lumbayanague", "Luna", "Lupao", 
+        "Lupi", "Lupon", "Lutayan", "Luuk", "Maasim", "Maasin", "Maasin City", 
+        "Ma-ayon", "Mabalacat", "Mabinay", "Mabini", "Mabitac", "Mabuhay", 
+        "Macabebe", "Macalelon", "Macarthur", "Maco", "Maconacon", "Macrohon", 
+        "Madalag", "Madalum", "Madamba", "Maddela", "Madrid", "Madridejos", 
+        "Magalang", "Magallanes", "Magarao", "Magdalena", "Magdiwang", "Magpet", 
+        "Magsaysay", "Magsingal", "Maguing", "Mahaplag", "Mahatao", "Mahayag", 
+        "Mahinog", "Maigo", "Maimbung", "Mainit", "Maitum", "Majayjay", "Makati", 
+        "Makato", "Makilala", "Malabang", "Malabon", "Malabuyoc", "Malalag", 
+        "Malangas", "Malapatan", "Malasiqui", "Malay", "Malaybalay City", 
+        "Malibcong", "Malilipot", "Malimono", "Malinao", "Malita", 
+        "Malitbog", "Mallig", "Malolos City", "Malungon", "Maluso", "Malvar", 
+        "Mamasapano", "Mambajao", "Mamburao", "Mambusao", "Manabo", "Manaoag", 
+        "Manapla", "Manay", "Mandaluyong", "Mandaon", "Mandaue City", 
+        "Mangaldan", "Mangatarem", "Mangudadatu", "Manila", "Manito", "Manjuyod", 
+        "Mankayan", "Manolo Fortich", "Mansalay", "Manticao", "Manukan", 
+        "Mapanas", "Mapandan", "Mapun", "Marabut", "Maragondon", "Maragusan", 
+        "Maramag", "Marantao", "Marawi City", "Marcos", "Margosatubig", "Maria", 
+        "Maria Aurora", "Maribojoc", "Marihatag", "Marikina", "Marilao", 
+        "Maripipi", "Mariveles", "Marogong", "Masantol", "Masbate City", 
+        "Masinloc", "Masiu", "Maslog", "Mataas na Kahoy", "Matag-ob", "Matalom", 
+        "Matanao", "Matanog", "Mati City", "Matnog", "Matuguinao", "Matungao", 
+        "Mauban", "Mawab", "Mayantoc", "Maydolong", "Mayorga", "Mayoyao", 
+        "Medellin", "Medina", "Mendez", "Mercedes", "Merida", "Mexico", 
+        "Meycauayan City", "Miagao", "Midsalip", "Midsayap", "Milagros", 
+        "Milaor", "Mina", "Minalabac", "Minalin", "Minglanilla", "M'Lang", 
+        "Moalboal", "Mobo", "Mogpog", "Moises Padilla", "Molave", "Moncada", 
+        "Mondragon", "Monkayo", "Monreal", "Montevista", "Morong", "Motiong", 
+        "Mulanay", "Mulondo", "Munai", "Muntinlupa", "Murcia", "Mutia", "Naawan", 
+        "Nabas", "Nabua", "Nabunturan", "Naga", "Naga City", "Nagbukel", 
+        "Nagcarlan", "Nagtipunan", "Naguilian", "Naic", "Nampicuan", "Narra", 
+        "Narvacan", "Nasipit", "Nasugbu", "Natividad", "Natonin", "Naujan", 
+        "Naval", "Navotas", "New Bataan", "New Corella", "New Lucena", 
+        "New Washington", "Norala", "Northern Kabuntalan", "Norzagaray", 
+        "Noveleta", "Nueva Era", "Nueva Valencia", "Numancia", "Nunungan", "Oas", 
+        "Obando", "Ocampo", "Odiongan", "Old Panamao", "Olongapo City", 
+        "Olutanga", "Omar", "Opol", "Orani", "Oras", "Orion", "Ormoc City", 
+        "Oroquieta City", "Oslob", "Oton", "Ozamis City", "Padada", 
+        "Padre Burgos", "Padre Garcia", "Paete", "Pagadian City", "Pagagawan", 
+        "Pagalungan", "Pagayawan", "Pagbilao", "Paglat", "Pagsanghan", 
+        "Pagsanjan", "Pagudpud", "Pakil", "Palanan", "Palanas", "Palapag", 
+        "Palauig", "Palayan City", "Palimbang", "Palo", "Palompon", "Paluan", 
+        "Pambujan", "Pamplona", "Panabo City", "Panaon", "Panay", 
+        "Pandag", "Pandami", "Pandan", "Pandi", "Panganiban", 
+        "Pangantucan", "Pangil", "Panglao", "Panglima Estino", "Panglima Sugala", 
+        "Pangutaran", "Paniqui", "Panitan", "Pantabangan", "Pantao Ragat", 
+        "Pantar", "Pantukan", "Panukulan", "Paoay", "Paombong", "Paracale", 
+        "Paracelis", "Parañaque", "Paranas", "Parang", "Pasacao", "Pasay", 
+        "Pasig", "Pasil", "Passi City", "Pastrana", "Pasuquin", "Pata", 
+        "Pateros", "Patikul", "Patnanungan", "Patnongon", "Pavia", "Payao", 
+        "Peñablanca", "Peñaranda", "Peñarrubia", "Perez", "Piagapo", "Piat", 
+        "Picong", "Piddig", "Pidigan", "Pigkawayan", "Pikit", "Pila", "Pilar", 
+        "Pili", "Pililla", "Pinabacdao", "Pinamalayan", "Pinamungahan", "Piñan", 
+        "Pinili", "Pintuyan", "Pinukpuk", "Pio Duran", "Pio V. Corpuz", "Pitogo", 
+        "Placer", "Plaridel", "Pola", "Polanco", "Polangui", "Polillo", 
+        "Polomolok", "Pontevedra", "Poona Bayabao", "Poona Piagapo", "Porac", 
+        "Poro", "Pototan", "Pozzorubio", "Pres. Carlos P. Garcia", 
+        "Pres. Manuel A. Roxas", "Presentacion", "President Quirino", 
+        "Prieto Diaz", "Prosperidad", "Pualas", "Pudtol", "Puerto Galera", 
+        "Puerto Princesa City", "Pugo", "Pulilan", "Pulupandan", "Pura", 
+        "Quezon", "Quezon City", "Quinapondan", "Quirino", "Ragay", 
+        "Rajah Buayan", "Ramon", "Ramon Magsaysay", "Ramos", "Rapu-Rapu", "Real", 
+        "Reina Mercedes", "Remedios T. Romualdez", "Rizal", "Rodriguez", 
+        "Romblon", "Ronda", "Rosales", "Rosario", "Roseller Lim", "Roxas", 
+        "Roxas City", "Sabangan", "Sablan", "Sablayan", "Sabtang", "Sadanga", 
+        "Sagada", "Sagay", "Sagay City", "Sagbayan", "Sagñay", "Saguday", 
+        "Saguiaran", "Saint Bernard", "Salay", "Salcedo", "Sallapadan", "Salug", 
+        "Salvador", "Salvador Benedicto", "Samal", "Samboan", "Sampaloc", 
+        "San Agustin", "San Andres", "San Antonio", "San Benito", 
+        "San Carlos City", "San Clemente", "San Dionisio", "San Emilio", 
+        "San Enrique", "San Esteban", "San Fabian", "San Felipe", "San Fernando", 
+        "San Fernando City", "San Francisco", "San Gabriel", "San Guillermo", 
+        "San Ildefonso", "San Isidro", "San Jacinto", "San Joaquin", "San Jorge", 
+        "San Jose", "San Jose City", "San Jose De Buan", 
+        "San Jose del Monte City", "San Juan", "San Julian", "San Leonardo", 
+        "San Lorenzo", "San Lorenzo Ruiz", "San Luis", "San Manuel", 
+        "San Marcelino", "San Mariano", "San Mateo", "San Miguel", "San Narciso", 
+        "San Nicolas", "San Pablo", "San Pablo City", "San Pascual", "San Pedro", 
+        "San Policarpo", "San Quintin", "San Rafael", "San Remigio", 
+        "San Ricardo", "San Roque", "San Sebastian", "San Simon", "San Teodoro", 
+        "San Vicente", "Sanchez-Mira", "Santa", "Santa Ana", "Santa Barbara", 
+        "Santa Catalina", "Santa Cruz", "Santa Elena", "Santa Fe", 
+        "Santa Ignacia", "Santa Josefa", "Santa Lucia", "Santa Magdalena", 
+        "Santa Marcela", "Santa Margarita", "Santa Maria", "Santa Monica", 
+        "Santa Praxedes", "Santa Rita", "Santa Rosa", "Santa Rosa City", 
+        "Santa Teresita", "Santander", "Santiago", "Santiago City", 
+        "Santo Domingo", "Santo Niño", "Santo Tomas", "Santol", "Sapad", 
+        "Sapang Dalaga", "Sapa-Sapa", "Sapi-an", "Sara", "Sarangani", "Sariaya", 
+        "Sarrat", "Sasmuan", "Science City of Muñoz", "Sebaste", 
+        "Sen. Ninoy Aquino", "Sergio Osmeña Sr.", "Sevilla", "Shariff Aguak", 
+        "Siasi", "Siaton", "Siay", "Siayan", "Sibagat", "Sibalom", "Sibonga", 
+        "Sibuco", "Sibulan", "Sibunag", "Sibutad", "Sibutu", "Sierra Bullones", 
+        "Sigay", "Sigma", "Sikatuna", "Silago", "Silang", "Silay City", 
+        "Silvino Lobos", "Simunul", "Sinacaban", "Sinait", "Sindangan", 
+        "Siniloan", "Siocon", "Sipalay City", "Sipocot", "Siquijor", "Sirawai", 
+        "Siruma", "Sison", "Sitangkai", "Socorro", "Sofronio Española", "Sogod", 
+        "Solana", "Solano", "Solsona", "Sominot", "Sorsogon City", "South Ubian", 
+        "South Upi", "Sual", "Subic", "Sudipen", "Sugbongcogon", "Sugpon", 
+        "Sulat", "Sulop", "Sultan Dumalondong", "Sultan Kudarat", "Sultan Mastura", 
+        "Sultan Naga Dimaporo", "Sultan sa Barongis", "Sumilao", "Sumisip", 
+        "Surallah", "Surigao City", "Suyo", "Taal", "Tabaco City", "Tabango", 
+        "Tabina", "Tabogon", "Tabontabon", "Tabuelan", "Tabuk City", 
+        "Tacloban City", "Tacurong City", "Tadian", "Taft", "Tagana-an", 
+        "Tagapul-an", "Tagaytay City", "Tagbilaran City", "Tagbina", 
+        "Tagkawayan", "Tago", "Tagoloan", "Tagoloan Ii", "Tagudin", "Taguig", 
+        "Tagum City", "Talacogon", "Talaingod", "Talakag", "Talalora", 
+        "Talavera", "Talayan", "Talibon", "Talipao", "Talisay", "Talisay City", 
+        "Talisayan", "Talitay", "Talugtug", "Talusan", "Tambulig", "Tampakan", 
+        "Tamparan", "Tampilisan", "Tanauan", "Tanauan City", "Tanay", 
+        "Tandag City", "Tandubas", "Tangalan", "Tangcal", "Tangub City", 
+        "Tanjay", "Tantangan", "Tanudan", "Tanza", "Tapaz", "Tapul", "Taraka", 
+        "Tarangnan", "Tarlac City", "Tarragona", "Tayabas City", "Tayasan", 
+        "Taysan", "Taytay", "Tayug", "Tayum", "T'Boli", "Teresa", "Ternate", 
+        "Tiaong", "Tibiao", "Tigaon", "Tigbao", "Tigbauan", "Tinambac", "Tineg", 
+        "Tinglayan", "Tingloy", "Tinoc", "Tipo-Tipo", "Titay", "Tiwi", 
+        "Tobias Fornier", "Toboso", "Toledo City", "Tolosa", "Tomas Oppus", 
+        "Tongkil", "Torrijos", "Trece Martires City", "Trento", "Trinidad", 
+        "Tuao", "Tuba", "Tubajon", "Tubao", "Tubaran", "Tubay", "Tubigon", 
+        "Tublay", "Tubo", "Tubod", "Tubungan", "Tuburan", "Tudela", "Tugaya", 
+        "Tuguegarao City", "Tukuran", "Tulunan", "Tumauini", "Tunga", "Tungawan", 
+        "Tupi", "Turtle Islands", "Tuy", "Ubay", "Umingan", "Ungkaya Pukan", 
+        "Unisan", "Upi", "Urbiztondo", "Urdaneta City", "Uson", "Uyugan", 
+        "Valderrama", "Valencia", "Valencia City", "Valenzuela", "Valladolid", 
+        "Vallehermoso", "Veruela", "Victoria", "Victorias City", "Viga", 
+        "Vigan City", "Villaba", "Villanueva", "Villareal", "Villasis", 
+        "Villaverde", "Villaviciosa", "Vincenzo A. Sagun", "Vintar", "Vinzons", 
+        "Virac", "Wao", "Zamboanga City", "Zamboanguita", "Zaragoza", "Zarraga", 
+        "Zumarraga"
     )
     
     genres = (
-        'Action', 'Adventure', 'Animation', 'Biography', 'Comedy', 
-        'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Film-Noir', 
-        'Game-Show', 'History', 'Horror', 'Music', 'Musical', 'Mystery', 'News', 
-        'Reality-TV', 'Romance', 'Sci-Fi', 'Short', 'Sport', 'Talk-Show', 
-        'Thriller', 'War', 'Western'
+        "Action", "Adventure", "Animation", "Biography", "Comedy", 
+        "Crime", "Documentary", "Drama", "Family", "Fantasy", "Film-Noir", 
+        "Game-Show", "History", "Horror", "Music", "Musical", "Mystery", "News", 
+        "Reality-TV", "Romance", "Sci-Fi", "Short", "Sport", "Talk-Show", 
+        "Thriller", "War", "Western"
     )
     
     # add states to the database
@@ -1057,7 +1057,7 @@ def populateTables(session):
         session.add(Genre(genre))
         
     # add a country to the database
-    session.add(Country('PH', 'Philippines'))
+    session.add(Country("PH", "Philippines"))
         
     session.commit()
     
@@ -1144,7 +1144,7 @@ def getWriter(session, writer):
     
 def main():
     
-    session = checkDatabase('posvrsys.sqlite')
+    session = checkDatabase("posvrsys.sqlite")
     
     for instance in session.query(Customer):
         
@@ -1152,7 +1152,7 @@ def main():
         
     session.close()
         
-if __name__ == '__main__':
+if __name__ == "__main__":
     
     main()
     

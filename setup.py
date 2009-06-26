@@ -41,35 +41,37 @@ setup(
     name = config.APP_NAME, 
     version = config.__appversion__, 
     license = config.__license__, 
-    author = 'Bertrand Son Kintanar', 
-    author_email = '<b3rxkintanar@gmail.com>', 
-    scripts=['posvrsys.py'],
+    author = "Bertrand Son Kintanar", 
+    author_email = "<b3rxkintanar@gmail.com>", 
+    scripts=["posvrsys.py"],
     windows=[
         {
-            'script': 'posvrsys.py',
-            'icon_resources': [(1, os.path.join('img', 'logo.ico'))],
+            "script": "posvrsys.py",
+            "icon_resources": [(1, os.path.join("img", "logo.ico"))],
         }
     ],
     data_files=[
-        ('glade', [os.path.join('glade', 'posvrsys.glade'),
-                   os.path.join('glade', 'logo.ico')]),
-        ('img', [
-            os.path.join('img', 'rentals.png'),
-            os.path.join('img', 'inventory.png'),
-            os.path.join('img', 'customers.png'),
-            os.path.join('img', 'transactions.png'),
-            os.path.join('img', 'reports.png'),
-            os.path.join('img', 'maintenance.png'),
-            os.path.join('img', 'dayend.png'),]
+        ("glade", [os.path.join("glade", "posvrsys.glade"),
+                   os.path.join("glade", "logo.ico")]),
+        ("img", [
+            os.path.join("img", "rentals.png"),
+            os.path.join("img", "inventory.png"),
+            os.path.join("img", "customers.png"),
+            os.path.join("img", "transactions.png"),
+            os.path.join("img", "reports.png"),
+            os.path.join("img", "maintenance.png"),
+            os.path.join("img", "dayend.png"),
+            os.path.join("img", "customer-new.png"),
+            os.path.join("img", "movie-new.png"),]
          ),
     ],
     options = {
-        'py2exe' : {
-            'packages': 'encodings, sqlalchemy',
-            'includes': 'cairo, pango, pangocairo, atk, gobject',
+        "py2exe" : {
+            "packages": "encodings, sqlalchemy",
+            "includes": "cairo, pango, pangocairo, atk, gobject",
         },
-        'sdist': {
-            'formats': 'zip',
+        "sdist": {
+            "formats": "zip",
         }
     }
 )
