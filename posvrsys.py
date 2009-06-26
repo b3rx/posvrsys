@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # package  : POSvrSys - PyGTK POS Video Rental System
@@ -81,7 +81,7 @@ try:
         
 except ImportError, e:
     
-    print _("Import error POSvsSys cannot start:"), e
+    print _("Import error POSvrSys cannot start:"), e
     
     sys.exit(1)
     
