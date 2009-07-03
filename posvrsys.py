@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # package  : POSvrSys - PyGTK POS Video Rental System
@@ -171,7 +171,6 @@ class POSvrSys(object):
         self.main_window.show_all()
         
     #***************************************************************************
-    # Initialize
     #***************************************************************************
     def initialize_widgets(self):
         
@@ -955,7 +954,8 @@ class POSvrSys(object):
         #req  = urllib2.Request("http://www.imdb.com/title/%s/" % self.inImdbCodeEntry.get_text())
         #req  = urllib2.Request("file:///C:/Documents%20and%20Settings/bkintanar/My%20Documents/src/posvrsys/tt1111422.html")
         
-        url = "file:///C:/Documents%20and%20Settings/bkintanar/My%20Documents/src/posvrsys/tt1111422.html"
+        #url = "file:///C:/Documents%20and%20Settings/bkintanar/My%20Documents/src/posvrsys/tt1111422.html"
+        url = "http://www.imdb.com/title/%s/" % self.inImdbCodeEntry.get_text()
         charset = "utf-8"
         data = ""
         
@@ -977,11 +977,11 @@ class POSvrSys(object):
         
         # Get Directors
         directors = re.findall("id=\"director-info\" class=\"info\">(.*?)</div>", data, re.MULTILINE | re.DOTALL)
-        directors = [re.findall("/\">(.*?)</a>", entry) for entry in directors][0]
+        directors = [re.findall(";\">(.*?)</a>", entry) for entry in directors][0]
         
         # Get Writers
         writers = re.findall("<h5>Writer(.*?)</div>", data, re.MULTILINE | re.DOTALL)
-        writers = [re.findall("/\">(.*?)</a>", entry) for entry in writers][0]
+        writers = [re.findall(";\">(.*?)</a>", entry) for entry in writers][0]
         
         # Get Plot
         plot = re.findall("<h5>Plot:</h5>\r*\n(.*?)\r*\n<a", data, re.MULTILINE | re.DOTALL)[0]
@@ -1000,7 +1000,8 @@ class POSvrSys(object):
         
         # get the Casts
         casts = re.findall("<h3>Cast(.*?)more</a></div>", data, re.MULTILINE | re.DOTALL)
-        casts = [re.findall("<a href.*?/name/.*?/\">(.*?)</a>",entry) for entry in casts][0]
+        casts = [re.findall("src='/rg/castlist/.*?;\">(.*?)</a></td>",entry) for entry in casts][0]
+        
         
         self.inGenresAddEditListstore.clear()
         self.inWritersAddEditListstore.clear()
@@ -1021,11 +1022,12 @@ class POSvrSys(object):
         # Populate inCastsAddEditListstore
         for cast in casts:
         
-            #cast = cast.replace("&#", "\\")
-            #cast = cast.replace(";", "")
-            #print repr(cast.encode("ascii", "replace"))
-            #cast = u"%s" % cast
-            
+            cast = cast.replace("&#", "\\")
+            cast = cast.replace(";", "")
+            #print repr(cast.encode("utf-8"))
+            cast = u"%s" %(cast)
+            #print cast
+            cast = cast.decode('ascii')
             self.on_inCastsAddButton_clicked(self, cast)
         
         self.inTitleEntry.set_text(title[0])
